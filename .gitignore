@@ -26,3 +26,6 @@ nb-configuration.xml
 
 # OSX
 .DS_Store
+
+# Claude
+/.claude/settings.json
