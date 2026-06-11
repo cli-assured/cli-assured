@@ -1,0 +1,16 @@
+#
+# SPDX-FileCopyrightText: Copyright (c) 2025 CLI Assured contributors as indicated by the @author tags
+# SPDX-License-Identifier: Apache-2.0
+#
+
+site:
+  title: CLI Assured
+  start_page: cli-assured:ROOT:index.adoc
+content:
+  sources:
+  - url: ./../
+    branches: HEAD
+    start_path: docs
+
+output:
+  dir: ./target/site

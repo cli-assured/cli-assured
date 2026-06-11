@@ -1,0 +1,12 @@
+// user-guide
+* xref:user-guide/index.adoc[User guide]
+
+// release-notes
+* xref:release-notes/index.adoc[Release notes]
+
+ifeval::[{doc-is-main} == true]
+** xref:release-notes/0.0.1.adoc[0.0.1]
+endif::[]
+
+// reference
+* xref:reference/index.adoc[Reference]

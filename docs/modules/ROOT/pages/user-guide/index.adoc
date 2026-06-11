@@ -1,0 +1,86 @@
+[[user-guide-index]]
+= User guide
+
+== Hello World!
+
+Here is a basic Hello World! example:
+
+[source,java]
+----
+include::example$j21/HelloWorldTest.java[tag=imports]
+
+include::example$j21/HelloWorldTest.java[tag=hello-world,indent=0]
+----
+
+== Given-when-then
+
+== Given: `CommandSpec`
+
+=== Command and its arguments
+
+==== Java
+
+==== Maven
+
+=== Environment variables
+
+=== Working directory
+
+=== Redirect `stderr` to `stdout`
+
+=== Send data to `stdin`
+
+=== Auto-close behavior
+
+=== Thread pool
+
+
+== Then: `ExpectationsSpec`
+
+=== Exit codes
+
+== `std[out|err]` asserts and consumers
+
+=== `log()`
+
+=== Line asserts
+
+==== Encoding
+
+==== Line count
+
+==== Awaiting a specific line
+
+==== Using AssertJ asserts on `std[out|err]` output
+
+=== Capture size and `captureAll()`
+
+=== Byte count
+
+==== `isEmpty()`
+
+==== Timeouts
+
+== `CommandProcess`
+
+=== `start().awatTermination()` or simply `execute()`
+
+==== Timeouts
+
+=== Killing the command midflight
+
+=== PID
+
+=== Child and descendant processes
+
+== `CommandResult`
+
+=== `assertSuccess()`
+
+=== `assertTimeout()`
+
+=== `exitCode()`
+
+=== `duration()`
+
+

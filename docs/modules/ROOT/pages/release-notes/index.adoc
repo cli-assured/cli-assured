@@ -1,0 +1,12 @@
+[[release-notes-index]]
+= Release notes
+
+ifeval::[{doc-is-main} != true]
+Check the `dev` version of the documentation for the https://docs.cli-assured.org/dev/release-notes/index.html[list of release notes] documents.
+endif::[]
+ifeval::[{doc-is-main} == true]
+Release notes documents for major and minor releases are listed in this section.
+
+* xref:release-notes/0.0.1.adoc[0.0.1]
+
+endif::[]

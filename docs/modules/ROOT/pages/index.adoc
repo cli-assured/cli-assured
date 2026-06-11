@@ -1,0 +1,24 @@
+= CLI Assured
+
+CLI Assured is a Java DSL for testing or simply executing command line applications.
+
+== Design principles
+
+* Follow the given-when-then structure known e.g. from https://rest-assured.io/[REST Assured]
+* Give user control over details but do not stand in way to do simple things
+* Avoid holding the entire command output in memory unless needed or wanted by the user
+** Allows for testing commands outputting large amounts of data
+** Output line asserts:
+*** Defined before the command process is started
+*** Evaluated line-by-line on the thread consuming `stdout` or `stderr`
+
+The documentation is divided into the following main parts:
+
+* xref:user-guide/index.adoc[User guide] - explains the typical usage of CLI Assured
+* xref:release-notes/index.adoc[Release notes] - Release notes documents for the past releases
+* xref:reference/index.adoc[Reference] - full list of supported features
+
+[[issues-and-support]]
+== Issues and Support
+
+Issues and suggestions can be reported at https://github.com/cli-assured/cli-assured/issues/new[GitHub].
