@@ -3,6 +3,16 @@ name: verify
 on:
   pull_request
 
+permissions:
+  discussions: read
+  issues: read
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   install:
     name: Install
@@ -77,3 +87,17 @@ jobs:
       - run: ./mvnw test -e -B -ntp -pl ':cli-assured-tests,:cli-assured-tests-java21'
         if: ${{ matrix.jdk >= 21 }}
 
+      - run: ./mvnw test -e -B -ntp -pl ':cli-assured-docs'
+        if: ${{ matrix.jdk == 25 && matrix.os == 'ubuntu-latest' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fail on uncommitted changes
+        shell: bash
+        run: |
+          [[ -z $(git status --porcelain) ]] || {
+            echo 'There are uncommitted changes'
+            git status
+            git diff
+            exit 1
+          }

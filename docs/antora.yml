@@ -1,0 +1,18 @@
+#
+# SPDX-FileCopyrightText: Copyright (c) 2025 CLI Assured contributors as indicated by the @author tags
+# SPDX-License-Identifier: Apache-2.0
+#
+
+name: cli-assured
+title: CLI Assured
+version: dev
+nav:
+  - modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+
+    # Versions
+
+    # Toggle whether some page elements are rendered
+    doc-is-main: true # Release notes and release planning are only shown and maintained in the main branch

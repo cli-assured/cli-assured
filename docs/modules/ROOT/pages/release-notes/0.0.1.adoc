@@ -1,0 +1,3 @@
+= CLI Assured 0.0.1 release notes
+
+The first stable relase.

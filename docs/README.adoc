@@ -1,0 +1,12 @@
+= Quarkus CXF (CXF Extensions for Quarkus)
+
+The generated site is available at https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/
+
+== Live-edit locally
+
+[source,shell]
+----
+$ mvn quarkus:dev
+----
+
+When the site is built, hit `w` and the site should open in browser.
