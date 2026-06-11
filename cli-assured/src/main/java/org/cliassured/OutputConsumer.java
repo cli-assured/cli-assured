@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.cliassured.CliAssertUtils.ExcludeFromJacocoGeneratedReport;
+import org.cliassured.StreamExpectationsSpec.OutputCapture;
 import org.cliassured.StreamExpectationsSpec.ProcessOutput;
 import org.cliassured.StreamExpectationsSpec.Redirect;
 import org.cliassured.StreamExpectationsSpec.StreamExpectations;
@@ -36,10 +37,12 @@ abstract class OutputConsumer implements Assert {
     final StreamExpectationsSpec.ProcessOutput stream;
     final AtomicInteger byteCount = new AtomicInteger();
     private final CompletableFuture<Void> status;
+    private final OutputCapture capture;
 
-    OutputConsumer(InputStream in, StreamExpectationsSpec.ProcessOutput stream) {
+    OutputConsumer(InputStream in, StreamExpectationsSpec.ProcessOutput stream, OutputCapture capture) {
         this.in = in;
         this.stream = stream;
+        this.capture = capture;
         this.status = new CompletableFuture<Void>();
     }
 
@@ -94,7 +97,7 @@ abstract class OutputConsumer implements Assert {
     static class DevNull extends OutputConsumer {
 
         public DevNull(InputStream in, ProcessOutput stream) {
-            super(in, stream);
+            super(in, stream, OutputCapture.noCapture(stream));
         }
 
         @Override
@@ -126,7 +129,7 @@ abstract class OutputConsumer implements Assert {
         private final StreamExpectations streamExpectations;
 
         OutputAsserts(InputStream inputStream, StreamExpectations streamExpectations) {
-            super(inputStream, streamExpectations.stream);
+            super(inputStream, streamExpectations.stream, streamExpectations.capture);
             this.streamExpectations = Objects.requireNonNull(streamExpectations, "streamExpectations");
         }
 
@@ -244,6 +247,10 @@ abstract class OutputConsumer implements Assert {
             }
         }
 
+    }
+
+    public OutputCapture capture() {
+        return capture;
     }
 
 }

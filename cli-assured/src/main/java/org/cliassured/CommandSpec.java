@@ -618,4 +618,18 @@ public class CommandSpec {
         }
     }
 
+    /**
+     * Execute the command redirecting {@code stderr} to {@code stdout}, capture all {@code stdout} lines, assert
+     * success and return the lines captured on {@code stdout}.
+     * A shorthand for {@link CommandSpec#execute()
+     * stderrToStdout().then().stdout().captureAll().execute().assertSuccess().stdout().lines()}
+     *
+     * @return a {@link List} of lines captured from {@code stdout} of the
+     *         executed command
+     * @since  0.1.0
+     */
+    public List<String> lines() {
+        return stderrToStdout().then().stdout().captureAll().execute().assertSuccess().stdout().lines();
+    }
+
 }

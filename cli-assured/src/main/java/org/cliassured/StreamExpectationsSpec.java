@@ -760,8 +760,10 @@ public class StreamExpectationsSpec {
         private final StreamExpectationsSpec.ProcessOutput stream;
 
         private int lineCount = 0;
-        private final List<String> headLines = new ArrayList<>();
-        private String[] tailLines;
+        private final Object linesLock = new Object();
+        private boolean linesSealed = false;
+        private List<String> headLines = new ArrayList<>();
+        private List<String> tailLines;
         private int tailLinesCount = 0;
 
         static OutputCapture defaultCapture(ProcessOutput stream) {
@@ -789,56 +791,88 @@ public class StreamExpectationsSpec {
          * @since      0.0.1
          */
         public void capture(String line) {
-            synchronized (headLines) {
+            synchronized (linesLock) {
 
                 if (maxHead < 0 || headLines.size() < maxHead) {
                     headLines.add(line);
                 }
                 if (maxHead >= 0 && lineCount >= maxHead && maxTail > 0) {
                     if (tailLines == null) {
-                        tailLines = new String[maxTail];
+                        tailLines = new ArrayList<>(maxTail);
                     }
-                    tailLines[tailLinesCount++ % maxTail] = line;
+                    final int index = tailLinesCount++ % maxTail;
+                    if (index >= tailLines.size()) {
+                        tailLines.add(line);
+                    } else {
+                        tailLines.set(index, line);
+                    }
                 }
                 lineCount++;
             }
         }
 
+        OutputCaptureResult result() {
+            synchronized (linesLock) {
+                return new OutputCaptureResult(lineCount, () -> {
+                    if (maxHead >= 0) {
+                        throw new IllegalStateException(
+                                "Call CliAssured.command(...).then()."
+                                        + stream.name() + "().captureAll() to be able to retrieve all lines via CommandResult."
+                                        + stream.name() + "().lines()");
+                    }
+                    seal();
+                    return headLines;
+                });
+            }
+        }
+
+        @ExcludeFromJacocoGeneratedReport
+        void seal() {
+            synchronized (linesLock) {
+                if (!linesSealed) {
+                    linesSealed = true;
+                    headLines = Collections.unmodifiableList(headLines);
+                    if (tailLines != null) {
+                        tailLines = Collections.unmodifiableList(tailLines);
+                    }
+                }
+            }
+        }
+
         @ExcludeFromJacocoGeneratedReport
         public StringBuilder toString(StringBuilder sb) {
-            synchronized (headLines) {
-                int storedTailLines = Math.min(tailLinesCount, maxTail);
-                if (lineCount == 0) {
-                    sb.append(stream.name()).append(": <no output>");
-                } else if (headLines.isEmpty() && storedTailLines == 0) {
-                    sb.append(stream.name()).append(": <no lines captured>");
-                } else {
-                    sb.append(stream.name()).append(":\n");
-                    for (String line : headLines) {
-                        sb.append("\n    ").append(line);
+            seal();
+            int storedTailLines = Math.min(tailLinesCount, maxTail);
+            if (lineCount == 0) {
+                sb.append(stream.name()).append(": <no output>");
+            } else if (headLines.isEmpty() && storedTailLines == 0) {
+                sb.append(stream.name()).append(": <no lines captured>");
+            } else {
+                sb.append(stream.name()).append(":\n");
+                for (String line : headLines) {
+                    sb.append("\n    ").append(line);
+                }
+                int omitted = lineCount - headLines.size();
+                if (storedTailLines > 0) {
+                    omitted -= storedTailLines;
+                }
+                if (omitted > 0) {
+                    if (headLines.size() > 0) {
+                        sb.append("\n    ...");
                     }
-                    int omitted = lineCount - headLines.size();
-                    if (storedTailLines > 0) {
-                        omitted -= storedTailLines;
-                    }
-                    if (omitted > 0) {
-                        if (headLines.size() > 0) {
-                            sb.append("\n    ...");
-                        }
-                        sb
-                                .append("\n    [")
-                                .append(omitted).append(" lines omitted; set ")
-                                .append(stream.name()).append("().capture(maxHeadLines, maxTailLines) or ")
-                                .append(stream.name()).append("().captureAll() to capure more lines]");
+                    sb
+                            .append("\n    [")
+                            .append(omitted).append(" lines omitted; set ")
+                            .append(stream.name()).append("().capture(maxHeadLines, maxTailLines) or ")
+                            .append(stream.name()).append("().captureAll() to capure more lines]");
 
-                        if (storedTailLines > 0) {
-                            sb.append("\n    ...");
-                        }
-                    }
                     if (storedTailLines > 0) {
-                        for (int i = 0; i < storedTailLines; i++) {
-                            sb.append("\n    ").append(tailLines[(i + tailLinesCount) % storedTailLines]);
-                        }
+                        sb.append("\n    ...");
+                    }
+                }
+                if (storedTailLines > 0) {
+                    for (int i = 0; i < storedTailLines; i++) {
+                        sb.append("\n    ").append(tailLines.get((i + tailLinesCount) % storedTailLines));
                     }
                 }
             }
@@ -850,6 +884,17 @@ public class StreamExpectationsSpec {
             StringBuilder sb = new StringBuilder();
             toString(sb);
             return sb.toString();
+        }
+
+        static class OutputCaptureResult {
+            static final OutputCaptureResult EMPTY = new OutputCaptureResult(0, Collections::emptyList);
+            final int lineCount;
+            final Supplier<List<String>> lines;
+
+            private OutputCaptureResult(int lineCount, Supplier<List<String>> lines) {
+                this.lineCount = lineCount;
+                this.lines = lines;
+            }
         }
 
     }

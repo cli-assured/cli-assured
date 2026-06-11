@@ -17,8 +17,8 @@ public class CommandResult {
     private final String command;
     private final int exitCode;
     private final Duration duration;
-    private final long byteCountStdout;
-    private final long byteCountStderr;
+    private final StreamResult stdout;
+    private final StreamResult stderr;
     private final Throwable exception;
     private final Assert outputAssert;
 
@@ -26,16 +26,16 @@ public class CommandResult {
             String command,
             int exitCode,
             Duration runtimeMs,
-            long byteCountStdout,
-            long byteCountStderr,
+            StreamResult stdout,
+            StreamResult stderr,
             Throwable exception,
             Assert outputAssert) {
         super();
         this.command = command;
         this.exitCode = exitCode;
         this.duration = runtimeMs;
-        this.byteCountStdout = byteCountStdout;
-        this.byteCountStderr = byteCountStderr;
+        this.stdout = stdout;
+        this.stderr = stderr;
         this.exception = exception;
         this.outputAssert = outputAssert;
     }
@@ -97,19 +97,39 @@ public class CommandResult {
     }
 
     /**
-     * @return the number of bytes produced on {@code stdout}
-     * @since  0.0.1
+     * @return     the number of bytes produced on {@code stdout}
+     * @since      0.0.1
+     * @deprecated use {@code stdout().byteCount()}
      */
+    @Deprecated(forRemoval = true)
     public long byteCountStdout() {
-        return byteCountStdout;
+        return stdout.byteCount();
     }
 
     /**
-     * @return the number of bytes produced on {@code stderr}
-     * @since  0.0.1
+     * @return     the number of bytes produced on {@code stderr}
+     * @since      0.0.1
+     * @deprecated use {@code stderr().byteCount()}
      */
+    @Deprecated(forRemoval = true)
     public long byteCountStderr() {
-        return byteCountStderr;
+        return stderr.byteCount();
+    }
+
+    /**
+     * @return the {@link StreamResult} containing {@code stdout} result data of the executed command
+     * @since  0.1.0
+     */
+    public StreamResult stdout() {
+        return stdout;
+    }
+
+    /**
+     * @return the {@link StreamResult} containing {@code stderr} result data of the executed command
+     * @since  0.1.0
+     */
+    public StreamResult stderr() {
+        return stderr;
     }
 
 }

@@ -89,6 +89,7 @@ public class JavaTest {
                 .assertSuccess();
 
         Assertions.assertThat(result.byteCountStderr()).isBetween(17L, 18L);
+        Assertions.assertThat(result.stderr().byteCount()).isBetween(17L, 18L);
         Assertions.assertThat(result.duration()).isGreaterThan(Duration.ofMillis(0));
 
         Assertions
@@ -519,6 +520,7 @@ public class JavaTest {
                     .awaitTermination()
                     .assertSuccess();
             Assertions.assertThat(result.byteCountStdout()).isBetween(10L, 11L);
+            Assertions.assertThat(result.stdout().byteCount()).isBetween(10L, 11L);
         }
 
         {
@@ -535,6 +537,7 @@ public class JavaTest {
 
             Assertions.assertThat(result.byteCountStdout())
                     .isBetween(10L, 11L); // it is 10 on Linux and 11 on Windows
+            Assertions.assertThat(result.stdout().byteCount()).isBetween(10L, 11L);
         }
 
         {
@@ -550,6 +553,7 @@ public class JavaTest {
                                     Pattern.DOTALL));
 
             Assertions.assertThat(result.byteCountStdout()).isBetween(11L, 12L);
+            Assertions.assertThat(result.stdout().byteCount()).isBetween(11L, 12L);
         }
 
     }
@@ -623,6 +627,37 @@ public class JavaTest {
                         + "\n"
                         + "stdout: <no lines captured>");
 
+    }
+
+    @Test
+    void lines() {
+        assertLines(command("outputLines", "5").lines());
+
+        CommandResult result = run("outputLines", "5")
+                .captureAll()
+                .stderr()
+                .captureAll()
+                .execute()
+                .assertSuccess();
+        assertLines(result.stdout().lines());
+        Assertions.assertThat(result.stdout().lineCount()).isEqualTo(5);
+        Assertions.assertThat(result.stdout().byteCount()).isBetween(7L * 5L/* Linux */, 8L * 5L /* Windows */ );
+        Assertions.assertThat(result.stderr().lines().size()).isEqualTo(0);
+        Assertions.assertThat(result.stderr().byteCount()).isEqualTo(0);
+
+        Assertions.assertThatThrownBy(run("outputLines", "5")
+                .execute()
+                .assertSuccess().stdout()::lines)
+                .isInstanceOf(IllegalStateException.class)
+                .message().contains(".captureAll() to be able to retrieve all lines");
+
+    }
+
+    static void assertLines(List<String> lines) {
+        Assertions.assertThat(lines.size()).isEqualTo(5);
+        Assertions.assertThat(lines).contains("Line 0", "Line 1", "Line 2",
+                "Line 3",
+                "Line 4");
     }
 
     @Test

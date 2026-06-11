@@ -153,6 +153,7 @@ public class StdinTest {
                 .message().contains("Exception 1/1: org.cliassured.CancellationException: The process was cancelled");
 
         Assertions.assertThat(result.byteCountStdout()).isEqualTo(7);
+        Assertions.assertThat(result.stdout().byteCount()).isEqualTo(7);
     }
 
     @Test
