@@ -4,8 +4,8 @@
  */
 package org.cliassured;
 
-import java.util.List;
-import org.cliassured.StreamExpectationsSpec.OutputCapture.OutputCaptureResult;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Information about {@code stdout} or {@code stderr} of the executed command.
@@ -15,21 +15,25 @@ import org.cliassured.StreamExpectationsSpec.OutputCapture.OutputCaptureResult;
  */
 public class StreamResult {
     private final long byteCount;
-    private final OutputCaptureResult capture;
+    private final int lineCount;
+    private final Supplier<Stream<String>> lines;
+    private final Supplier<byte[]> bytes;
 
-    StreamResult(long byteCount, OutputCaptureResult capture) {
+    StreamResult(int lineCount, Supplier<Stream<String>> lines, long byteCount, Supplier<byte[]> bytes) {
+        this.lineCount = lineCount;
+        this.lines = lines;
         this.byteCount = byteCount;
-        this.capture = capture;
+        this.bytes = bytes;
     }
 
     /**
-     * @return                       a {@link List} of lines captured from {@code stdout} or {@code stderr} of the
+     * @return                       a {@link Stream} of lines captured from {@code stdout} or {@code stderr} of the
      *                               executed command
      * @throws IllegalStateException if {@link StreamExpectationsSpec#captureAll()} was not called on the associated stream
      * @since                        0.1.0
      */
-    public List<String> lines() {
-        return capture.lines.get();
+    public Stream<String> lines() {
+        return lines.get();
     }
 
     /**
@@ -37,7 +41,21 @@ public class StreamResult {
      * @since  0.1.0
      */
     public int lineCount() {
-        return capture.lineCount;
+        return lineCount;
+    }
+
+    /**
+     * Returns the raw bytes captured from {@code stdout} or {@code stderr} of the executed command.
+     * <p>
+     * For the given command execution, this method always returns the same byte array instance.
+     * Mutating the array will mutate it for all subsequent callers.
+     *
+     * @return                       the raw bytes captured from {@code stdout} or {@code stderr} of the executed command
+     * @throws IllegalStateException if {@link StreamExpectationsSpec#captureAll()} was not called on the associated stream
+     * @since                        0.1.0
+     */
+    public byte[] bytes() {
+        return bytes.get();
     }
 
     /**
