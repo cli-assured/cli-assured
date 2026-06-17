@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.assertj.core.api.Assertions;
 import org.cliassured.CliAssured;
 import org.cliassured.CommandProcess;
@@ -162,6 +164,39 @@ public class JavaTest {
                         + "using case insensitive comparison to occur in stderr, but none of them occurred\n"
                         + "\n"
                         + "stderr: <no output>");
+
+        Assertions
+                .assertThatThrownBy(
+                        command("outputLines", "0")
+                                .then()
+                                .stdout()
+                                .captureAll()
+                                .hasLinesContaining("foo")
+                                .execute()::assertSuccess)
+                .isInstanceOf(AssertionError.class)
+                .message().endsWith("Failure 1/1: Expected lines containing\n"
+                        + "\n"
+                        + "    foo\n"
+                        + "\n"
+                        + "to occur in stdout, but none of them occurred\n"
+                        + "\n"
+                        + "stdout: <no output>");
+
+        Assertions
+                .assertThatThrownBy(
+                        command("outputLines", "0")
+                                .then()
+                                .stdout()
+                                .hasLinesContaining("foo")
+                                .execute()::assertSuccess)
+                .isInstanceOf(AssertionError.class)
+                .message().endsWith("Failure 1/1: Expected lines containing\n"
+                        + "\n"
+                        + "    foo\n"
+                        + "\n"
+                        + "to occur in stdout, but none of them occurred\n"
+                        + "\n"
+                        + "stdout: <no output>");
 
     }
 
@@ -630,8 +665,9 @@ public class JavaTest {
     }
 
     @Test
-    void lines() {
-        assertLines(command("outputLines", "5").lines());
+    void bytes() throws IOException {
+        assertBytes(5);
+        assertBytes(128); // byte buffer expansion
 
         CommandResult result = run("outputLines", "5")
                 .captureAll()
@@ -639,10 +675,44 @@ public class JavaTest {
                 .captureAll()
                 .execute()
                 .assertSuccess();
-        assertLines(result.stdout().lines());
+        Assertions.assertThat(result.stdout().bytes()).isNotEmpty();
+        assertLines(result.stdout().lines().collect(Collectors.toList()));
+        Assertions.assertThat(result.stdout().lineCount()).isEqualTo(5);
+        Assertions.assertThat(result.stderr().bytes()).isEmpty();
+        Assertions.assertThat(result.stderr().byteCount()).isEqualTo(0);
+
+        Assertions.assertThatThrownBy(run("outputLines", "5")
+                .execute()
+                .assertSuccess().stdout()::bytes)
+                .isInstanceOf(IllegalStateException.class)
+                .message().contains(".captureAll() to be able to retrieve all bytes");
+
+    }
+
+    public void assertBytes(int lines) {
+        byte[] bytes = command("outputLines", String.valueOf(lines)).bytes();
+        String content = new String(bytes, StandardCharsets.UTF_8);
+        final String lineSeparator = System.lineSeparator();
+        final String expected = IntStream.range(0, lines).mapToObj(i -> "Line " + i)
+                .collect(Collectors.joining(lineSeparator))
+                + lineSeparator;
+        Assertions.assertThat(content).isEqualTo(expected);
+    }
+
+    @Test
+    void lines() {
+        assertLines(command("outputLines", "5").lines().collect(Collectors.toList()));
+
+        CommandResult result = run("outputLines", "5")
+                .captureAll()
+                .stderr()
+                .captureAll()
+                .execute()
+                .assertSuccess();
+        assertLines(result.stdout().lines().collect(Collectors.toList()));
         Assertions.assertThat(result.stdout().lineCount()).isEqualTo(5);
         Assertions.assertThat(result.stdout().byteCount()).isBetween(7L * 5L/* Linux */, 8L * 5L /* Windows */ );
-        Assertions.assertThat(result.stderr().lines().size()).isEqualTo(0);
+        Assertions.assertThat(result.stderr().lines().count()).isEqualTo(0);
         Assertions.assertThat(result.stderr().byteCount()).isEqualTo(0);
 
         Assertions.assertThatThrownBy(run("outputLines", "5")
