@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.cliassured.CliAssertUtils.ExcludeFromJacocoGeneratedReport;
-import org.cliassured.StreamExpectationsSpec.OutputCapture;
+import org.cliassured.OutputCaptureSpec.OutputCapture;
 import org.cliassured.StreamExpectationsSpec.ProcessOutput;
 import org.cliassured.StreamExpectationsSpec.Redirect;
 import org.cliassured.StreamExpectationsSpec.StreamExpectations;
@@ -138,7 +138,8 @@ abstract class OutputConsumer implements Assert {
         void run() {
             if (streamExpectations.hasLineAsserts()) {
                 try (BufferedReader r = new BufferedReader(
-                        new InputStreamReader(redirect(in, streamExpectations.redirect()), streamExpectations.charset()))) {
+                        new InputStreamReader(streamExpectations.capture.wrap(redirect(in, streamExpectations.redirect())),
+                                streamExpectations.charset()))) {
                     String line;
                     while (!cancelled && (line = r.readLine()) != null) {
                         streamExpectations.line(line);
@@ -149,7 +150,7 @@ abstract class OutputConsumer implements Assert {
                     }
                 }
             } else {
-                try (InputStream wrappedIn = redirect(in, streamExpectations.redirect())) {
+                try (InputStream wrappedIn = streamExpectations.capture.wrap(redirect(in, streamExpectations.redirect()))) {
                     byte[] buff = new byte[8192];
                     while (wrappedIn.read(buff) >= 0) {
                     }

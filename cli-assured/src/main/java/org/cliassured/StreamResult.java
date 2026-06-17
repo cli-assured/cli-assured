@@ -4,8 +4,11 @@
  */
 package org.cliassured;
 
+import java.util.Collections;
 import java.util.List;
-import org.cliassured.StreamExpectationsSpec.OutputCapture.OutputCaptureResult;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import org.cliassured.CliAssertUtils.ExcludeFromJacocoGeneratedReport;
 
 /**
  * Information about {@code stdout} or {@code stderr} of the executed command.
@@ -14,12 +17,22 @@ import org.cliassured.StreamExpectationsSpec.OutputCapture.OutputCaptureResult;
  * @since  0.1.0
  */
 public class StreamResult {
+    static final StreamResult EMPTY = emptyResult();
     private final long byteCount;
-    private final OutputCaptureResult capture;
+    final int lineCount;
+    final Supplier<Stream<String>> lines;
+    final Supplier<byte[]> bytes;
 
-    StreamResult(long byteCount, OutputCaptureResult capture) {
+    StreamResult(int lineCount, Supplier<Stream<String>> lines, long byteCount, Supplier<byte[]> bytes) {
+        this.lineCount = lineCount;
+        this.lines = lines;
         this.byteCount = byteCount;
-        this.capture = capture;
+        this.bytes = bytes;
+    }
+
+    @ExcludeFromJacocoGeneratedReport
+    private static StreamResult emptyResult() {
+        return new StreamResult(0, Collections.<String> emptyList()::stream, 0, () -> new byte[0]);
     }
 
     /**
@@ -28,8 +41,8 @@ public class StreamResult {
      * @throws IllegalStateException if {@link StreamExpectationsSpec#captureAll()} was not called on the associated stream
      * @since                        0.1.0
      */
-    public List<String> lines() {
-        return capture.lines.get();
+    public Stream<String> lines() {
+        return lines.get();
     }
 
     /**
@@ -37,7 +50,16 @@ public class StreamResult {
      * @since  0.1.0
      */
     public int lineCount() {
-        return capture.lineCount;
+        return lineCount;
+    }
+
+    /**
+     * @return                       the raw bytes captured from {@code stdout} or {@code stderr} of the executed command
+     * @throws IllegalStateException if {@link StreamExpectationsSpec#captureAll()} was not called on the associated stream
+     * @since                        0.1.0
+     */
+    public byte[] bytes() {
+        return bytes.get();
     }
 
     /**

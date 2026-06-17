@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,6 +31,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.cliassured.CliAssertUtils.ExcludeFromJacocoGeneratedReport;
+import org.cliassured.OutputCaptureSpec.OutputCapture;
 import org.cliassured.OutputConsumer.DevNull;
 import org.cliassured.asserts.Assert;
 import org.cliassured.asserts.ByteCountAssert;
@@ -53,7 +53,7 @@ public class StreamExpectationsSpec {
     private final ByteCountAssert byteCountAssert;
     private final Charset charset;
     private final Redirect redirect;
-    private final OutputCapture capture;
+    private final OutputCaptureSpec capture;
 
     StreamExpectationsSpec(
             Function<StreamExpectations, ExpectationsSpec> expectations,
@@ -64,7 +64,7 @@ public class StreamExpectationsSpec {
         this.byteCountAssert = null;
         this.charset = StandardCharsets.UTF_8;
         this.redirect = null;
-        this.capture = new OutputCapture(16, 16, stream);
+        this.capture = OutputCaptureSpec.defaultCapture(charset, stream);
     }
 
     StreamExpectationsSpec(
@@ -74,7 +74,7 @@ public class StreamExpectationsSpec {
             ByteCountAssert byteCountAssert,
             Charset charset,
             Redirect redirect,
-            OutputCapture capture) {
+            OutputCaptureSpec capture) {
         this.expectations = expectations;
         this.stream = stream;
         this.asserts = asserts;
@@ -458,7 +458,8 @@ public class StreamExpectationsSpec {
      * @since          0.0.1
      */
     public StreamExpectationsSpec charset(Charset charset) {
-        return new StreamExpectationsSpec(expectations, stream, asserts, byteCountAssert, charset, redirect, capture);
+        return new StreamExpectationsSpec(expectations, stream, asserts, byteCountAssert, charset, redirect,
+                capture.charset(charset));
     }
 
     /**
@@ -598,7 +599,7 @@ public class StreamExpectationsSpec {
                 CliAssertUtils.join(this.asserts,
                         LineAssert.log(stream, LoggerFactory.getLogger("org.cliassured." + stream.name())::info)),
                 byteCountAssert, charset, redirect,
-                new OutputCapture(maxHeadLines, maxTailLines, stream));
+                new OutputCaptureSpec(maxHeadLines, maxTailLines, charset, stream));
     }
 
     /**
@@ -614,7 +615,7 @@ public class StreamExpectationsSpec {
                 CliAssertUtils.join(this.asserts,
                         LineAssert.log(stream, LoggerFactory.getLogger("org.cliassured." + stream.name())::info)),
                 byteCountAssert, charset, redirect,
-                OutputCapture.captureAll(stream));
+                OutputCaptureSpec.captureAll(charset, stream));
     }
 
     /**
@@ -734,7 +735,7 @@ public class StreamExpectationsSpec {
                 charset,
                 redirect,
                 stream,
-                capture);
+                capture.build());
     }
 
     /**
@@ -746,157 +747,6 @@ public class StreamExpectationsSpec {
      */
     ExpectationsSpec parent() {
         return expectations.apply(build());
-    }
-
-    /**
-     * A facility for recording output lines for the sake of failure reporting
-     *
-     * @since 0.0.1
-     */
-    static class OutputCapture {
-        static final int DEFAULT_CAPTURE_SIZE = 16;
-        private final int maxHead;
-        private final int maxTail;
-        private final StreamExpectationsSpec.ProcessOutput stream;
-
-        private int lineCount = 0;
-        private final Object linesLock = new Object();
-        private boolean linesSealed = false;
-        private List<String> headLines = new ArrayList<>();
-        private List<String> tailLines;
-        private int tailLinesCount = 0;
-
-        static OutputCapture defaultCapture(ProcessOutput stream) {
-            return new OutputCapture(DEFAULT_CAPTURE_SIZE, DEFAULT_CAPTURE_SIZE, stream);
-        }
-
-        static OutputCapture noCapture(ProcessOutput stream) {
-            return new OutputCapture(0, 0, stream);
-        }
-
-        static OutputCapture captureAll(ProcessOutput stream) {
-            return new OutputCapture(-1, -1, stream);
-        }
-
-        OutputCapture(int maxHead, int maxTail, ProcessOutput stream) {
-            this.maxHead = maxHead;
-            this.maxTail = maxTail;
-            this.stream = stream;
-        }
-
-        /**
-         * Capture the given {@code line} if there is enough capacity in this {@link OutputCapture}.
-         *
-         * @param line the line to capture
-         * @since      0.0.1
-         */
-        public void capture(String line) {
-            synchronized (linesLock) {
-
-                if (maxHead < 0 || headLines.size() < maxHead) {
-                    headLines.add(line);
-                }
-                if (maxHead >= 0 && lineCount >= maxHead && maxTail > 0) {
-                    if (tailLines == null) {
-                        tailLines = new ArrayList<>(maxTail);
-                    }
-                    final int index = tailLinesCount++ % maxTail;
-                    if (index >= tailLines.size()) {
-                        tailLines.add(line);
-                    } else {
-                        tailLines.set(index, line);
-                    }
-                }
-                lineCount++;
-            }
-        }
-
-        OutputCaptureResult result() {
-            synchronized (linesLock) {
-                return new OutputCaptureResult(lineCount, () -> {
-                    if (maxHead >= 0) {
-                        throw new IllegalStateException(
-                                "Call CliAssured.command(...).then()."
-                                        + stream.name() + "().captureAll() to be able to retrieve all lines via CommandResult."
-                                        + stream.name() + "().lines()");
-                    }
-                    seal();
-                    return headLines;
-                });
-            }
-        }
-
-        @ExcludeFromJacocoGeneratedReport
-        void seal() {
-            synchronized (linesLock) {
-                if (!linesSealed) {
-                    linesSealed = true;
-                    headLines = Collections.unmodifiableList(headLines);
-                    if (tailLines != null) {
-                        tailLines = Collections.unmodifiableList(tailLines);
-                    }
-                }
-            }
-        }
-
-        @ExcludeFromJacocoGeneratedReport
-        public StringBuilder toString(StringBuilder sb) {
-            seal();
-            int storedTailLines = Math.min(tailLinesCount, maxTail);
-            if (lineCount == 0) {
-                sb.append(stream.name()).append(": <no output>");
-            } else if (headLines.isEmpty() && storedTailLines == 0) {
-                sb.append(stream.name()).append(": <no lines captured>");
-            } else {
-                sb.append(stream.name()).append(":\n");
-                for (String line : headLines) {
-                    sb.append("\n    ").append(line);
-                }
-                int omitted = lineCount - headLines.size();
-                if (storedTailLines > 0) {
-                    omitted -= storedTailLines;
-                }
-                if (omitted > 0) {
-                    if (headLines.size() > 0) {
-                        sb.append("\n    ...");
-                    }
-                    sb
-                            .append("\n    [")
-                            .append(omitted).append(" lines omitted; set ")
-                            .append(stream.name()).append("().capture(maxHeadLines, maxTailLines) or ")
-                            .append(stream.name()).append("().captureAll() to capure more lines]");
-
-                    if (storedTailLines > 0) {
-                        sb.append("\n    ...");
-                    }
-                }
-                if (storedTailLines > 0) {
-                    for (int i = 0; i < storedTailLines; i++) {
-                        sb.append("\n    ").append(tailLines.get((i + tailLinesCount) % storedTailLines));
-                    }
-                }
-            }
-            return sb;
-        }
-
-        @ExcludeFromJacocoGeneratedReport
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            toString(sb);
-            return sb.toString();
-        }
-
-        static class OutputCaptureResult {
-            static final OutputCaptureResult EMPTY = new OutputCaptureResult(0, Collections::emptyList);
-            final int lineCount;
-            final Supplier<List<String>> lines;
-
-            private OutputCaptureResult(int lineCount, Supplier<List<String>> lines) {
-                this.lineCount = lineCount;
-                this.lines = lines;
-            }
-        }
-
     }
 
     /**
@@ -950,13 +800,14 @@ public class StreamExpectationsSpec {
         final OutputCapture capture;
 
         static StreamExpectations hasNoLines(StreamExpectationsSpec.ProcessOutput stream) {
+            final Charset charset = StandardCharsets.UTF_8;
             return new StreamExpectations(
                     Collections.singletonList(LineAssert.doesNotHaveAnyLines(stream)),
                     null,
-                    StandardCharsets.UTF_8,
+                    charset,
                     null,
                     stream,
-                    OutputCapture.defaultCapture(stream));
+                    OutputCaptureSpec.defaultCapture(charset, stream).build());
         }
 
         static StreamExpectations devNull(ProcessOutput stream) {

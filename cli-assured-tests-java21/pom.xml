@@ -86,7 +86,7 @@
                         </goals>
                         <phase>process-test-classes</phase>
                         <configuration>
-                            <outputDirectory>${maven.multiModuleProjectDirectory}/docs/modules/ROOT/examples/j21</outputDirectory>
+                            <outputDirectory>${maven.multiModuleProjectDirectory}/../docs/modules/ROOT/examples/j21</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/test/java/org/cliassured/test/j21/docs</directory>

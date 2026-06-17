@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import org.cliassured.CliAssertUtils.ExcludeFromJacocoGeneratedReport;
 import org.cliassured.StreamExpectationsSpec.StreamExpectations;
 import org.cliassured.asserts.Assert;
@@ -628,8 +629,21 @@ public class CommandSpec {
      *         executed command
      * @since  0.1.0
      */
-    public List<String> lines() {
+    public Stream<String> lines() {
         return stderrToStdout().then().stdout().captureAll().execute().assertSuccess().stdout().lines();
+    }
+
+    /**
+     * Execute the command redirecting {@code stderr} to {@code stdout}, capture all {@code stdout} output, assert
+     * success and return the raw bytes captured on {@code stdout}.
+     * A shorthand for {@link CommandSpec#execute()
+     * stderrToStdout().then().stdout().captureAll().execute().assertSuccess().stdout().bytes()}
+     *
+     * @return the raw bytes captured from {@code stdout} of the executed command
+     * @since  0.1.0
+     */
+    public byte[] bytes() {
+        return stderrToStdout().then().stdout().captureAll().execute().assertSuccess().stdout().bytes();
     }
 
 }
