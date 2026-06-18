@@ -2,6 +2,29 @@
 
 == Command and its arguments
 
+The most common way to specify the executable and its arguments is to use `CommandSpec.command(String executable, String... arguments)`.
+
+The `executable` can be any of the following:
+
+** An absolute path
+** If `CommandSpec.cd(path)` was specified, then `executable` can be a path relative to that directory
+** A directory relative to the working directory of the current JVM
+** Plain command name of the command can be found in `PATH` environment variable.
+
+[source,java]
+----
+include::example$j21/CommandSpecCommandTest.java[tag=command,indent=0]
+----
+
+=== Add arguments separately
+
+If you need to add the arguments in several iterations, you can use the following pattern:
+
+[source,java]
+----
+include::example$j21/CommandSpecCommandTest.java[tag=executableArgs,indent=0]
+----
+
 == Special `CommandSpec` factories
 
 === `CliAssured.java()`
