@@ -61,13 +61,15 @@ jobs:
 
     - name: Build Antora site
       run: cd docs && ../mvnw clean package -e -B -ntp
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Pages artifact
       uses: actions/upload-pages-artifact@v3
       with:
         path: docs/target/classes/META-INF/antora
 
-    - name: Report failure in issue {{ env.ISSUE_ID }}
+    - name: Report failure in issue {{ ISSUE_ID }}
       if: ${{ failure() }}
       uses: actions/github-script@v7
       with:
@@ -75,13 +77,13 @@ jobs:
           const issue = await github.rest.issues.get({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: env.ISSUE_ID
+            issue_number: process.env.ISSUE_ID
           });
           if (issue.data.state !== 'open') {
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: env.ISSUE_ID,
+              issue_number: process.env.ISSUE_ID,
               state: 'open'
             });
           }
@@ -89,7 +91,7 @@ jobs:
           await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: env.ISSUE_ID,
+            issue_number: process.env.ISSUE_ID,
             body: `Documentation build failed for ${sha}:\n\n${JSON.stringify(context.payload?.workflow_run?.conclusion || 'see logs')}\nWorkflow run: ${runUrl}`
           });
 
@@ -106,31 +108,31 @@ jobs:
       id: deployment
       uses: actions/deploy-pages@v4
 
-    - name: Close issue {{ env.ISSUE_ID }} on success
+    - name: Close issue {{ ISSUE_ID }} on success
       uses: actions/github-script@v7
       with:
         script: |
           const issue = await github.rest.issues.get({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: env.ISSUE_ID
+            issue_number: process.env.ISSUE_ID
           });
           if (issue.data.state === 'open') {
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: env.ISSUE_ID,
+              issue_number: process.env.ISSUE_ID,
               state: 'closed'
             });
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: env.ISSUE_ID,
+              issue_number: process.env.ISSUE_ID,
               body: `Documentation published successfully for ${sha} `
             });
           }
 
-    - name: Report failure in issue {{ env.ISSUE_ID }}
+    - name: Report failure in issue {{ ISSUE_ID }}
       if: ${{ failure() }}
       uses: actions/github-script@v7
       with:
@@ -138,13 +140,13 @@ jobs:
           const issue = await github.rest.issues.get({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: env.ISSUE_ID
+            issue_number: process.env.ISSUE_ID
           });
           if (issue.data.state !== 'open') {
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: env.ISSUE_ID,
+              issue_number: process.env.ISSUE_ID,
               state: 'open'
             });
           }
@@ -152,6 +154,6 @@ jobs:
           await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: env.ISSUE_ID,
+            issue_number: process.env.ISSUE_ID,
             body: `Documentation publication failed for ${sha}:\n\n${JSON.stringify(context.payload?.workflow_run?.conclusion || 'see logs')}\nWorkflow run: ${runUrl}`
           });
