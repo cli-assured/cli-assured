@@ -92,7 +92,7 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: process.env.ISSUE_ID,
-            body: `Documentation build failed for ${sha}:\n\n${JSON.stringify(context.payload?.workflow_run?.conclusion || 'see logs')}\nWorkflow run: ${runUrl}`
+            body: `Documentation build failed for ${context.sha}:\n\n${JSON.stringify(context.payload?.workflow_run?.conclusion || 'see logs')}\nWorkflow run: ${runUrl}`
           });
 
   deploy:
@@ -128,7 +128,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: process.env.ISSUE_ID,
-              body: `Documentation published successfully for ${sha} `
+              body: `Documentation published successfully for ${context.sha} `
             });
           }
 
@@ -155,5 +155,5 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: process.env.ISSUE_ID,
-            body: `Documentation publication failed for ${sha}:\n\n${JSON.stringify(context.payload?.workflow_run?.conclusion || 'see logs')}\nWorkflow run: ${runUrl}`
+            body: `Documentation publication failed for ${context.sha}:\n\n${JSON.stringify(context.payload?.workflow_run?.conclusion || 'see logs')}\nWorkflow run: ${runUrl}`
           });
