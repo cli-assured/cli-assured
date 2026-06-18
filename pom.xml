@@ -52,7 +52,7 @@
         <junit.version>5.14.4</junit.version>
         <assertj.version>3.27.7</assertj.version>
         <awaitility.version>4.3.0</awaitility.version>
-        <quarkus.version>3.36.2</quarkus.version>
+        <quarkus.version>3.37.0</quarkus.version>
         <quarkus-antora.version>3.33.0</quarkus-antora.version>
         <rest-assured.version>6.0.0</rest-assured.version>
 
