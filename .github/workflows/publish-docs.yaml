@@ -69,7 +69,7 @@ jobs:
       with:
         path: docs/target/classes/META-INF/antora
 
-    - name: Report failure in issue {{ ISSUE_ID }}
+    - name: Report failure in issue ${{ env.ISSUE_ID }}
       if: ${{ failure() }}
       uses: actions/github-script@v7
       with:
@@ -108,7 +108,7 @@ jobs:
       id: deployment
       uses: actions/deploy-pages@v4
 
-    - name: Close issue {{ ISSUE_ID }} on success
+    - name: Close issue ${{ env.ISSUE_ID }} on success
       uses: actions/github-script@v7
       with:
         script: |
@@ -132,7 +132,7 @@ jobs:
             });
           }
 
-    - name: Report failure in issue {{ ISSUE_ID }}
+    - name: Report failure in issue ${{ env.ISSUE_ID }}
       if: ${{ failure() }}
       uses: actions/github-script@v7
       with:

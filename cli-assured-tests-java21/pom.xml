@@ -74,6 +74,15 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>net.revelc.code</groupId>
+                <artifactId>impsort-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>org/cliassured/test/j21/docs/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
@@ -86,7 +95,7 @@
                         </goals>
                         <phase>process-test-classes</phase>
                         <configuration>
-                            <outputDirectory>${maven.multiModuleProjectDirectory}/../docs/modules/ROOT/examples/j21</outputDirectory>
+                            <outputDirectory>${maven.multiModuleProjectDirectory}/docs/modules/ROOT/examples/j21</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/test/java/org/cliassured/test/j21/docs</directory>
