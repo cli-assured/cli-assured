@@ -4,8 +4,6 @@
  */
 package org.cliassured.test.j21.docs;
 
-import java.util.stream.IntStream;
-
 // tag::imports[]
 import org.cliassured.CliAssured;
 import org.cliassured.CommandSpec;
