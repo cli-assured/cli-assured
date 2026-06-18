@@ -1,5 +1,8 @@
 = Given: `CommandSpec`
 
+The static methods in `CliAssured` class are the main entry points into the CLI Assured API.
+They all return a `CommandSpec` instance.
+
 == Command and its arguments
 
 The most common way to specify the executable and its arguments is to use `CommandSpec.command(String executable, String... arguments)`.
@@ -13,6 +16,8 @@ The `executable` can be any of the following:
 
 [source,java]
 ----
+include::example$j21/CommandSpecCommandTest.java[tag=imports]
+
 include::example$j21/CommandSpecCommandTest.java[tag=command,indent=0]
 ----
 
@@ -22,12 +27,26 @@ If you need to add the arguments in several iterations, you can use the followin
 
 [source,java]
 ----
+include::example$j21/CommandSpecCommandTest.java[tag=imports]
+
 include::example$j21/CommandSpecCommandTest.java[tag=executableArgs,indent=0]
 ----
 
 == Special `CommandSpec` factories
 
+CLI Assured offers special `CommandSpec` factories for the `java` executable of the current JVM process and for Maven.
+
 === `CliAssured.java()`
+
+`CliAssured.java()` creates a `CommandSpec` with the `java` executable of the current JVM pre-configured.
+The executable is resolved from the `java.home` system property.
+
+[source,java]
+----
+include::example$j21/CommandSpecJavaTest.java[tag=imports]
+
+include::example$j21/CommandSpecJavaTest.java[tag=javaVersion,indent=0]
+----
 
 === Maven
 
