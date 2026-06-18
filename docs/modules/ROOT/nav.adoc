@@ -1,7 +1,6 @@
 // user-guide
 * xref:user-guide/index.adoc[User guide]
 ** xref:user-guide/hello-world.adoc[Hello World!]
-** xref:user-guide/api-overview.adoc[API overview]
 ** xref:user-guide/get-the-output-of-a-command.adoc[Get the output of a Command]
 
 // release-notes
@@ -12,4 +11,9 @@ ifeval::[{doc-is-main} == true]
 endif::[]
 
 // reference
-* xref:reference/index.adoc[Reference]
+* xref:reference/index.adoc[API Reference]
+** xref:reference/command-spec.adoc[Given: `CommandSpec`]
+** xref:reference/expectations-spec.adoc[Then: `ExpectationsSpec`]
+** xref:reference/stdout-stderr-asserts-and-consumers.adoc[`std\[out|err\]` asserts and consumers]
+** xref:reference/command-process.adoc[`CommandProcess`]
+** xref:reference/command-result.adoc[`CommandResult`]

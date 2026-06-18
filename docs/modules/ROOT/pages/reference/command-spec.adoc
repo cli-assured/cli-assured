@@ -1,0 +1,23 @@
+= Given: `CommandSpec`
+
+== Command and its arguments
+
+== Special `CommandSpec` factories
+
+=== `CliAssured.java()`
+
+=== Maven
+
+== Environment variables
+
+== Working directory
+
+== Redirect `stderr` to `stdout`
+
+== Send a file to `stdin`
+
+== Write to `stdin`
+
+== Auto-close behavior
+
+== Thread pool

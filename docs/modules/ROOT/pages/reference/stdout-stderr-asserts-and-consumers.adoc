@@ -1,0 +1,27 @@
+= `std[out|err]` asserts and consumers
+
+== Redirect `std[out|err]` to a file
+
+== Read from `std[out|err]`
+
+== `log()`
+
+== Line asserts
+
+=== Encoding
+
+=== Line count
+
+=== Awaiting a specific line
+
+=== Using AssertJ asserts on `std[out|err]` output
+
+=== Using AssertJ on individual lines
+
+== Capture size and `captureAll()`
+
+== Byte count
+
+=== `isEmpty()`
+
+=== Timeouts

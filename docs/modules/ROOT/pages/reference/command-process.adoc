@@ -1,0 +1,11 @@
+= `CommandProcess`
+
+== `start().awatTermination()` or simply `execute()`
+
+=== Timeouts
+
+== Killing the command midflight
+
+== PID
+
+== Child and descendant processes
