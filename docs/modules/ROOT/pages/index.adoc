@@ -11,6 +11,8 @@ CLI Assured is a Java DSL for testing or executing command line applications.
 ** Output line asserts:
 *** Defined before the command process is started
 *** Evaluated line-by-line on the thread consuming `stdout` or `stderr`
+*** Allow using third party asserts, such as AssertJ
+** Allow handling binary content
 
 The documentation is divided into the following main parts:
 

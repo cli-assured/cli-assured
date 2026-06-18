@@ -28,7 +28,8 @@ include::example$j21/HelloWorldTest.java[tag=hello-world,indent=0]
 
 === Redirect `stderr` to `stdout`
 
-=== Send data to `stdin`
+=== Send a file to `stdin`
+=== Write to `stdin`
 
 === Auto-close behavior
 
@@ -41,6 +42,10 @@ include::example$j21/HelloWorldTest.java[tag=hello-world,indent=0]
 
 == `std[out|err]` asserts and consumers
 
+=== Redirect `std[out|err]` to a file
+
+=== Read from `std[out|err]`
+
 === `log()`
 
 === Line asserts
@@ -52,6 +57,8 @@ include::example$j21/HelloWorldTest.java[tag=hello-world,indent=0]
 ==== Awaiting a specific line
 
 ==== Using AssertJ asserts on `std[out|err]` output
+
+==== Using AssertJ on individual lines
 
 === Capture size and `captureAll()`
 
@@ -83,4 +90,10 @@ include::example$j21/HelloWorldTest.java[tag=hello-world,indent=0]
 
 === `duration()`
 
+=== Access the whole content of `std[out|err]`
 
+==== `std[out|err]` as stream of lines
+
+==== `std[out|err]` as byte array
+
+==== Line count and byte count of `std[out|err]`
