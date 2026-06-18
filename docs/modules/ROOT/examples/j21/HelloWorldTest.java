@@ -14,16 +14,20 @@ public class HelloWorldTest {
     @Test
     void helloWorld() {
         // @formatter:off
-        // tag::hello-world[]
+        // tag::snippet[]
         CliAssured
-                .command("echo", "Hello World!") // Call the echo command with parameter "Hello World!"
+                .command("echo", "Hello World!")   // Call the echo command with parameter "Hello World!"
                 .then()
                     .stdout()
-                        .hasLines("Hello World!") // Fail if there is no line equal to "Hello World!" in stdout
+                        .hasLines("Hello World!")  // Fail if there is no line equal to "Hello World!" in stdout
+                        .hasLinesMatching("Hello .*") // Fail if there is no line matching the given regular expression
+                        .doesNotHaveLines("foo", "bar") // Fail if foo or bar occur in stdout
+                        .hasLineCount(1)          // Fail unless stdout has exactly one line
+                                                  // Possibly more asserts here
                         .log()                    // Log everything received from stdout
                 .execute()                        // Start the echo process on the operating system
                 .assertSuccess();                 // Fail if "Hello World!" was not in stdout or exit code was not 0
-        // end::hello-world[]
+        // end::snippet[]
         // @formatter:on
     }
 

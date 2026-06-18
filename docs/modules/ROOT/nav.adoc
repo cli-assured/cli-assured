@@ -1,5 +1,8 @@
 // user-guide
 * xref:user-guide/index.adoc[User guide]
+** xref:user-guide/hello-world.adoc[Hello World!]
+** xref:user-guide/api-overview.adoc[API overview]
+** xref:user-guide/get-the-output-of-a-command.adoc[Get the output of a Command]
 
 // release-notes
 * xref:release-notes/index.adoc[Release notes]
