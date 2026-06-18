@@ -1,0 +1,17 @@
+= `CommandResult`
+
+== `assertSuccess()`
+
+== `assertTimeout()`
+
+== `exitCode()`
+
+== `duration()`
+
+== Access the whole content of `std[out|err]`
+
+=== `std[out|err]` as stream of lines
+
+=== `std[out|err]` as byte array
+
+=== Line count and byte count of `std[out|err]`
