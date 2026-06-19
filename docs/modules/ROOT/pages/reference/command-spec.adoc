@@ -52,6 +52,23 @@ include::example$j21/CommandSpecJavaTest.java[tag=javaVersion,indent=0]
 
 == Environment variables
 
+Use `CommandSpec.env(String name, String value, String... more)` to set one or more environment variables for the command.
+Note that the number of additional arguments must be even. Each name must have a corresponding value.
+Here is a basic example:
+
+[source,java]
+----
+include::example$j21/EnvTest.java[tag=imports]
+
+include::example$j21/EnvTest.java[tag=multiple,indent=0]
+----
+
+[TIP]
+====
+There is also `CommandSpec.env(Map<String, String> variables)` accepting a map from variable names to their respective values.
+====
+
+
 == Working directory
 
 == Redirect `stderr` to `stdout`
