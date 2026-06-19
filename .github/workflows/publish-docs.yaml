@@ -71,7 +71,7 @@ jobs:
 
     - name: Report failure in issue ${{ env.ISSUE_ID }}
       if: ${{ failure() }}
-      uses: actions/github-script@v7
+      uses: actions/github-script@v9
       with:
         script: |
           const issue = await github.rest.issues.get({
@@ -109,7 +109,7 @@ jobs:
       uses: actions/deploy-pages@v5
 
     - name: Close issue ${{ env.ISSUE_ID }} on success
-      uses: actions/github-script@v7
+      uses: actions/github-script@v9
       with:
         script: |
           const issue = await github.rest.issues.get({
@@ -134,7 +134,7 @@ jobs:
 
     - name: Report failure in issue ${{ env.ISSUE_ID }}
       if: ${{ failure() }}
-      uses: actions/github-script@v7
+      uses: actions/github-script@v9
       with:
         script: |-
           const issue = await github.rest.issues.get({
