@@ -71,6 +71,23 @@ There is also `CommandSpec.env(Map<String, String> variables)` accepting a map f
 
 == Working directory
 
+Use `CommandSpec.cd(Path workDirectory)` to set the working directory of the spawned process.
+The command's executable and any relative file paths will be resolved against this directory.
+If `cd()` is not called, the working directory defaults to the current JVM's working directory.
+
+[source,java]
+----
+include::example$j21/CdTest.java[tag=imports]
+
+include::example$j21/CdTest.java[tag=snippet,indent=0]
+----
+
+[TIP]
+====
+`given()` and `when()` methods we used in the above snippet are just syntactic sugar.
+Using `CliAssured.command("cat", "hello.txt").cd(myWorkDir)` would have exactly the same effect.
+====
+
 == Redirect `stderr` to `stdout`
 
 == Send a file to `stdin`
