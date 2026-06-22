@@ -14,6 +14,26 @@ CLI Assured is a Java DSL for testing or executing command line applications.
 *** Allow using third party asserts, such as AssertJ
 ** Allow handling binary content
 
+== Prerequisites
+
+CLI Assured requires Java 8+ for basic usage,
+but Java 9+ is better if you need newer Process API for accessing PID or child processes.
+
+== Maven coordinates
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.cli-assured</groupId>
+  <artifactId>cli-assured</artifactId>
+  <version><!-- Use the latest --></version>
+</dependency>
+----
+
+Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured[Maven Central].
+
+== Structure of this documentation
+
 The documentation is divided into the following main parts:
 
 * xref:user-guide/index.adoc[User guide] - explains the typical usage of CLI Assured
