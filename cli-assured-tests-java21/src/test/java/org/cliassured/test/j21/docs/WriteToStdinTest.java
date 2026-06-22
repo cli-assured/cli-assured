@@ -23,9 +23,7 @@ public class WriteToStdinTest {
             // cat with no arguments reads from stdin
             .command("cat")
             // Write bytes to the process' stdin
-            .stdin(out -> {
-                out.write("Hello from stdin!".getBytes(StandardCharsets.UTF_8));
-            })
+            .stdin(out -> out.write("Hello from stdin!".getBytes(StandardCharsets.UTF_8)))
             .then()
                 .stdout()
                     // The data written to stdin appears in stdout

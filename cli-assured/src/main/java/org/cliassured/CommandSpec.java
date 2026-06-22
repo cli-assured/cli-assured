@@ -271,9 +271,11 @@ public class CommandSpec {
      * <p>
      * You may call only one of {@code stdin(...)} methods for the given {@link CommandSpec} chain.
      *
-     * @param  stdin a handler that may write to the passed-in {@link OutputStream}
-     * @return       an adjusted copy of this {@link CommandSpec}
-     * @since        0.0.1
+     * @param  stdin                 a handler that may write to the passed-in {@link OutputStream}
+     * @return                       an adjusted copy of this {@link CommandSpec}
+     * @throws IllegalStateException if any of the {@code stdin(...)} methods was called already for the given
+     *                               {@link CommandSpec} chain
+     * @since                        0.0.1
      */
     public CommandSpec stdin(IoConsumer<OutputStream> stdin) {
         if (this.stdin != null) {
@@ -285,13 +287,16 @@ public class CommandSpec {
     }
 
     /**
-     * Pass the given {@link String} to the {@code stdin} of the command using {@code utf-8 encoding}.
+     * Pass the given {@link String} to the {@code stdin} of the command using {@code UTF-8} encoding.
      * <p>
      * You may call only one of {@code stdin(...)} methods for the given {@link CommandSpec} chain.
      *
-     * @param  stdin a {@link String} to pass to the {@code stdin} of the command using {@code utf-8 encoding}
-     * @return       an adjusted copy of this {@link CommandSpec}
-     * @since        0.0.1
+     * @param  stdin                 a {@link String} to pass to the {@code stdin} of the command using
+     *                               {@code utf-8 encoding}
+     * @return                       an adjusted copy of this {@link CommandSpec}
+     * @throws IllegalStateException if any of the {@code stdin(...)} methods was called already for the given
+     *                               {@link CommandSpec} chain
+     * @since                        0.0.1
      */
     public CommandSpec stdin(String stdin) {
         if (this.stdin != null) {
@@ -308,9 +313,11 @@ public class CommandSpec {
      * <p>
      * You may call only one of {@code stdin(...)} methods for the given {@link CommandSpec} chain.
      *
-     * @param  file a handler that may write to the passed-in {@link OutputStream}
-     * @return      an adjusted copy of this {@link CommandSpec}
-     * @since       0.0.1
+     * @param  file                  a handler that may write to the passed-in {@link OutputStream}
+     * @return                       an adjusted copy of this {@link CommandSpec}
+     * @throws IllegalStateException if any of the {@code stdin(...)} methods was called already for the given
+     *                               {@link CommandSpec} chain
+     * @since                        0.0.1
      */
     public CommandSpec stdin(Path file) {
         if (this.stdin != null) {
