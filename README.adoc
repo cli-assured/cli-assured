@@ -6,6 +6,8 @@ Central]]
 
 A Java DSL for testing command line applications.
 
+Visit https://cli-assured.org/ for more information.
+
 Requires Java 8+ for basic usage,
 but Java 9+ is better if you need newer Process API for accessing PID or child processes.
 
