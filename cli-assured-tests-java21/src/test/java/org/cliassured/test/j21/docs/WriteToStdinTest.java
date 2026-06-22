@@ -5,8 +5,6 @@
 package org.cliassured.test.j21.docs;
 
 // tag::imports[]
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import org.cliassured.CliAssured;
 // end::imports[]
@@ -26,11 +24,7 @@ public class WriteToStdinTest {
             .command("cat")
             // Write bytes to the process' stdin
             .stdin(out -> {
-                try {
-                    out.write("Hello from stdin!".getBytes(StandardCharsets.UTF_8));
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
+                out.write("Hello from stdin!".getBytes(StandardCharsets.UTF_8));
             })
             .then()
                 .stdout()

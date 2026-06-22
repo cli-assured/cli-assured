@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -49,7 +48,7 @@ public class CommandSpec {
     private final Path cd;
     private final ExpectationsSpec expectations;
     private final boolean stderrToStdout;
-    private final Consumer<OutputStream> stdin;
+    private final IoConsumer<OutputStream> stdin;
     private final boolean autoCloseForcibly;
     private final boolean autoCloseWithDescendants;
     private final Duration autoCloseTimeout;
@@ -78,7 +77,7 @@ public class CommandSpec {
             Path cd,
             ExpectationsSpec expectations,
             boolean stderrToStdout,
-            Consumer<OutputStream> stdin,
+            IoConsumer<OutputStream> stdin,
             boolean autoCloseForcibly,
             boolean autoCloseWithDescendants,
             Duration autoCloseTimeout,
@@ -252,22 +251,22 @@ public class CommandSpec {
     }
 
     /**
-     * Set a {@link Consumer} that will receive an {@link OutputStream} connected to the underlying process'es
+     * Set an {@link IoConsumer} that will receive an {@link OutputStream} connected to the underlying process'es
      * {@code stdin}.
      * <p>
-     * CLI Assert will attempt to close the passed-in {@link OutputStream} right after {@link Consumer#accept(Object)}
+     * CLI Assert will attempt to close the passed-in {@link OutputStream} right after {@link IoConsumer#accept(Object)}
      * returns.
      * <p>
-     * {@link Consumer#accept(Object)} will be called on a dedicated thread.
+     * {@link IoConsumer#accept(Object)} will be called on a dedicated thread.
      * It is the responsibility of the caller of this method to address any thread safety concerns.
      * <p>
      * A {@link CancellationException} can be thrown from any method called on the {@link OutputStream} passed-in to
-     * {@link Consumer#accept(Object)}, if {@link CommandProcess#kill(boolean)} is called while
-     * {@link Consumer#accept(Object)} is running.
+     * {@link IoConsumer#accept(Object)}, if {@link CommandProcess#kill(boolean)} is called while
+     * {@link IoConsumer#accept(Object)} is running.
      * You may want to catch that exception and stop attempting to write to the passed-in {@link OutputStream} after
      * that.
      * <p>
-     * Exceptions thrown from {@link Consumer#accept(Object)} will be caught and reported upon calling
+     * Exceptions thrown from {@link IoConsumer#accept(Object)} will be caught and reported upon calling
      * {@link CommandResult#assertSuccess()}.
      * <p>
      * You may call only one of {@code stdin(...)} methods for the given {@link CommandSpec} chain.
@@ -276,7 +275,7 @@ public class CommandSpec {
      * @return       an adjusted copy of this {@link CommandSpec}
      * @since        0.0.1
      */
-    public CommandSpec stdin(Consumer<OutputStream> stdin) {
+    public CommandSpec stdin(IoConsumer<OutputStream> stdin) {
         if (this.stdin != null) {
             throw new IllegalStateException("stdin was already defined for this " + CommandSpec.class.getName()
                     + ". You may want to keep ony one stdin(...) call for the given CommandSpec chain");
@@ -583,7 +582,7 @@ public class CommandSpec {
         return string;
     }
 
-    static class FilePipe implements Consumer<OutputStream> {
+    static class FilePipe implements IoConsumer<OutputStream> {
         private final Path file;
 
         FilePipe(Path file) {
@@ -591,17 +590,12 @@ public class CommandSpec {
         }
 
         @Override
-        @ExcludeFromJacocoGeneratedReport
-        public void accept(OutputStream out) {
-            try {
-                Files.copy(file, out);
-            } catch (IOException e) {
-                throw new UncheckedIOException("Could not write to stdin", e);
-            }
+        public void accept(OutputStream out) throws IOException {
+            Files.copy(file, out);
         }
     }
 
-    static class StringPipe implements Consumer<OutputStream> {
+    static class StringPipe implements IoConsumer<OutputStream> {
         private final String payload;
 
         StringPipe(String payload) {
@@ -609,12 +603,9 @@ public class CommandSpec {
         }
 
         @Override
-        @ExcludeFromJacocoGeneratedReport
-        public void accept(OutputStream out) {
+        public void accept(OutputStream out) throws IOException {
             try (BufferedWriter w = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
                 w.write(payload);
-            } catch (IOException e) {
-                throw new UncheckedIOException("Could not write to stdin", e);
             }
         }
     }

@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.function.Consumer;
 import org.cliassured.CliAssertUtils.ExcludeFromJacocoGeneratedReport;
 import org.cliassured.asserts.Assert;
 
@@ -21,10 +20,10 @@ import org.cliassured.asserts.Assert;
  */
 class InputProducer implements Assert {
     private final CancellableOutputStream stdin;
-    private final Consumer<OutputStream> consumer;
+    private final IoConsumer<OutputStream> consumer;
     final List<Throwable> exceptions = new ArrayList<>();
 
-    InputProducer(OutputStream stdin, Consumer<OutputStream> consumer) {
+    InputProducer(OutputStream stdin, IoConsumer<OutputStream> consumer) {
         this.stdin = new CancellableOutputStream(stdin);
         this.consumer = consumer;
     }

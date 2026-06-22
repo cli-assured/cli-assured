@@ -5,8 +5,6 @@
 package org.cliassured.test;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -18,7 +16,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 import org.assertj.core.api.Assertions;
 import org.cliassured.Await;
 import org.cliassured.Await.LineAwait;
@@ -92,14 +89,9 @@ public class StdinTest {
 
         JavaTest.command("stdin")
                 .stdin(out -> {
-                    try {
-                        for (int i = 0; i < 1024; i++) {
-                            out.write(bytes);
-                        }
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
+                    for (int i = 0; i < 1024; i++) {
+                        out.write(bytes);
                     }
-
                 })
                 .then()
                 .stdout()
@@ -121,8 +113,6 @@ public class StdinTest {
                             out.write(line.getBytes(StandardCharsets.UTF_8));
                             out.flush();
                         }
-                    } catch (IOException e) {
-                        throw new UncheckedIOException("IOException when writing to stdout", e);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         throw new RuntimeException("InterruptedException when writing to stdout", e);
@@ -162,21 +152,16 @@ public class StdinTest {
         // @formatter:off
         LineAwait<String> awaitName = Await.line("name:");
         LineAwait<String> awaitAge = Await.line("age:");
-        Consumer<OutputStream> stdin = out -> {
-            try {
-                awaitName.await(Duration.ofSeconds(5));
-                out.write("Douglas Adams\n".getBytes(StandardCharsets.UTF_8));
-                out.flush();
-                awaitAge.await(Duration.ofSeconds(6));
-                out.write("42\n".getBytes(StandardCharsets.UTF_8));
-                out.close();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        };
         CliAssured
                 .given()
-                    .stdin(stdin)
+                    .stdin(out -> {
+                        awaitName.await(Duration.ofSeconds(5));
+                        out.write("Douglas Adams\n".getBytes(StandardCharsets.UTF_8));
+                        out.flush();
+                        awaitAge.await(Duration.ofSeconds(6));
+                        out.write("42\n".getBytes(StandardCharsets.UTF_8));
+                        out.close();
+                    })
                 .when()
                     .command(
                             "bash",
@@ -197,19 +182,14 @@ public class StdinTest {
     @DisabledOnOs(OS.WINDOWS)
     void readPrompt() {
         // @formatter:off
-        Consumer<OutputStream> stdin = out -> {
-            try {
-                out.write("Douglas Adams\n".getBytes(StandardCharsets.UTF_8));
-                out.flush();
-                out.write("42\n".getBytes(StandardCharsets.UTF_8));
-                out.close();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        };
         CliAssured
                 .given()
-                    .stdin(stdin)
+                    .stdin(out -> {
+                        out.write("Douglas Adams\n".getBytes(StandardCharsets.UTF_8));
+                        out.flush();
+                        out.write("42\n".getBytes(StandardCharsets.UTF_8));
+                        out.close();
+                    })
                 .when()
                     .command(
                             "bash",
