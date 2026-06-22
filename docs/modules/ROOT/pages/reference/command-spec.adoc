@@ -148,4 +148,22 @@ include::example$j21/WriteToStdinTest.java[tag=snippet,indent=0]
 
 == Auto-close behavior
 
+`CommandProcess` implements `AutoCloseable`, so you can use it in a try-with-resources block.
+When the block exits, `close()` kills the underlying process and waits for its termination.
+
+By default, `close()` sends a graceful termination signal (`Process.destroy()`, typically `SIGTERM` on Linux) and waits
+indefinitely. You can change this behavior with the following methods:
+
+* `autoCloseForcibly()` — use `Process.destroyForcibly()` (`SIGKILL`) instead of `Process.destroy()` (`SIGTERM`)
+* `autoCloseTimeout(Duration)` — limit how long `close()` waits for the process to terminate
+* `autoCloseWithoutDescendants()` — kill only the main process, not its descendant processes (on Java 9+, descendants
+are killed by default)
+
+[source,java]
+----
+include::example$j21/AutoCloseForciblyTest.java[tag=imports]
+
+include::example$j21/AutoCloseForciblyTest.java[tag=snippet,indent=0]
+----
+
 == Thread pool
