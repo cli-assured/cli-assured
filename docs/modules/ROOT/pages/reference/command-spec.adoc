@@ -107,6 +107,20 @@ include::example$j21/StderrToStdoutTest.java[tag=snippet,indent=0]
 
 == Write to `stdin`
 
+Use `CommandSpec.stdin(Consumer<OutputStream>)` to write arbitrary data to the process' standard input.
+The consumer receives an `OutputStream` connected to the process' `stdin` and is called on a dedicated thread.
+CLI Assured closes the stream automatically after the consumer returns.
+
+Exceptions thrown from the consumer are caught and reported when `CommandResult.assertSuccess()` is called.
+You may call only one of the `stdin(...)` methods per `CommandSpec` chain.
+
+[source,java]
+----
+include::example$j21/WriteToStdinTest.java[tag=imports]
+
+include::example$j21/WriteToStdinTest.java[tag=snippet,indent=0]
+----
+
 == Auto-close behavior
 
 == Thread pool
