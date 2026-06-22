@@ -2,6 +2,7 @@
 * xref:user-guide/index.adoc[User guide]
 ** xref:user-guide/hello-world.adoc[Hello World!]
 ** xref:user-guide/get-the-output-of-a-command.adoc[Get the output of a Command]
+** xref:user-guide/test-long-running-processes.adoc[Test long running processes]
 
 // release-notes
 * xref:release-notes/index.adoc[Release notes]
