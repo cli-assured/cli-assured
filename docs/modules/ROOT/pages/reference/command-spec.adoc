@@ -105,7 +105,30 @@ include::example$j21/StderrToStdoutTest.java[tag=snippet,indent=0]
 
 == Write to `stdin`
 
+=== Write a string to `stdin`
+
+Use `CommandSpec.stdin(String)` to pass a string to the process' standard input using UTF-8 encoding.
+This is a convenience shorthand for the `IoConsumer<OutputStream>` variant when you have all input data upfront.
+You may call only one of the `stdin(...)` methods per `CommandSpec` chain.
+
+[source,java]
+----
+include::example$j21/SendStringToStdinTest.java[tag=imports]
+
+include::example$j21/SendStringToStdinTest.java[tag=snippet,indent=0]
+----
+
 === Send a file to `stdin`
+
+Use `CommandSpec.stdin(Path)` to pass the contents of a file to the process' standard input.
+You may call only one of the `stdin(...)` methods per `CommandSpec` chain.
+
+[source,java]
+----
+include::example$j21/SendFileToStdinTest.java[tag=imports]
+
+include::example$j21/SendFileToStdinTest.java[tag=snippet,indent=0]
+----
 
 === Write bytes to `stdin`
 
@@ -122,21 +145,6 @@ include::example$j21/WriteToStdinTest.java[tag=imports]
 
 include::example$j21/WriteToStdinTest.java[tag=snippet,indent=0]
 ----
-
-=== Write a string to `stdin`
-
-Use `CommandSpec.stdin(String)` to pass a string to the process' standard input using UTF-8 encoding.
-This is a convenience shorthand for the `IoConsumer<OutputStream>` variant when you have all input data upfront.
-You may call only one of the `stdin(...)` methods per `CommandSpec` chain.
-
-[source,java]
-----
-include::example$j21/SendStringToStdinTest.java[tag=imports]
-
-include::example$j21/SendStringToStdinTest.java[tag=snippet,indent=0]
-----
-
-== Send a file to `stdin`
 
 == Auto-close behavior
 
