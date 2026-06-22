@@ -90,6 +90,19 @@ Using `CliAssured.command("cat", "hello.txt").cd(myWorkDir)` would have exactly 
 
 == Redirect `stderr` to `stdout`
 
+Use `CommandSpec.stderrToStdout()` to redirect the standard error output of the spawned process to its standard output.
+This is useful when you want to assert on `stderr` content using the `stdout()` assertions, or when the command mixes output
+across both streams and you want to capture everything in one place.
+
+Note that once `stderrToStdout()` is enabled, calling `stderr()` on the expectations will throw an `IllegalStateException`.
+
+[source,java]
+----
+include::example$j21/StderrToStdoutTest.java[tag=imports]
+
+include::example$j21/StderrToStdoutTest.java[tag=snippet,indent=0]
+----
+
 == Send a file to `stdin`
 
 == Write to `stdin`
