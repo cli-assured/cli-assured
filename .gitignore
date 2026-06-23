@@ -29,3 +29,7 @@ nb-configuration.xml
 
 # Claude
 /.claude/settings.json
+/antora-cache/
+/node_modules/
+/package-lock.json
+/package.json
