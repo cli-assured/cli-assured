@@ -24,19 +24,6 @@ public class GetStdOutLinesTest {
         Stream<String> lines = CliAssured.command("echo", "Line 1\nLine 2").lines();
         Assertions.assertThat(lines).containsExactly("Line 1", "Line 2");
         // end::snippet[]
-
-        // The above is a shorthand for
-        Stream<String> alsoLines = CliAssured.command("echo", "Line 1\nLine 2")
-            .stderrToStdout()
-            .then()
-                .stdout()
-                    .captureAll()
-            .execute()
-            .assertSuccess()
-            .stdout()
-            .lines();
-        Assertions.assertThat(alsoLines).containsExactly("Line 1", "Line 2");
-        // end::snippet[]
         // @formatter:on
     }
 

@@ -353,6 +353,14 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>antora-cache/**</exclude>
+                                <exclude>node_modules/**</exclude>
+                                <exclude>package.json</exclude>
+                                <exclude>package-lock.json</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -388,6 +396,7 @@
 SPDX-License-Identifier: Apache-2.0</inlineHeader>
                                     <excludes>
                                         <exclude>**/*.adoc</exclude>
+                                        <exclude>**/*.hbs</exclude>
                                         <exclude>**/*.expected.*</exclude>
                                         <exclude>**/create-extension-templates/*</exclude>
                                         <exclude>**/README.*</exclude>
@@ -395,6 +404,10 @@ SPDX-License-Identifier: Apache-2.0</inlineHeader>
                                         <exclude>**/ComparableVersion.java</exclude><!-- Keep the original header -->
                                         <exclude>.gitattributes/</exclude>
                                         <exclude>.mvn/wrapper/</exclude>
+                                        <exclude>antora-cache/**</exclude>
+                                        <exclude>node_modules/**</exclude>
+                                        <exclude>package.json</exclude>
+                                        <exclude>package-lock.json</exclude>
                                         <exclude>LICENSE</exclude>
                                         <exclude>mvnw</exclude>
                                         <exclude>mvnw.cmd</exclude>

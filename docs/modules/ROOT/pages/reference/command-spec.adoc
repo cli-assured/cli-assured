@@ -225,3 +225,28 @@ include::example$j21/AutoCloseForciblyTest.java[tag=snippet,indent=0]
 ----
 
 == Thread pool
+
+By default, CLI Assured uses a single global thread pool (see `CliAssured.globalThreadPool()`) for consuming `stdout`,
+`stderr` and producing `stdin` of all commands.
+Use `CommandSpec.threadPool()` to assign a dedicated per-command thread pool with custom `coreSize`, `maxSize` and
+`keepAlive` settings:
+
+[source,java]
+----
+include::example$j21/ThreadPoolTest.java[tag=imports]
+
+include::example$j21/ThreadPoolTest.java[tag=local,indent=0]
+----
+
+=== Supply a custom `ExecutorService`
+
+If you need full control, use `CommandSpec.threadPool(Supplier<ExecutorService>)` to provide your own
+`ExecutorService` factory.
+A new `ExecutorService` is created from the supplier each time the command is started.
+
+[source,java]
+----
+include::example$j21/ThreadPoolCustomTest.java[tag=imports]
+
+include::example$j21/ThreadPoolCustomTest.java[tag=custom,indent=0]
+----
