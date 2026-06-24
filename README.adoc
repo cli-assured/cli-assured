@@ -1,4 +1,4 @@
-= CLI Assured
+= ![image](https://cli-assured.org/favicon.svg) CLI Assured
 
 https://github.com/cli-assured/cli-assured/blob/main/LICENSE[image:https://img.shields.io/github/license/cli-assured/cli-assured.svg[License]]
 https://central.sonatype.com/artifact/org.cli-assured/cli-assured[image:https://img.shields.io/maven-central/v/org.cli-assured/cli-assured.svg[Maven
@@ -6,11 +6,7 @@ Central]]
 
 A Java DSL for testing command line applications.
 
-Visit https://cli-assured.org/ for more information.
-
-== Usage
-
-=== Basic syntax
+== Hello World!
 
 Test an executable available in `PATH`
 
@@ -19,15 +15,15 @@ Test an executable available in `PATH`
 import org.cliassured.CliAssured;
 
 CliAssured
-    .command("echo", "CLI Assured rocks!")
+    .command("echo", "Hello World!")
     .stderrToStdout() // redirect stderr to stdout
     .then()
         // Assertions for stdout
         // The same can be done with stderr(), unless you called stderrToStdout()
         .stdout()
-            .hasLines("CLI Assured rocks!")
-            .hasLinesContaining("rocks")
-            .hasLinesMatching("CLI.*rocks")
+            .hasLines("Hello World!")
+            .hasLinesContaining("Hello")
+            .hasLinesMatching(".*World!")
             .doesNotHaveLinesContainingCaseInsensitive("error")
             .log() // Pass every line to org.cliassured.stdout logger
             .hasLineCount(1)
@@ -37,30 +33,19 @@ CliAssured
     .assertSuccess(); // Report all assertion errors
 ----
 
-=== Given-when-then
+== Maven coordinates
 
-If you are a fan of Behavior-Driven testing, CLI Assert has some syntactic sugar for you:
-
-[source,java]
+[source,xml]
 ----
-import org.cliassured.CliAssured;
-
-CliAssured
-    .given()
-        .env("MESSAGE", "CLI Assured rocks!")
-    .when()
-        .command("sh", "-c",
-                    "echo $MESSAGE;"
-                  + "echo Really! 1>&2")
-    .then()
-        .stdout()
-            .hasLines("CLI Assured rocks!")
-            .hasLineCount(1)
-        .stderr()
-            .hasLines("Really!")
-            .hasLineCount(1)
-        .exitCodeIs(0)
-    .execute()
-    .assertSuccess();
+<dependency>
+  <groupId>org.cli-assured</groupId>
+  <artifactId>cli-assured</artifactId>
+  <version><!-- Use the latest --></version>
+</dependency>
 ----
 
+Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured/versions[Maven Central].
+
+== Documentation
+
+Visit https://cli-assured.org/ for more information.

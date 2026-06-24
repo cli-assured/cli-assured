@@ -1,5 +1,6 @@
-= Get the output of a command
+= Run a command and get the output
 
+[[lines]]
 == Redirect `stderr` to `stdout` and get all output lines
 
 [source,java]

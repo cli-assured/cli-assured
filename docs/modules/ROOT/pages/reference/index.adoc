@@ -1,3 +1,65 @@
 [[reference-index]]
 = CLI Assured API reference
 
+== API overview
+
+[source,java]
+----
+import java.nio.Path;
+import org.cliassured.CliAssured;
+
+CliAssured
+    // Command specification
+    .command("sh", "-c", "echo $MESSAGE; echo Really! 1>&2")
+        .env("MESSAGE", "CLI Assured rocks!")
+        .cd(Path.of("work/directory")
+    // Output asserts (optional)
+    .then()
+        // stdout asserts (optional)
+        .stdout()
+            .hasLines("CLI Assured rocks!")
+            .hasLineCount(1)
+            ...
+        // stderr asserts (optional)
+        .stderr()
+            .hasLines("Really!")
+            .hasLineCount(1)
+            ...
+        // Exit code asserts (optional)
+        .exitCodeIs(0)
+    // Call the command and await its termination
+    .execute()
+    // Report any assert failures
+    .assertSuccess();
+----
+
+[NOTE]
+====
+Unless specified otherwise, all API methods return an adjusted copy rather that mutating the instance.
+====
+
+== Given-when-then
+
+If you are a fan of Behavior-Driven testing, CLI Assert has some syntactic sugar for you:
+
+[source,java]
+----
+import org.cliassured.CliAssured;
+
+CliAssured
+    .given()
+        .env("MESSAGE", "CLI Assured rocks!")
+    .when()
+        .command("sh", "-c", "echo $MESSAGE; echo Really! 1>&2")
+    .then()
+        .stdout()
+            .hasLines("CLI Assured rocks!")
+            .hasLineCount(1)
+        .stderr()
+            .hasLines("Really!")
+            .hasLineCount(1)
+        .exitCodeIs(0)
+    .execute()
+    .assertSuccess();
+----
+

@@ -4,14 +4,16 @@ CLI Assured is a Java DSL for testing or executing command line applications.
 
 == Design principles
 
-* Follow the given-when-then structure known e.g. from https://rest-assured.io/[REST Assured]
+* xref:reference/index.adoc#_api_overview[Fluent API]
+** Methods return an adjusted copy rather that mutating the instance (unless specified otherwise)
+* xref:reference/index.adoc#_given_when_then[Given-when-then] structure known e.g. from https://rest-assured.io/[REST Assured]
 * Give user control over details but do not stand in way to do simple things
+** E.g. just quickly xref:user-guide/run-command-and-get-the-output.adoc[run a command and get the output]
 * Avoid holding the entire command output in memory unless needed or wanted by the user
 ** Allow testing commands outputting large amounts of data
 ** Output line asserts:
 *** Defined before the command process is started
 *** Evaluated line-by-line on the thread consuming `stdout` or `stderr`
-*** Allow using third party asserts, such as AssertJ
 ** Allow handling binary content
 
 == Prerequisites
@@ -30,7 +32,7 @@ but Java 9+ is better if you need newer Process API for accessing PID or child p
 </dependency>
 ----
 
-Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured[Maven Central].
+Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured/versions[Maven Central].
 
 == Structure of this documentation
 
