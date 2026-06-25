@@ -1,0 +1,69 @@
+= Output consumers
+
+== Consume lines from `std[out|err]`
+
+Use `lines(Consumer<String>)` to receive each line of the output as it is produced.
+The consumer is called from an internal I/O thread.
+
+[source,java]
+----
+include::example$j21/ReadFromStdoutTest.java[tag=imports]
+
+include::example$j21/ReadFromStdoutTest.java[tag=snippet,indent=0]
+----
+
+[TIP]
+====
+You can get all lines of the output as a `Stream<String>`.
+However that way is not recommended for commands producing a lot of output because of memory consumption.
+Using `.then().std[out|err].lines(Consumer<String>)` is much more memory efficient.
+====
+
+== `log()`
+
+Use `log()` to log each line at `INFO` level using an SLF4J logger named `org.cliassured.stdout` or
+`org.cliassured.stderr` respectively.
+
+[source,java]
+----
+include::example$j21/LogTest.java[tag=imports]
+
+include::example$j21/LogTest.java[tag=snippet,indent=0]
+----
+
+== `log(Consumer<String>)`
+
+To log to a custom consumer (e.g. a specific logger level), use `log(Consumer<String>)`:
+
+[source,java]
+----
+include::example$j21/LoggerTest.java[tag=imports]
+
+include::example$j21/LoggerTest.java[tag=custom,indent=0]
+----
+
+== Awaiting a specific line
+
+Use `await(Consumer<String>)` together with `Await` factory methods to block until a specific condition is met in the
+output. This is especially useful for testing long-running processes like servers, where you need to wait for a startup
+message before interacting with the process.
+
+[source,java]
+----
+include::example$j21/AwaitLineTest.java[tag=imports]
+
+include::example$j21/AwaitLineTest.java[tag=snippet,indent=0]
+----
+
+The `Await` class provides several factory methods:
+
+* `Await.line(String)` — wait for an exact line
+* `Await.lineContaining(String)` — wait for a line containing a substring
+* `Await.lineContainingCaseInsensitive(String)` — case-insensitive substring match
+* `Await.lineMatching(String)` — wait for a line matching a regex (supports capturing groups)
+* `Await.lineMatching(Pattern)` — compiled `Pattern` variant
+* `Await.lineCount(int)` — wait until N lines have been output
+* `Await.lineSatifying(String, Predicate<String>)` — wait for a line satisfying a custom predicate
+
+All factory methods return a `LineAwait<String>` which can be transformed with `.map(Function)`.
+

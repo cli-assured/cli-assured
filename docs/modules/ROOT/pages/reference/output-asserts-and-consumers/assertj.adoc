@@ -1,0 +1,39 @@
+= AssertJ
+
+If you need full AssertJ power over the captured output, use `captureAll()` to store all lines in memory,
+then access them via `CommandResult.stdout().lines()` or `CommandResult.stdout().bytes()` after execution:
+
+[source,java]
+----
+include::example$j21/AssertJStdoutTest.java[tag=imports]
+
+include::example$j21/AssertJStdoutTest.java[tag=snippet,indent=0]
+----
+
+You can also assert on the raw bytes:
+
+[source,java]
+----
+include::example$j21/AssertJStdoutTest.java[tag=imports]
+
+include::example$j21/AssertJStdoutTest.java[tag=bytes,indent=0]
+----
+
+[WARNING]
+====
+Using `captureAll()`, `lines()` and `bytes()` API methods may cause high memory consumption
+depending on the amount of data produced on `stdout` or `stderr`.
+====
+
+=== Using AssertJ on individual lines
+
+Use `lines(Consumer<String>)` to run AssertJ assertions on each line as it is produced.
+The consumer is called once per line from an internal I/O thread:
+
+[source,java]
+----
+include::example$j21/AssertJLinesTest.java[tag=imports]
+
+include::example$j21/AssertJLinesTest.java[tag=snippet,indent=0]
+----
+

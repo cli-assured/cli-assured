@@ -1,0 +1,31 @@
+= Configure failure reporting
+
+== Capture size and `captureAll()`
+
+By default, CLI Assured captures the first 16 and last 16 lines of each output stream in memory.
+These are used in assertion failure messages to help diagnose problems.
+
+Use `capture(int maxHeadLines, int maxTailLines)` to customize the number of head and tail lines to capture:
+
+[source,java]
+----
+include::example$j21/CaptureTest.java[tag=imports]
+
+include::example$j21/CaptureTest.java[tag=snippet,indent=0]
+----
+
+Use `captureAll()` to capture the entire output in memory.
+This enables `CommandResult.stdout().lines()` and `CommandResult.stdout().bytes()` for post-execution access:
+
+[source,java]
+----
+include::example$j21/CaptureTest.java[tag=imports]
+
+include::example$j21/CaptureTest.java[tag=captureAll,indent=0]
+----
+
+[WARNING]
+====
+`captureAll()` stores the entire output in memory. For commands producing large amounts of data, consider using
+`redirect(OutputStream)` instead.
+====

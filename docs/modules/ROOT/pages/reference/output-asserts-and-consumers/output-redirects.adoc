@@ -1,0 +1,26 @@
+= Output redirects
+
+== Redirect `std[out|err]` to a file
+
+Use `redirect(Path)` to write the output of `stdout` or `stderr` to a file.
+CLI Assured opens the file, writes all output to it and closes it when the process terminates.
+
+[source,java]
+----
+include::example$j21/RedirectToFileTest.java[tag=imports]
+
+include::example$j21/RedirectToFileTest.java[tag=snippet,indent=0]
+----
+
+== Redirect `std[out|err]` to an `OutputStream`
+
+You can also redirect to an arbitrary `OutputStream` using `redirect(OutputStream)`.
+Note that CLI Assured will *not* close the stream — the caller is responsible for closing it.
+This is useful for appending output from multiple commands to a single stream.
+
+[source,java]
+----
+include::example$j21/RedirectToStreamTest.java[tag=imports]
+
+include::example$j21/RedirectToStreamTest.java[tag=snippet,indent=0]
+----

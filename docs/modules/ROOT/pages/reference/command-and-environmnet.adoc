@@ -1,4 +1,4 @@
-= Given: `CommandSpec`
+= Command and environment
 
 The static methods in `CliAssured` class are the main entry points into the CLI Assured API.
 They all return a `CommandSpec` instance.

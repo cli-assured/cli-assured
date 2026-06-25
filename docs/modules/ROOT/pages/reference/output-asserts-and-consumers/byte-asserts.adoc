@@ -1,0 +1,24 @@
+= Byte asserts
+
+== `hasByteCount(long)`
+
+Use `hasByteCount(long)` to assert the exact number of bytes produced by the output stream,
+or `hasByteCount(LongPredicate, String)` with a custom predicate:
+
+[source,java]
+----
+include::example$j21/ByteCountTest.java[tag=imports]
+
+include::example$j21/ByteCountTest.java[tag=snippet,indent=0]
+----
+
+== `isEmpty()`
+
+`isEmpty()` is a shorthand for `hasByteCount(0)`. It asserts that the output stream produced zero bytes:
+
+[source,java]
+----
+include::example$j21/ByteCountTest.java[tag=imports]
+
+include::example$j21/ByteCountTest.java[tag=isEmpty,indent=0]
+----

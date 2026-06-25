@@ -1,0 +1,39 @@
+= Exit code asserts
+
+By default, CLI Assured asserts that the exit code is `0`.
+You can customize this with the following methods on `ExpectationsSpec`.
+
+== `exitCodeIs(int)`
+
+Use `exitCodeIs(int)` to assert that the process exits with an exact exit code:
+
+[source,java]
+----
+include::example$j21/ExitCodeTest.java[tag=imports]
+
+include::example$j21/ExitCodeTest.java[tag=exitCodeIs,indent=0]
+----
+
+== `exitCodeIsAnyOf(int...)`
+
+Use `exitCodeIsAnyOf(int...)` when the command may exit with different codes depending on the platform or runtime
+conditions:
+
+[source,java]
+----
+include::example$j21/ExitCodeTest.java[tag=imports]
+
+include::example$j21/ExitCodeTest.java[tag=exitCodeIsAnyOf,indent=0]
+----
+
+== `exitCodeSatisfies(IntPredicate, String)`
+
+Use `exitCodeSatisfies(IntPredicate, String)` for more complex conditions.
+The description string supports `${actual}` as a placeholder for the actual exit code:
+
+[source,java]
+----
+include::example$j21/ExitCodeTest.java[tag=imports]
+
+include::example$j21/ExitCodeTest.java[tag=exitCodeSatisfies,indent=0]
+----

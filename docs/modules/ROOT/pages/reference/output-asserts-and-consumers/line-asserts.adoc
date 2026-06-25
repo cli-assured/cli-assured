@@ -1,0 +1,121 @@
+= Line asserts
+
+CLI Assured provides several assertion methods for verifying the content of `stdout` or `stderr` output.
+All line asserts check lines among the full output in any order.
+
+[TIP]
+====
+All assertion methods that accept `String...` also have `Collection<String>` overloads.
+`hasLinesMatching` also accepts `Pattern...` for compiled regular expressions.
+====
+
+== `hasLines(String...)`
+
+`hasLines(String...)` asserts that the given complete lines are present:
+
+[source,java]
+----
+include::example$j21/LineAssertsTest.java[tag=imports]
+
+include::example$j21/LineAssertsTest.java[tag=hasLines,indent=0]
+----
+
+== `doesNotHaveLines(String...)`
+
+`doesNotHaveLines(String...)` asserts that the given lines are *not* present:
+
+[source,java]
+----
+include::example$j21/LineAssertsTest.java[tag=imports]
+
+include::example$j21/LineAssertsTest.java[tag=doesNotHaveLines,indent=0]
+----
+
+== `hasLinesContaining(String...)`
+
+`hasLinesContaining(String...)` asserts that at least one line contains each of the given substrings:
+
+[source,java]
+----
+include::example$j21/LineAssertsTest.java[tag=imports]
+
+include::example$j21/LineAssertsTest.java[tag=hasLinesContaining,indent=0]
+----
+
+== `doesNotHaveLinesContaining(String...)`
+
+`doesNotHaveLinesContaining(String...)` asserts that no line contains any of the given substrings:
+
+[source,java]
+----
+include::example$j21/LineAssertsTest.java[tag=imports]
+
+include::example$j21/LineAssertsTest.java[tag=doesNotHaveLinesContaining,indent=0]
+----
+
+== `hasLinesContainingCaseInsensitive(String...)`
+
+`hasLinesContainingCaseInsensitive(String...)` works like `hasLinesContaining`, but uses case-insensitive comparison:
+
+[source,java]
+----
+include::example$j21/LineAssertsTest.java[tag=imports]
+
+include::example$j21/LineAssertsTest.java[tag=hasLinesContainingCaseInsensitive,indent=0]
+----
+
+== `hasLinesMatching(String...)`
+
+`hasLinesMatching(String...)` asserts that at least one line matches each given regular expression.
+The regex is evaluated using `Matcher.find()` rather than `Matcher.matches()`, so it matches a substring by default:
+
+[source,java]
+----
+include::example$j21/LineAssertsTest.java[tag=imports]
+
+include::example$j21/LineAssertsTest.java[tag=hasLinesMatching,indent=0]
+----
+
+== `doesNotHaveLinesMatching(String...)`
+
+`doesNotHaveLinesMatching(String...)` asserts that no line matches the given regular expressions:
+
+[source,java]
+----
+include::example$j21/LineAssertsTest.java[tag=imports]
+
+include::example$j21/LineAssertsTest.java[tag=doesNotHaveLinesMatching,indent=0]
+----
+
+== `hasLineCount(int)`
+
+Use `hasLineCount(int)` to assert that the output contains an exact number of lines:
+
+[source,java]
+----
+include::example$j21/LineCountTest.java[tag=imports]
+
+include::example$j21/LineCountTest.java[tag=snippet,indent=0]
+----
+
+For more complex conditions, use `hasLineCount(LongPredicate, String)` with a custom predicate.
+The description string supports `${stream}` and `${actual}` placeholders:
+
+[source,java]
+----
+include::example$j21/LineCountTest.java[tag=imports]
+
+include::example$j21/LineCountTest.java[tag=predicate,indent=0]
+----
+
+== Encoding
+
+By default, CLI Assured reads the output using UTF-8 encoding.
+Use `charset(Charset)` to change the character encoding:
+
+[source,java]
+----
+include::example$j21/CharsetTest.java[tag=imports]
+
+include::example$j21/CharsetTest.java[tag=snippet,indent=0]
+----

@@ -35,8 +35,7 @@ public class AutoCloseForciblyTest {
             // Do some work while the process is running...
             System.out.println("`sleep 60` has PID" + proc.pid());
 
-        }
-        // The process is forcibly killed here when the try block exits
+        } // The process is forcibly killed here when the try block exits
         // end::snippet[]
         // @formatter:on
     }
