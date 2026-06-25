@@ -1,6 +1,6 @@
 = Command and environment
 
-The static methods in `CliAssured` class are the main entry points into the CLI Assured API.
+The static methods in `CliAssured` class, such as `CliAssured.given()` or `CliAssured.command(String, String...)` are the main entry points into the CLI Assured API.
 They all return a `CommandSpec` instance.
 
 == Command and its arguments
@@ -250,3 +250,16 @@ include::example$j21/ThreadPoolCustomTest.java[tag=imports]
 
 include::example$j21/ThreadPoolCustomTest.java[tag=custom,indent=0]
 ----
+
+== Next steps
+
+Once you have configured a `CommandSpec` instance, you may want to do one of the following:
+
+* Specify some assertions and/or ouptut consumers using `CommandSpec.then()`:
+** xref:reference/output-asserts-and-consumers/line-asserts.adoc[]
+** xref:reference/output-asserts-and-consumers/byte-asserts.adoc[]
+** xref:reference/output-asserts-and-consumers/output-consumers.adoc[]
+** xref:reference/output-asserts-and-consumers/output-redirects.adoc[]
+** xref:reference/output-asserts-and-consumers/exit-code-asserts.adoc[]
+** xref:reference/output-asserts-and-consumers/assertj.adoc[]
+* xref:reference/invoke-the-command-and-await-its-termination.adoc[Execute the command] using `CommandSpec.execute()` or `CommandSpec.start().awaitTermination()`.
