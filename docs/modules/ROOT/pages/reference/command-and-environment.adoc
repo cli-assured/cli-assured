@@ -5,6 +5,8 @@ They all return a `CommandSpec` instance.
 
 == Command and its arguments
 
+[.since]#0.0.1#
+
 The most common way to specify the executable and its arguments is to use `CommandSpec.command(String executable, String... arguments)`.
 
 The `executable` can be any of the following:
@@ -33,6 +35,8 @@ include::example$j21/CommandSpecCommandTest.java[tag=executableArgs,indent=0]
 ----
 
 == Special `CommandSpec` factories
+
+[.since]#0.0.1#
 
 CLI Assured offers special `CommandSpec` factories for the `java` executable of the current JVM process and for Maven.
 
@@ -110,6 +114,8 @@ Mvn.fromMvnw() // Find .mvn/wrapper/maven-wrapper.properties
 
 == Environment variables
 
+[.since]#0.0.1#
+
 Use `CommandSpec.env(String name, String value, String... more)` to set one or more environment variables for the command.
 Note that the number of additional arguments must be even. Each name must have a corresponding value.
 Here is a basic example:
@@ -128,6 +134,8 @@ There is also `CommandSpec.env(Map<String, String> variables)` accepting a map f
 
 
 == Working directory
+
+[.since]#0.0.1#
 
 Use `CommandSpec.cd(Path workDirectory)` to set the working directory of the spawned process.
 The command's executable and any relative file paths will be resolved against this directory.
@@ -148,6 +156,8 @@ Using `CliAssured.command("cat", "hello.txt").cd(myWorkDir)` would have exactly 
 
 == Redirect `stderr` to `stdout`
 
+[.since]#0.0.1#
+
 Use `CommandSpec.stderrToStdout()` to redirect the standard error output of the spawned process to its standard output.
 This is useful when you want to assert on `stderr` content using the `stdout()` assertions, or when the command mixes output
 across both streams and you want to capture everything in one place.
@@ -162,6 +172,8 @@ include::example$j21/StderrToStdoutTest.java[tag=snippet,indent=0]
 ----
 
 == Write to `stdin`
+
+[.since]#0.0.1#
 
 === Write a string to `stdin`
 
@@ -206,6 +218,8 @@ include::example$j21/WriteToStdinTest.java[tag=snippet,indent=0]
 
 == Auto-close behavior
 
+[.since]#0.0.1#
+
 `CommandProcess` implements `AutoCloseable`, so you can use it in a try-with-resources block.
 When the block exits, `close()` kills the underlying process and waits for its termination.
 
@@ -225,6 +239,8 @@ include::example$j21/AutoCloseForciblyTest.java[tag=snippet,indent=0]
 ----
 
 == Thread pool
+
+[.since]#0.0.1#
 
 By default, CLI Assured uses a single global thread pool (see `CliAssured.globalThreadPool()`) for consuming `stdout`,
 `stderr` and producing `stdin` of all commands.

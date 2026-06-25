@@ -2,6 +2,8 @@
 
 == `hasByteCount(long)`
 
+[.since]#0.0.1#
+
 Use `hasByteCount(long)` to assert the exact number of bytes produced by the output stream,
 or `hasByteCount(LongPredicate, String)` with a custom predicate:
 
@@ -13,6 +15,8 @@ include::example$j21/ByteCountTest.java[tag=snippet,indent=0]
 ----
 
 == `isEmpty()`
+
+[.since]#0.0.1#
 
 `isEmpty()` is a shorthand for `hasByteCount(0)`. It asserts that the output stream produced zero bytes:
 

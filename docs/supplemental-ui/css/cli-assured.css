@@ -1,0 +1,20 @@
+/**
+ * SPDX-FileCopyrightText: Copyright (c) 2025 CLI Assured contributors as indicated by the @author tags
+ * SPDX-License-Identifier: Apache-2.0
+ */
+.since {
+  display: block;
+  width: fit-content;
+  font-size: 0.6em;
+  font-family: var(--monospace-font-family, monospace);
+  font-weight: normal;
+  background: var(--note-background, #f0f0f0);
+  color: var(--note-font-color, #6a6a6a);
+  padding: 0.15em 0.5em;
+  border-radius: 0.75em;
+  white-space: nowrap;
+}
+
+.since::before {
+  content: "Since ";
+}

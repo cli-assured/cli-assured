@@ -5,6 +5,8 @@ execution.
 
 == `assertSuccess()`
 
+[.since]#0.0.1#
+
 `assertSuccess()` verifies that no exceptions occurred during execution and that all assertions defined via `then()`
 are satisfied. It throws an `AssertionError` if any check fails.
 
@@ -16,6 +18,8 @@ include::example$j21/CommandResultTest.java[tag=assertSuccess,indent=0]
 ----
 
 == `assertTimeout()`
+
+[.since]#0.0.1#
 
 `assertTimeout()` verifies that the command was killed because it exceeded the timeout specified via
 `execute(Duration)` or `execute(long)`. It throws an `AssertionError` if the process terminated normally.
@@ -29,6 +33,8 @@ include::example$j21/CommandResultTest.java[tag=assertTimeout,indent=0]
 
 == `exitCode()`
 
+[.since]#0.0.1#
+
 `exitCode()` returns the exit code of the terminated process.
 
 [source,java]
@@ -39,6 +45,8 @@ include::example$j21/CommandResultTest.java[tag=exitCode,indent=0]
 ----
 
 == `duration()`
+
+[.since]#0.0.1#
 
 `duration()` returns the wall-clock duration of the command execution as a `java.time.Duration`.
 
@@ -51,10 +59,14 @@ include::example$j21/CommandResultTest.java[tag=duration,indent=0]
 
 == Access the whole content of `std[out|err]`
 
+[.since]#0.1.0#
+
 Use `CommandResult.stdout()` or `CommandResult.stderr()` to obtain a `StreamResult` object, which provides access to
 the captured output lines, raw bytes, line count and byte count.
 
 === `std[out|err]` as stream of lines
+
+[.since]#0.1.0#
 
 Use `stdout().lines()` to get the captured output as a `Stream<String>`.
 This requires `captureAll()` to have been called on the stream before execution.
@@ -68,6 +80,8 @@ include::example$j21/CommandResultTest.java[tag=stdoutLines,indent=0]
 
 === `std[out|err]` as byte array
 
+[.since]#0.1.0#
+
 Use `stdout().bytes()` to get the captured output as a raw byte array.
 This also requires `captureAll()` to have been called on the stream before execution.
 
@@ -79,6 +93,8 @@ include::example$j21/CommandResultTest.java[tag=stdoutBytes,indent=0]
 ----
 
 === Line count and byte count of `std[out|err]`
+
+[.since]#0.1.0#
 
 `stdout().lineCount()` and `stdout().byteCount()` are always available without `captureAll()`.
 

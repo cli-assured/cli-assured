@@ -5,6 +5,8 @@ or you can use `CommandSpec.start()` and `CommandProcess.awatTermination()` if y
 
 == `CommandSpec.execute()`
 
+[.since]#0.0.1#
+
 `execute()` starts the command process and blocks until it terminates.
 It is a shorthand for `start().awaitTermination()`.
 
@@ -16,6 +18,8 @@ include::example$j21/ExecuteAndStartTest.java[tag=execute,indent=0]
 ----
 
 == `CommandSpec.start()` and `CommandProcess.awaitTermination()`
+
+[.since]#0.0.1#
 
 Use `start()` when you need a reference to the running `CommandProcess` before it terminates — for example, to interact
 with the process, read its PID, or await a specific output line.
@@ -39,6 +43,8 @@ include::example$j21/ExecuteAndStartTest.java[tag=tryWithResources,indent=0]
 ----
 
 == Timeouts
+
+[.since]#0.0.1#
 
 Use `execute(Duration)` or `execute(long)` to set a maximum time to wait for the process to terminate.
 If the process does not terminate within the given timeout, it is killed.
@@ -70,6 +76,8 @@ include::example$j21/TimeoutTest.java[tag=assertTimeout,indent=0]
 
 == Killing the command midflight
 
+[.since]#0.0.1#
+
 Use `kill(boolean forcibly, boolean withDescendants)` to terminate a running process before it exits on its own.
 When `forcibly` is `false`, the process receives a graceful signal (`SIGTERM` on Linux/macOS); when `true`, it is killed
 immediately (`SIGKILL`). The `withDescendants` flag controls whether child processes are also killed.
@@ -92,6 +100,8 @@ include::example$j21/CommandProcessTest.java[tag=killForcibly,indent=0]
 
 == Access the PID of the command process
 
+[.since]#0.0.1#
+
 Use `pid()` to obtain the operating system process ID of the running command. This requires Java 9 or newer.
 
 [source,java]
@@ -102,6 +112,8 @@ include::example$j21/CommandProcessTest.java[tag=pid,indent=0]
 ----
 
 == Child and descendant processes
+
+[.since]#0.0.1#
 
 Use `children()` to get a `LongStream` of PIDs of direct child processes, or `descendants()` to include all direct and
 indirect child processes. Both methods require Java 9 or newer.

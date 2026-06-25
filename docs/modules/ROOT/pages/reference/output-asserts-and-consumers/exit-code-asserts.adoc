@@ -5,6 +5,8 @@ You can customize this with the following methods on `ExpectationsSpec`.
 
 == `exitCodeIs(int)`
 
+[.since]#0.0.1#
+
 Use `exitCodeIs(int)` to assert that the process exits with an exact exit code:
 
 [source,java]
@@ -15,6 +17,8 @@ include::example$j21/ExitCodeTest.java[tag=exitCodeIs,indent=0]
 ----
 
 == `exitCodeIsAnyOf(int...)`
+
+[.since]#0.0.1#
 
 Use `exitCodeIsAnyOf(int...)` when the command may exit with different codes depending on the platform or runtime
 conditions:
@@ -27,6 +31,8 @@ include::example$j21/ExitCodeTest.java[tag=exitCodeIsAnyOf,indent=0]
 ----
 
 == `exitCodeSatisfies(IntPredicate, String)`
+
+[.since]#0.0.1#
 
 Use `exitCodeSatisfies(IntPredicate, String)` for more complex conditions.
 The description string supports `${actual}` as a placeholder for the actual exit code:
