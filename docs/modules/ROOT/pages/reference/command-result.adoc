@@ -1,17 +1,90 @@
 = Command result
 
+`CommandResult` is returned by `execute()` or `awaitTermination()` and provides access to the outcome of a command
+execution.
+
 == `assertSuccess()`
+
+`assertSuccess()` verifies that no exceptions occurred during execution and that all assertions defined via `then()`
+are satisfied. It throws an `AssertionError` if any check fails.
+
+[source,java]
+----
+include::example$j21/CommandResultTest.java[tag=imports]
+
+include::example$j21/CommandResultTest.java[tag=assertSuccess,indent=0]
+----
 
 == `assertTimeout()`
 
+`assertTimeout()` verifies that the command was killed because it exceeded the timeout specified via
+`execute(Duration)` or `execute(long)`. It throws an `AssertionError` if the process terminated normally.
+
+[source,java]
+----
+include::example$j21/CommandResultTest.java[tag=imports]
+
+include::example$j21/CommandResultTest.java[tag=assertTimeout,indent=0]
+----
+
 == `exitCode()`
+
+`exitCode()` returns the exit code of the terminated process.
+
+[source,java]
+----
+include::example$j21/CommandResultTest.java[tag=imports]
+
+include::example$j21/CommandResultTest.java[tag=exitCode,indent=0]
+----
 
 == `duration()`
 
+`duration()` returns the wall-clock duration of the command execution as a `java.time.Duration`.
+
+[source,java]
+----
+include::example$j21/CommandResultTest.java[tag=imports]
+
+include::example$j21/CommandResultTest.java[tag=duration,indent=0]
+----
+
 == Access the whole content of `std[out|err]`
+
+Use `CommandResult.stdout()` or `CommandResult.stderr()` to obtain a `StreamResult` object, which provides access to
+the captured output lines, raw bytes, line count and byte count.
 
 === `std[out|err]` as stream of lines
 
+Use `stdout().lines()` to get the captured output as a `Stream<String>`.
+This requires `captureAll()` to have been called on the stream before execution.
+
+[source,java]
+----
+include::example$j21/CommandResultTest.java[tag=imports]
+
+include::example$j21/CommandResultTest.java[tag=stdoutLines,indent=0]
+----
+
 === `std[out|err]` as byte array
 
+Use `stdout().bytes()` to get the captured output as a raw byte array.
+This also requires `captureAll()` to have been called on the stream before execution.
+
+[source,java]
+----
+include::example$j21/CommandResultTest.java[tag=imports]
+
+include::example$j21/CommandResultTest.java[tag=stdoutBytes,indent=0]
+----
+
 === Line count and byte count of `std[out|err]`
+
+`stdout().lineCount()` and `stdout().byteCount()` are always available without `captureAll()`.
+
+[source,java]
+----
+include::example$j21/CommandResultTest.java[tag=imports]
+
+include::example$j21/CommandResultTest.java[tag=counts,indent=0]
+----
