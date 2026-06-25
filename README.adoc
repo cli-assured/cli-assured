@@ -1,10 +1,10 @@
-= image:https://cli-assured.org/favicon.svg[title=CLI Assured,width=32] CLI Assured
+image::https://cli-assured.org/cli-assured-logo-with-text.svg[alt=CLI Assured,width=336]
 
 https://github.com/cli-assured/cli-assured/blob/main/LICENSE[image:https://img.shields.io/github/license/cli-assured/cli-assured.svg[License]]
 https://central.sonatype.com/artifact/org.cli-assured/cli-assured[image:https://img.shields.io/maven-central/v/org.cli-assured/cli-assured.svg[Maven
 Central]]
 
-A Java DSL for testing command line applications.
+CLI Assured is a Java DSL for running and testing command line applications.
 
 == Hello World!
 

@@ -2,7 +2,7 @@
 
 CLI Assured is a Java DSL for testing or executing command line applications.
 
-== Design principles
+== Main characteristics
 
 * xref:reference/index.adoc#_api_overview[Fluent API]
 ** Methods return an adjusted copy rather that mutating the instance (unless specified otherwise)
@@ -34,6 +34,12 @@ but Java 9+ is better if you need newer Process API for accessing PID or child p
 
 Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured/versions[Maven Central].
 
+== Project information
+
+* License: https://github.com/cli-assured/cli-assured/blob/main/LICENSE[Apache License v2.0]
+* Source code: https://github.com/cli-assured/cli-assured
+* Issue tracker: https://github.com/cli-assured/cli-assured/issues
+
 == Structure of this documentation
 
 The documentation is divided into the following main parts:
@@ -42,7 +48,3 @@ The documentation is divided into the following main parts:
 * xref:release-notes/index.adoc[Release notes] - Release notes documents for the past releases
 * xref:reference/index.adoc[Reference] - full list of supported features
 
-[[issues-and-support]]
-== Issues and Support
-
-Issues and suggestions can be reported at https://github.com/cli-assured/cli-assured/issues/new[GitHub].
