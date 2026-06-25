@@ -21,7 +21,8 @@ public class ThreadPoolCustomTest {
         // tag::custom[]
         CliAssured
             .command("echo", "Hello!")
-            .threadPool(Executors::newCachedThreadPool) // Supply a custom ExecutorService
+            // Supply a custom ExecutorService
+            .threadPool(Executors::newCachedThreadPool)
             .execute()
             .assertSuccess();
         // end::custom[]

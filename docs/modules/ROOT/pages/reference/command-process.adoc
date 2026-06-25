@@ -2,7 +2,36 @@
 
 == `start().awatTermination()` or simply `execute()`
 
+
 === Timeouts
+
+Use `execute(Duration)` or `execute(long)` to set a maximum time to wait for the process to terminate.
+If the process does not terminate within the given timeout, it is killed.
+
+[source,java]
+----
+include::example$j21/TimeoutTest.java[tag=imports]
+
+include::example$j21/TimeoutTest.java[tag=snippet,indent=0]
+----
+
+You can also specify the timeout in milliseconds:
+
+[source,java]
+----
+include::example$j21/TimeoutTest.java[tag=imports]
+
+include::example$j21/TimeoutTest.java[tag=millis,indent=0]
+----
+
+Use `assertTimeout()` on the `CommandResult` to verify that a process was killed due to a timeout:
+
+[source,java]
+----
+include::example$j21/TimeoutTest.java[tag=imports]
+
+include::example$j21/TimeoutTest.java[tag=assertTimeout,indent=0]
+----
 
 == Killing the command midflight
 

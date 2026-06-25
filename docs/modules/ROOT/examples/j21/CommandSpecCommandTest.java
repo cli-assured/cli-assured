@@ -17,7 +17,8 @@ public class CommandSpecCommandTest {
         // @formatter:off
         // tag::command[]
         CliAssured
-            .command("echo", "Hello", "World!")   // Call the echo command with two parameters "Hello" and "World!"
+            // Call the echo command with two parameters "Hello" and "World!"
+            .command("echo", "Hello", "World!")
             .execute()
             .assertSuccess();
         // end::command[]
@@ -43,8 +44,10 @@ public class CommandSpecCommandTest {
             .then()
                 .stdout()
                     .log()
-                    .hasLines("1 2 3") // ensure 1 2 3 is printed
-                    .hasLineCount(1)   // ... and nothing else
+                    // ensure 1 2 3 is printed
+                    .hasLines("1 2 3")
+                    // ... and nothing else
+                    .hasLineCount(1)
                 .execute()
                 .assertSuccess();
         // end::executableArgs[]
