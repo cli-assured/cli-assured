@@ -1,9 +1,13 @@
-= `CommandProcess`
+= Invoke the command and await its termination
 
-== `start().awatTermination()` or simply `execute()`
+You can start the command process and await its termination in one step using `CommandSpec.execute()`
+or you can use `CommandSpec.start()` and `CommandProcess.awatTermination()` if you need more control.
 
+== `CommandSpec.execute()`
 
-=== Timeouts
+== `CommandSpec.start()` and `CommandProcess.awatTermination()`
+
+== Timeouts
 
 Use `execute(Duration)` or `execute(long)` to set a maximum time to wait for the process to terminate.
 If the process does not terminate within the given timeout, it is killed.
@@ -35,6 +39,6 @@ include::example$j21/TimeoutTest.java[tag=assertTimeout,indent=0]
 
 == Killing the command midflight
 
-== PID
+== Access the PID of the command process
 
 == Child and descendant processes
