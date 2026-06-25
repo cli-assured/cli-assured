@@ -70,6 +70,45 @@ include::example$j21/TimeoutTest.java[tag=assertTimeout,indent=0]
 
 == Killing the command midflight
 
+Use `kill(boolean forcibly, boolean withDescendants)` to terminate a running process before it exits on its own.
+When `forcibly` is `false`, the process receives a graceful signal (`SIGTERM` on Linux/macOS); when `true`, it is killed
+immediately (`SIGKILL`). The `withDescendants` flag controls whether child processes are also killed.
+
+[source,java]
+----
+include::example$j21/CommandProcessTest.java[tag=imports]
+
+include::example$j21/CommandProcessTest.java[tag=kill,indent=0]
+----
+
+To kill both the process and all its descendants forcibly:
+
+[source,java]
+----
+include::example$j21/CommandProcessTest.java[tag=imports]
+
+include::example$j21/CommandProcessTest.java[tag=killForcibly,indent=0]
+----
+
 == Access the PID of the command process
 
+Use `pid()` to obtain the operating system process ID of the running command. This requires Java 9 or newer.
+
+[source,java]
+----
+include::example$j21/CommandProcessTest.java[tag=imports]
+
+include::example$j21/CommandProcessTest.java[tag=pid,indent=0]
+----
+
 == Child and descendant processes
+
+Use `children()` to get a `LongStream` of PIDs of direct child processes, or `descendants()` to include all direct and
+indirect child processes. Both methods require Java 9 or newer.
+
+[source,java]
+----
+include::example$j21/CommandProcessTest.java[tag=imports]
+
+include::example$j21/CommandProcessTest.java[tag=children,indent=0]
+----

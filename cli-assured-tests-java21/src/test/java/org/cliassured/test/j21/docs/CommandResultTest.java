@@ -75,7 +75,7 @@ public class CommandResultTest {
         // @formatter:off
         // tag::duration[]
         CommandResult result = CliAssured
-            .command("echo", "Hello")
+            .command("sleep", "0.01")
             .execute()
             .assertSuccess();
 
