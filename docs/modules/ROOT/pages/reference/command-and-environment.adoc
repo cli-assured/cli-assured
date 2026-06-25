@@ -25,6 +25,8 @@ include::example$j21/CommandSpecCommandTest.java[tag=command,indent=0]
 
 === Add arguments separately
 
+[.since]#0.0.1#
+
 If you need to add the arguments in several iterations, you can use the following pattern:
 
 [source,java]
@@ -42,6 +44,8 @@ CLI Assured offers special `CommandSpec` factories for the `java` executable of 
 
 === `CliAssured.java()`
 
+[.since]#0.0.1#
+
 `CliAssured.java()` creates a `CommandSpec` with the `java` executable of the current JVM pre-configured.
 The executable is resolved from the `java.home` system property.
 
@@ -53,6 +57,8 @@ include::example$j21/CommandSpecJavaTest.java[tag=javaVersion,indent=0]
 ----
 
 === Install, invoke and test Maven
+
+[.since]#0.0.1#
 
 The utility methods for installing, invoking and testing Maven are available in `cli-assured-mvn` artifact
 
@@ -74,6 +80,8 @@ There are two ways how to specify the Maven version to install and run:
 
 ==== Install and run a specific version of Maven
 
+[.since]#0.0.1#
+
 [source,java]
 ----
 Mvn.version("3.9.11")
@@ -92,6 +100,8 @@ Mvn.version("3.9.11")
 ----
 
 ==== Install and run the Maven version configured for Maven Wrapper
+
+[.since]#0.0.1#
 
 [source,java]
 ----
@@ -177,6 +187,8 @@ include::example$j21/StderrToStdoutTest.java[tag=snippet,indent=0]
 
 === Write a string to `stdin`
 
+[.since]#0.0.1#
+
 Use `CommandSpec.stdin(String)` to pass a string to the process' standard input using UTF-8 encoding.
 This is a convenience shorthand for the `IoConsumer<OutputStream>` variant when you have all input data upfront.
 You may call only one of the `stdin(...)` methods per `CommandSpec` chain.
@@ -190,6 +202,8 @@ include::example$j21/SendStringToStdinTest.java[tag=snippet,indent=0]
 
 === Send a file to `stdin`
 
+[.since]#0.0.1#
+
 Use `CommandSpec.stdin(Path)` to pass the contents of a file to the process' standard input.
 You may call only one of the `stdin(...)` methods per `CommandSpec` chain.
 
@@ -201,6 +215,8 @@ include::example$j21/SendFileToStdinTest.java[tag=snippet,indent=0]
 ----
 
 === Write bytes to `stdin`
+
+[.since]#0.0.1#
 
 Use `CommandSpec.stdin(Consumer<OutputStream>)` to write arbitrary data to the process' standard input.
 The consumer receives an `OutputStream` connected to the process' `stdin` and is called on a dedicated thread.
@@ -255,6 +271,8 @@ include::example$j21/ThreadPoolTest.java[tag=local,indent=0]
 ----
 
 === Supply a custom `ExecutorService`
+
+[.since]#0.0.1#
 
 If you need full control, use `CommandSpec.threadPool(Supplier<ExecutorService>)` to provide your own
 `ExecutorService` factory.
