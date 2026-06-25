@@ -2,6 +2,8 @@
 
 == Consume lines from `std[out|err]`
 
+[.since]#0.0.1#
+
 Use `lines(Consumer<String>)` to receive each line of the output as it is produced.
 The consumer is called from an internal I/O thread.
 
@@ -21,6 +23,8 @@ Using `.then().std[out|err].lines(Consumer<String>)` is much more memory efficie
 
 == `log()`
 
+[.since]#0.0.1#
+
 Use `log()` to log each line at `INFO` level using an SLF4J logger named `org.cliassured.stdout` or
 `org.cliassured.stderr` respectively.
 
@@ -33,6 +37,8 @@ include::example$j21/LogTest.java[tag=snippet,indent=0]
 
 == `log(Consumer<String>)`
 
+[.since]#0.0.1#
+
 To log to a custom consumer (e.g. a specific logger level), use `log(Consumer<String>)`:
 
 [source,java]
@@ -43,6 +49,8 @@ include::example$j21/LoggerTest.java[tag=custom,indent=0]
 ----
 
 == Awaiting a specific line
+
+[.since]#0.0.1#
 
 Use `await(Consumer<String>)` together with `Await` factory methods to block until a specific condition is met in the
 output. This is especially useful for testing long-running processes like servers, where you need to wait for a startup

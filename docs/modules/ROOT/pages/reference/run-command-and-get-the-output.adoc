@@ -6,6 +6,8 @@ it also offers shortcuts to run a command and get the output as a stream of line
 [[lines]]
 == Redirect `stderr` to `stdout` and get all output lines
 
+[.since]#0.1.0#
+
 `CommandSpec.lines()` is a convenience shorthand that executes the command, redirects `stderr` to `stdout`, captures all output,
 asserts success, and returns a stream of lines captured on `stdout`.
 
@@ -19,6 +21,8 @@ include::example$j21/GetStdOutLinesTest.java[tag=snippet,indent=0]
 
 [[bytes]]
 == Redirect `stderr` to `stdout` and get all output as a byte array
+
+[.since]#0.1.0#
 
 `CommandSpec.bytes()` is a convenience shorthand that executes the command, redirects `stderr` to `stdout`, captures all output,
 asserts success, and returns the raw bytes captured on `stdout`.

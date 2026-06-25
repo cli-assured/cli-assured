@@ -9,4 +9,5 @@ static_files:
 - favicon-24x24.png
 - favicon-48x48.png
 - cli-assured-logo-with-text.svg
+- css/cli-assured.css
 

@@ -11,6 +11,8 @@ All assertion methods that accept `String...` also have `Collection<String>` ove
 
 == `hasLines(String...)`
 
+[.since]#0.0.1#
+
 `hasLines(String...)` asserts that the given complete lines are present:
 
 [source,java]
@@ -21,6 +23,8 @@ include::example$j21/LineAssertsTest.java[tag=hasLines,indent=0]
 ----
 
 == `doesNotHaveLines(String...)`
+
+[.since]#0.0.1#
 
 `doesNotHaveLines(String...)` asserts that the given lines are *not* present:
 
@@ -33,6 +37,8 @@ include::example$j21/LineAssertsTest.java[tag=doesNotHaveLines,indent=0]
 
 == `hasLinesContaining(String...)`
 
+[.since]#0.0.1#
+
 `hasLinesContaining(String...)` asserts that at least one line contains each of the given substrings:
 
 [source,java]
@@ -43,6 +49,8 @@ include::example$j21/LineAssertsTest.java[tag=hasLinesContaining,indent=0]
 ----
 
 == `doesNotHaveLinesContaining(String...)`
+
+[.since]#0.0.1#
 
 `doesNotHaveLinesContaining(String...)` asserts that no line contains any of the given substrings:
 
@@ -55,6 +63,8 @@ include::example$j21/LineAssertsTest.java[tag=doesNotHaveLinesContaining,indent=
 
 == `hasLinesContainingCaseInsensitive(String...)`
 
+[.since]#0.0.1#
+
 `hasLinesContainingCaseInsensitive(String...)` works like `hasLinesContaining`, but uses case-insensitive comparison:
 
 [source,java]
@@ -65,6 +75,8 @@ include::example$j21/LineAssertsTest.java[tag=hasLinesContainingCaseInsensitive,
 ----
 
 == `hasLinesMatching(String...)`
+
+[.since]#0.0.1#
 
 `hasLinesMatching(String...)` asserts that at least one line matches each given regular expression.
 The regex is evaluated using `Matcher.find()` rather than `Matcher.matches()`, so it matches a substring by default:
@@ -78,6 +90,8 @@ include::example$j21/LineAssertsTest.java[tag=hasLinesMatching,indent=0]
 
 == `doesNotHaveLinesMatching(String...)`
 
+[.since]#0.0.1#
+
 `doesNotHaveLinesMatching(String...)` asserts that no line matches the given regular expressions:
 
 [source,java]
@@ -88,6 +102,8 @@ include::example$j21/LineAssertsTest.java[tag=doesNotHaveLinesMatching,indent=0]
 ----
 
 == `hasLineCount(int)`
+
+[.since]#0.0.1#
 
 Use `hasLineCount(int)` to assert that the output contains an exact number of lines:
 
@@ -109,6 +125,8 @@ include::example$j21/LineCountTest.java[tag=predicate,indent=0]
 ----
 
 == Encoding
+
+[.since]#0.0.1#
 
 By default, CLI Assured reads the output using UTF-8 encoding.
 Use `charset(Charset)` to change the character encoding:
