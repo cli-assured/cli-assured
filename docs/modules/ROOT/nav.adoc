@@ -1,20 +1,24 @@
 // user-guide
-* xref:user-guide/index.adoc[User guide]
-** xref:user-guide/hello-world.adoc[Hello World!]
-** xref:user-guide/run-command-and-get-the-output.adoc[Run a command and get the output]
-** xref:user-guide/test-long-running-processes.adoc[Test long running processes]
+* xref:user-guide/index.adoc[]
+** xref:user-guide/hello-world.adoc[]
+** xref:user-guide/run-command-and-get-the-output.adoc[]
+** xref:user-guide/test-long-running-processes.adoc[]
 
 // release-notes
-* xref:release-notes/index.adoc[Release notes]
+* xref:release-notes/index.adoc[]
 
 ifeval::[{doc-is-main} == true]
-** xref:release-notes/0.0.1.adoc[0.0.1]
+** xref:release-notes/0.0.1.adoc[]
 endif::[]
 
 // reference
-* xref:reference/index.adoc[API Reference]
-** xref:reference/command-spec.adoc[Given: `CommandSpec`]
-** xref:reference/expectations-spec.adoc[Then: `ExpectationsSpec`]
-** xref:reference/stdout-stderr-asserts-and-consumers.adoc[`std[out|err\]` asserts and consumers]
-** xref:reference/command-process.adoc[`CommandProcess`]
-** xref:reference/command-result.adoc[`CommandResult`]
+* xref:reference/index.adoc[]
+** xref:reference/command-and-environmnet.adoc[]
+** xref:reference/output-asserts-and-consumers/line-asserts.adoc[]
+** xref:reference/output-asserts-and-consumers/byte-asserts.adoc[]
+** xref:reference/output-asserts-and-consumers/output-consumers.adoc[]
+** xref:reference/output-asserts-and-consumers/output-redirects.adoc[]
+** xref:reference/output-asserts-and-consumers/exit-code-asserts.adoc[]
+** xref:reference/output-asserts-and-consumers/assertj.adoc[]
+** xref:reference/command-process.adoc[]
+** xref:reference/command-result.adoc[]

@@ -21,10 +21,14 @@ public class ThreadPoolTest {
         // tag::local[]
         CliAssured
             .command("echo", "Hello!")
-            .threadPool()                         // Use a per-command thread pool
-                .coreSize(2)                      // 2 core threads
-                .maxSize(4)                       // Up to 4 threads
-                .keepAlive(Duration.ofSeconds(30)) // Idle threads removed after 30s
+            // Use a per-command thread pool
+            .threadPool()
+                // 2 core threads
+                .coreSize(2)
+                // Up to 4 threads
+                .maxSize(4)
+                // Idle threads removed after 30s
+                .keepAlive(Duration.ofSeconds(30))
             .execute()
             .assertSuccess();
         // end::local[]

@@ -16,10 +16,12 @@ public class CommandSpecJavaTest {
         // @formatter:off
         // tag::javaVersion[]
         CliAssured
-            .java()               // Use the java executable of the current JVM
+            // Use the java executable of the current JVM
+            .java()
                 .args("-version")
             .then()
-                .stderr()         // java -version prints to stderr
+                // java -version prints to stderr
+                .stderr()
                     .hasLinesContaining(System.getProperty("java.version"))
             .execute()
             .assertSuccess();

@@ -28,7 +28,8 @@ public class AutoCloseForciblyTest {
                 // Wait up to 5 seconds for the process to terminate after closing
                 .autoCloseTimeout(Duration.ofSeconds(5))
                 .then()
-                    .exitCodeIsAnyOf(137, 143) // SIGKILL=137, SIGTERM=143
+                    // SIGKILL=137, SIGTERM=143
+                    .exitCodeIsAnyOf(137, 143)
                 .start()) {
 
             // Do some work while the process is running...
