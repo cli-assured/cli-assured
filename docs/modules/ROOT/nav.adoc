@@ -1,19 +1,13 @@
-// user-guide
-* xref:user-guide/index.adoc[]
-** xref:user-guide/hello-world.adoc[]
-** xref:user-guide/run-command-and-get-the-output.adoc[]
-** xref:user-guide/test-long-running-processes.adoc[]
-
 // release-notes
 * xref:release-notes/index.adoc[]
-
 ifeval::[{doc-is-main} == true]
 ** xref:release-notes/0.0.1.adoc[]
 endif::[]
-
 // reference
 * xref:reference/index.adoc[]
+** xref:reference/hello-world.adoc[]
 ** xref:reference/command-and-environment.adoc[]
+** xref:reference/run-command-and-get-the-output.adoc[]
 ** xref:reference/output-asserts-and-consumers/line-asserts.adoc[]
 ** xref:reference/output-asserts-and-consumers/byte-asserts.adoc[]
 ** xref:reference/output-asserts-and-consumers/output-consumers.adoc[]
@@ -22,4 +16,5 @@ endif::[]
 ** xref:reference/output-asserts-and-consumers/exit-code-asserts.adoc[]
 ** xref:reference/output-asserts-and-consumers/assertj.adoc[]
 ** xref:reference/invoke-the-command-and-await-its-termination.adoc[]
+** xref:reference/test-long-running-processes.adoc[]
 ** xref:reference/command-result.adoc[]

@@ -8,7 +8,7 @@ CLI Assured is a Java DSL for testing or executing command line applications.
 ** Methods return an adjusted copy rather that mutating the instance (unless specified otherwise)
 * xref:reference/index.adoc#_given_when_then[Given-when-then] structure known e.g. from https://rest-assured.io/[REST Assured]
 * Give user control over details but do not stand in way to do simple things
-** E.g. just quickly xref:user-guide/run-command-and-get-the-output.adoc[run a command and get the output]
+** E.g. just quickly xref:reference/run-command-and-get-the-output.adoc[run a command and get the output]
 * Avoid holding the entire command output in memory unless needed or wanted by the user
 ** Allow testing commands outputting large amounts of data
 ** Output line asserts:
@@ -44,7 +44,6 @@ Find the latest version on https://central.sonatype.com/artifact/org.cli-assured
 
 The documentation is divided into the following main parts:
 
-* xref:user-guide/index.adoc[User guide] - explains the typical usage of CLI Assured
 * xref:release-notes/index.adoc[Release notes] - Release notes documents for the past releases
-* xref:reference/index.adoc[Reference] - full list of supported features
+* xref:reference/index.adoc[Reference] - full list of supported features and use cases
 

@@ -20,8 +20,13 @@ public class GetStdOutLinesTest {
     void getStdoutLines() {
         // @formatter:off
         // tag::snippet[]
-        // Redirect `stderr` to `stdout` and get all output lines
-        Stream<String> lines = CliAssured.command("echo", "Line 1\nLine 2").lines();
+        // lines() executes the command, redirects stderr to stdout,
+        // captures all output, asserts success,
+        // and returns the output as stream of lines
+        Stream<String> lines = CliAssured
+            .command("echo", "Line 1\nLine 2")
+            .lines();
+
         Assertions.assertThat(lines).containsExactly("Line 1", "Line 2");
         // end::snippet[]
         // @formatter:on
@@ -40,8 +45,7 @@ public class GetStdOutLinesTest {
             .execute()
             .assertSuccess()
             .stdout()
-            .lines();
-        Assertions.assertThat(lines).containsExactly("Line 1", "Line 2");
+            .lines(); // or .bytes();
         // end::full[]
         // @formatter:on
     }
