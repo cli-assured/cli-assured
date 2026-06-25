@@ -5,7 +5,38 @@ or you can use `CommandSpec.start()` and `CommandProcess.awatTermination()` if y
 
 == `CommandSpec.execute()`
 
-== `CommandSpec.start()` and `CommandProcess.awatTermination()`
+`execute()` starts the command process and blocks until it terminates.
+It is a shorthand for `start().awaitTermination()`.
+
+[source,java]
+----
+include::example$j21/ExecuteAndStartTest.java[tag=imports]
+
+include::example$j21/ExecuteAndStartTest.java[tag=execute,indent=0]
+----
+
+== `CommandSpec.start()` and `CommandProcess.awaitTermination()`
+
+Use `start()` when you need a reference to the running `CommandProcess` before it terminates — for example, to interact
+with the process, read its PID, or await a specific output line.
+Call `awaitTermination()` on the returned `CommandProcess` to block until it exits.
+
+[source,java]
+----
+include::example$j21/ExecuteAndStartTest.java[tag=imports]
+
+include::example$j21/ExecuteAndStartTest.java[tag=start,indent=0]
+----
+
+`CommandProcess` implements `AutoCloseable`, so you can use it in a try-with-resources block.
+When the block exits, `close()` kills the process and waits for its termination.
+
+[source,java]
+----
+include::example$j21/ExecuteAndStartTest.java[tag=imports]
+
+include::example$j21/ExecuteAndStartTest.java[tag=tryWithResources,indent=0]
+----
 
 == Timeouts
 
