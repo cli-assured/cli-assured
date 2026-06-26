@@ -7,6 +7,10 @@ endif::[]
 ifeval::[{doc-is-main} == true]
 Release notes documents for major and minor releases are listed in this section.
 
-* xref:release-notes/0.0.1.adoc[0.0.1]
+[%autowidth,stripes=hover]
+|===
+| Version | Release date
+
+| xref:release-notes/0.0.1.adoc[0.0.1] | 2026-03-05
 
 endif::[]
