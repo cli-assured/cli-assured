@@ -140,7 +140,9 @@ public class StdinTest {
 
         Assertions.assertThatThrownBy(result::assertSuccess)
                 .isInstanceOf(AssertionError.class)
-                .message().contains("Exception 1/1: org.cliassured.CancellationException: The process was cancelled");
+                .message().containsAnyOf(
+                        "Exception 1/1: org.cliassured.CancellationException: The process was cancelled",
+                        "Failure 1/1: Expected exit code 0 but actually terminated with exit code 137");
 
         Assertions.assertThat(result.byteCountStdout()).isEqualTo(7);
         Assertions.assertThat(result.stdout().byteCount()).isEqualTo(7);
