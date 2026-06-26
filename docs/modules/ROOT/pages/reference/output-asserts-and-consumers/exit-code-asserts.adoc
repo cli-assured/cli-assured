@@ -3,6 +3,7 @@
 By default, CLI Assured asserts that the exit code is `0`.
 You can customize this with the following methods on `ExpectationsSpec`.
 
+[[exit-code-is]]
 == `exitCodeIs(int)`
 
 [.since]#0.0.1#
@@ -16,6 +17,7 @@ include::example$j21/ExitCodeTest.java[tag=imports]
 include::example$j21/ExitCodeTest.java[tag=exitCodeIs,indent=0]
 ----
 
+[[exit-code-is-any-of]]
 == `exitCodeIsAnyOf(int...)`
 
 [.since]#0.0.1#
@@ -30,6 +32,7 @@ include::example$j21/ExitCodeTest.java[tag=imports]
 include::example$j21/ExitCodeTest.java[tag=exitCodeIsAnyOf,indent=0]
 ----
 
+[[exit-code-satisfies]]
 == `exitCodeSatisfies(IntPredicate, String)`
 
 [.since]#0.0.1#

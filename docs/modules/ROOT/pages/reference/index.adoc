@@ -1,6 +1,7 @@
 [[reference-index]]
 = CLI Assured API reference
 
+[[api-overview]]
 == API overview
 
 [source,java]
@@ -38,6 +39,7 @@ CliAssured
 Unless specified otherwise, all API methods return an adjusted copy rather that mutating the instance.
 ====
 
+[[given-when-then]]
 == Given-when-then
 
 If you are a fan of Behavior-Driven testing, CLI Assert has some syntactic sugar for you:

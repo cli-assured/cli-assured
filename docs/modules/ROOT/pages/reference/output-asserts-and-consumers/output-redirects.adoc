@@ -1,5 +1,6 @@
 = Output redirects
 
+[[redirect-stdout-err-to-a-file]]
 == Redirect `std[out|err]` to a file
 
 [.since]#0.0.1#
@@ -14,6 +15,7 @@ include::example$j21/RedirectToFileTest.java[tag=imports]
 include::example$j21/RedirectToFileTest.java[tag=snippet,indent=0]
 ----
 
+[[redirect-stdout-err-to-an-output-stream]]
 == Redirect `std[out|err]` to an `OutputStream`
 
 [.since]#0.0.1#

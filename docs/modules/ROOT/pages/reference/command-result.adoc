@@ -3,6 +3,7 @@
 `CommandResult` is returned by `execute()` or `awaitTermination()` and provides access to the outcome of a command
 execution.
 
+[[assert-success]]
 == `assertSuccess()`
 
 [.since]#0.0.1#
@@ -17,6 +18,7 @@ include::example$j21/CommandResultTest.java[tag=imports]
 include::example$j21/CommandResultTest.java[tag=assertSuccess,indent=0]
 ----
 
+[[assert-timeout]]
 == `assertTimeout()`
 
 [.since]#0.0.1#
@@ -31,6 +33,7 @@ include::example$j21/CommandResultTest.java[tag=imports]
 include::example$j21/CommandResultTest.java[tag=assertTimeout,indent=0]
 ----
 
+[[exit-code]]
 == `exitCode()`
 
 [.since]#0.0.1#
@@ -44,6 +47,7 @@ include::example$j21/CommandResultTest.java[tag=imports]
 include::example$j21/CommandResultTest.java[tag=exitCode,indent=0]
 ----
 
+[[duration]]
 == `duration()`
 
 [.since]#0.0.1#
@@ -57,6 +61,7 @@ include::example$j21/CommandResultTest.java[tag=imports]
 include::example$j21/CommandResultTest.java[tag=duration,indent=0]
 ----
 
+[[access-the-whole-content-of-stdout-err]]
 == Access the whole content of `std[out|err]`
 
 [.since]#0.1.0#
@@ -64,6 +69,7 @@ include::example$j21/CommandResultTest.java[tag=duration,indent=0]
 Use `CommandResult.stdout()` or `CommandResult.stderr()` to obtain a `StreamResult` object, which provides access to
 the captured output lines, raw bytes, line count and byte count.
 
+[[stdout-err-as-stream-of-lines]]
 === `std[out|err]` as stream of lines
 
 [.since]#0.1.0#
@@ -78,6 +84,7 @@ include::example$j21/CommandResultTest.java[tag=imports]
 include::example$j21/CommandResultTest.java[tag=stdoutLines,indent=0]
 ----
 
+[[stdout-err-as-byte-array]]
 === `std[out|err]` as byte array
 
 [.since]#0.1.0#
@@ -92,6 +99,7 @@ include::example$j21/CommandResultTest.java[tag=imports]
 include::example$j21/CommandResultTest.java[tag=stdoutBytes,indent=0]
 ----
 
+[[line-count-and-byte-count-of-stdout-err]]
 === Line count and byte count of `std[out|err]`
 
 [.since]#0.1.0#
