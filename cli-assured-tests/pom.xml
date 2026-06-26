@@ -28,6 +28,10 @@
         </dependency>
         <dependency>
             <groupId>org.cli-assured</groupId>
+            <artifactId>cli-assured-sdkman</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.cli-assured</groupId>
             <artifactId>cli-assured-test-app</artifactId>
             <scope>test</scope>
         </dependency>

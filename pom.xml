@@ -103,6 +103,7 @@
     <modules>
         <module>cli-assured</module>
         <module>cli-assured-mvn</module>
+        <module>cli-assured-sdkman</module>
         <module>cli-assured-test-app</module>
         <module>cli-assured-tests</module>
     </modules>
@@ -122,6 +123,11 @@
             <dependency>
                 <groupId>org.cli-assured</groupId>
                 <artifactId>cli-assured-mvn</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.cli-assured</groupId>
+                <artifactId>cli-assured-sdkman</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -44,6 +45,7 @@ public class CommandSpec {
 
     private final Supplier<String> executable;
     private final List<String> arguments;
+    private final BiFunction<Supplier<String>, List<String>, String[]> commandArrayFunction;
     private final Map<String, String> env;
     private final Path cd;
     private final ExpectationsSpec expectations;
@@ -59,6 +61,7 @@ public class CommandSpec {
             List<String> arguments) {
         this.executable = executable;
         this.arguments = arguments;
+        this.commandArrayFunction = CommandSpec::toCmdArray;
         this.env = Collections.emptyMap();
         this.cd = Paths.get(".").toAbsolutePath().normalize();
         this.stderrToStdout = false;
@@ -73,6 +76,7 @@ public class CommandSpec {
     CommandSpec(
             Supplier<String> executable,
             List<String> arguments,
+            BiFunction<Supplier<String>, List<String>, String[]> commandArrayFunction,
             Map<String, String> environment,
             Path cd,
             ExpectationsSpec expectations,
@@ -84,6 +88,7 @@ public class CommandSpec {
             Supplier<ExecutorService> executor) {
         this.executable = executable;
         this.arguments = arguments;
+        this.commandArrayFunction = commandArrayFunction;
         this.env = Objects.requireNonNull(environment, "environment");
         this.cd = Objects.requireNonNull(cd, "cd");
         this.stderrToStdout = stderrToStdout;
@@ -107,7 +112,8 @@ public class CommandSpec {
      * @since             0.0.1
      */
     public CommandSpec command(String executable, String... arguments) {
-        return new CommandSpec(() -> executable, CliAssertUtils.join(this.arguments, arguments), env, cd, expectations,
+        return new CommandSpec(() -> executable, CliAssertUtils.join(this.arguments, arguments), commandArrayFunction, env, cd,
+                expectations,
                 stderrToStdout, stdin, autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -119,7 +125,8 @@ public class CommandSpec {
      * @since             0.0.1
      */
     public CommandSpec executable(String executable) {
-        return new CommandSpec(() -> executable, arguments, env, cd, expectations, stderrToStdout, stdin, autoCloseForcibly,
+        return new CommandSpec(() -> executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout, stdin,
+                autoCloseForcibly,
                 autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -131,7 +138,8 @@ public class CommandSpec {
      */
     public CommandSpec java() {
         final String exec = javaExecutable();
-        return new CommandSpec(() -> exec, arguments, env, cd, expectations, stderrToStdout, stdin, autoCloseForcibly,
+        return new CommandSpec(() -> exec, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout, stdin,
+                autoCloseForcibly,
                 autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -158,7 +166,8 @@ public class CommandSpec {
      * @since      0.0.1
      */
     public CommandSpec arg(String arg) {
-        return new CommandSpec(executable, CliAssertUtils.join(this.arguments, arg), env, cd, expectations, stderrToStdout,
+        return new CommandSpec(executable, CliAssertUtils.join(this.arguments, arg), commandArrayFunction, env, cd,
+                expectations, stderrToStdout,
                 stdin, autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -170,7 +179,8 @@ public class CommandSpec {
      * @since       0.0.1
      */
     public CommandSpec args(String... args) {
-        return new CommandSpec(executable, CliAssertUtils.join(this.arguments, args), env, cd, expectations, stderrToStdout,
+        return new CommandSpec(executable, CliAssertUtils.join(this.arguments, args), commandArrayFunction, env, cd,
+                expectations, stderrToStdout,
                 stdin, autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -182,7 +192,22 @@ public class CommandSpec {
      * @since       0.0.1
      */
     public CommandSpec args(Collection<String> arguments) {
-        return new CommandSpec(executable, CliAssertUtils.join(this.arguments, arguments), env, cd, expectations,
+        return new CommandSpec(executable, CliAssertUtils.join(this.arguments, arguments), commandArrayFunction, env, cd,
+                expectations,
+                stderrToStdout, stdin, autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
+    }
+
+    /**
+     * Set a custom command array function to create a command array out of an executable {@link Supplier} and a list of
+     * arguments.
+     * This might be handy if you want to transform the executable path or arguments just before executing the command.
+     *
+     * @param  commandArrayFunction a {@link BiFunction}
+     * @return                      an adjusted copy of this {@link CommandSpec}
+     * @since                       0.2.0
+     */
+    public CommandSpec commandArrayFunction(BiFunction<Supplier<String>, List<String>, String[]> commandArrayFunction) {
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations,
                 stderrToStdout, stdin, autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -196,7 +221,8 @@ public class CommandSpec {
     public CommandSpec env(Map<String, String> env) {
         Map<String, String> e = new LinkedHashMap<>(this.env);
         e.putAll(env);
-        return new CommandSpec(executable, arguments, Collections.unmodifiableMap(e), cd, expectations, stderrToStdout, stdin,
+        return new CommandSpec(executable, arguments, commandArrayFunction, Collections.unmodifiableMap(e), cd, expectations,
+                stderrToStdout, stdin,
                 autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -222,7 +248,8 @@ public class CommandSpec {
         while (i < cnt) {
             e.put(more[i++], more[i++]);
         }
-        return new CommandSpec(executable, arguments, Collections.unmodifiableMap(e), cd, expectations, stderrToStdout, stdin,
+        return new CommandSpec(executable, arguments, commandArrayFunction, Collections.unmodifiableMap(e), cd, expectations,
+                stderrToStdout, stdin,
                 autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -234,7 +261,8 @@ public class CommandSpec {
      * @since                0.0.1
      */
     public CommandSpec cd(Path workDirectory) {
-        return new CommandSpec(executable, arguments, env, workDirectory, expectations, stderrToStdout, stdin,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, workDirectory, expectations, stderrToStdout,
+                stdin,
                 autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -245,7 +273,8 @@ public class CommandSpec {
      * @since  0.0.1
      */
     public CommandSpec stderrToStdout() {
-        return new CommandSpec(executable, arguments, env, cd, expectations, true, stdin, autoCloseForcibly,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, true, stdin,
+                autoCloseForcibly,
                 autoCloseWithDescendants,
                 autoCloseTimeout, threadPool);
     }
@@ -282,7 +311,8 @@ public class CommandSpec {
             throw new IllegalStateException("stdin was already defined for this " + CommandSpec.class.getName()
                     + ". You may want to keep ony one stdin(...) call for the given CommandSpec chain");
         }
-        return new CommandSpec(executable, arguments, env, cd, expectations, stderrToStdout, stdin, autoCloseForcibly,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout, stdin,
+                autoCloseForcibly,
                 autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -303,7 +333,7 @@ public class CommandSpec {
             throw new IllegalStateException("stdin was already defined for this " + CommandSpec.class.getName()
                     + ". You may want to keep ony one stdin(...) call for the given CommandSpec chain");
         }
-        return new CommandSpec(executable, arguments, env, cd, expectations, stderrToStdout,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout,
                 new StringPipe(stdin),
                 autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
@@ -324,7 +354,7 @@ public class CommandSpec {
             throw new IllegalStateException("stdin was already defined for this " + CommandSpec.class.getName()
                     + ". You may want to keep ony one stdin(...) call for the given CommandSpec chain");
         }
-        return new CommandSpec(executable, arguments, env, cd, expectations, stderrToStdout,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout,
                 new FilePipe(file),
                 autoCloseForcibly, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
@@ -339,7 +369,7 @@ public class CommandSpec {
      * @since  0.0.1
      */
     public CommandSpec autoCloseForcibly() {
-        return new CommandSpec(executable, arguments, env, cd, expectations, stderrToStdout,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout,
                 stdin,
                 true, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
@@ -356,7 +386,7 @@ public class CommandSpec {
      */
     @ExcludeFromJacocoGeneratedReport
     public CommandSpec autoCloseWithoutDescendants() {
-        return new CommandSpec(executable, arguments, env, cd, expectations, stderrToStdout,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout,
                 stdin,
                 autoCloseForcibly, false, autoCloseTimeout, threadPool);
     }
@@ -372,7 +402,7 @@ public class CommandSpec {
      * @since  0.0.1
      */
     public CommandSpec autoCloseTimeout(Duration autoCloseTimeout) {
-        return new CommandSpec(executable, arguments, env, cd, expectations, stderrToStdout,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout,
                 stdin,
                 true, autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
@@ -396,7 +426,8 @@ public class CommandSpec {
      * @since             0.0.1
      */
     public CommandSpec threadPool(Supplier<ExecutorService> threadPool) {
-        return new CommandSpec(executable, arguments, env, cd, expectations, stderrToStdout, stdin, autoCloseForcibly,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout, stdin,
+                autoCloseForcibly,
                 autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -442,7 +473,8 @@ public class CommandSpec {
      * @since               0.0.1
      */
     CommandSpec expect(ExpectationsSpec expectations) {
-        return new CommandSpec(executable, arguments, env, cd, expectations, stderrToStdout, stdin, autoCloseForcibly,
+        return new CommandSpec(executable, arguments, commandArrayFunction, env, cd, expectations, stderrToStdout, stdin,
+                autoCloseForcibly,
                 autoCloseWithDescendants, autoCloseTimeout, threadPool);
     }
 
@@ -456,7 +488,7 @@ public class CommandSpec {
      */
     @ExcludeFromJacocoGeneratedReport
     public CommandProcess start() {
-        final String[] cmdArray = asCmdArray(executable, arguments);
+        final String[] cmdArray = commandArrayFunction.apply(executable, arguments);
 
         final StringBuilder cmdStringBuilder = new StringBuilder()
                 .append("cd ")
@@ -568,7 +600,7 @@ public class CommandSpec {
      * @return an array containing the executable and its arguments that can be passed e.g. to
      *         {@link ProcessBuilder#command(String...)}
      */
-    String[] asCmdArray(Supplier<String> executable, List<String> args) {
+    static String[] toCmdArray(Supplier<String> executable, List<String> args) {
         if (executable == null) {
             throw new IllegalStateException("The executable must be specified before starting the command process."
                     + " You may want to call CommandSpec.executable(String) or CommandSpec.command(String, String...)");
