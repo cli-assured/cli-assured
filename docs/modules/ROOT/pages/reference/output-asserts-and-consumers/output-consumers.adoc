@@ -1,5 +1,6 @@
 = Output consumers
 
+[[consume-lines-from-stdout-err]]
 == Consume lines from `std[out|err]`
 
 [.since]#0.0.1#
@@ -21,6 +22,7 @@ However that way is not recommended for commands producing a lot of output becau
 Using `.then().std[out|err].lines(Consumer<String>)` is much more memory efficient.
 ====
 
+[[log]]
 == `log()`
 
 [.since]#0.0.1#
@@ -35,6 +37,7 @@ include::example$j21/LogTest.java[tag=imports]
 include::example$j21/LogTest.java[tag=snippet,indent=0]
 ----
 
+[[log-consumer]]
 == `log(Consumer<String>)`
 
 [.since]#0.0.1#
@@ -48,6 +51,7 @@ include::example$j21/LoggerTest.java[tag=imports]
 include::example$j21/LoggerTest.java[tag=custom,indent=0]
 ----
 
+[[awaiting-a-specific-line]]
 == Awaiting a specific line
 
 [.since]#0.0.1#

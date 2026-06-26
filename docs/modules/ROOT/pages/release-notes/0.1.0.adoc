@@ -1,0 +1,70 @@
+= CLI Assured 0.1.0 release notes
+
+== Important dependency upgrades
+
+* `org.slf4j:slf4j-api` 2.0.17 -> 2.0.18
+** https://www.slf4j.org/news.html[Release notes]
+** https://github.com/qos-ch/slf4j/compare/v_2.0.17+++...+++v_2.0.18[Changelog]
+
+== Enhancements
+
+=== Access captured output through `xref:reference/command-result.adoc[CommandResult]`
+
+`xref:reference/command-result.adoc[CommandResult]` now exposes `stdout()` and `stderr()` methods returning a new `StreamResult` object.
+`StreamResult` provides access to:
+
+* `xref:reference/command-result.adoc#stdout-err-as-stream-of-lines[lines()]` - the captured output lines as a `Stream<String>`
+* `xref:reference/command-result.adoc#stdout-err-as-byte-array[bytes()]` - the raw captured output as a `byte[]`
+* `xref:reference/command-result.adoc#line-count-and-byte-count-of-stdout-err[lineCount()]` - the number of captured lines
+* `xref:reference/command-result.adoc#line-count-and-byte-count-of-stdout-err[byteCount()]` - the number of captured bytes
+
+=== `xref:reference/run-command-and-get-the-output.adoc#lines[CommandSpec.lines()]` shorthand
+
+A new `xref:reference/run-command-and-get-the-output.adoc#lines[CommandSpec.lines()]` method serves as a shorthand for the common pattern of executing a command,
+redirecting stderr to stdout, capturing all output, asserting success, and returning the stdout lines.
+
+Here is an example:
+
+[source,java]
+----
+Stream<String> lines = CliAssured.command("my-command").lines();
+----
+
+=== `xref:reference/run-command-and-get-the-output.adoc#bytes[CommandSpec.bytes()]` shorthand
+
+Similarly, `xref:reference/run-command-and-get-the-output.adoc#bytes[CommandSpec.bytes()]` provides a shorthand for capturing raw output bytes:
+
+[source,java]
+----
+byte[] bytes = CliAssured.command("my-command").bytes();
+----
+
+=== `IoConsumer` for `xref:reference/command-and-environment.adoc#write-to-stdin[stdin]` producers
+
+`xref:reference/command-and-environment.adoc#write-bytes-to-stdin[CommandSpec.stdin(...)]` now accepts an `IoConsumer<OutputStream>` instead of `Consumer<OutputStream>`.
+`IoConsumer` is a `@FunctionalInterface` whose `accept` method declares `throws IOException`,
+eliminating the need to wrap I/O exceptions in `UncheckedIOException`.
+
+=== CLI Assured documentation published on https://cli-assured.org/
+
+The Antora documentation is published on https://cli-assured.org/ and covers
+
+* xref:release-notes/index.adoc[Release notes] - Release notes documents for the past releases
+* xref:reference/index.adoc[API Reference] - full list of supported features and use cases
+
+== Deprecations
+
+* `CommandResult.byteCountStdout()` - use `xref:reference/command-result.adoc#line-count-and-byte-count-of-stdout-err[stdout().byteCount()]` instead
+* `CommandResult.byteCountStderr()` - use `xref:reference/command-result.adoc#line-count-and-byte-count-of-stdout-err[stderr().byteCount()]` instead
+
+== Breaking changes
+
+=== `xref:reference/command-and-environment.adoc#write-bytes-to-stdin[CommandSpec.stdin(Consumer<OutputStream>)]` changed to `CommandSpec.stdin(IoConsumer<OutputStream>)`
+
+The `xref:reference/command-and-environment.adoc#write-bytes-to-stdin[stdin(...)]` method now accepts `IoConsumer<OutputStream>` instead of `Consumer<OutputStream>`.
+Lambda expressions work without changes, but code passing an explicit `Consumer<OutputStream>` variable
+will need to be updated.
+
+== Full changelog
+
+https://github.com/cli-assured/cli-assured/compare/0.0.1+++...+++0.1.0

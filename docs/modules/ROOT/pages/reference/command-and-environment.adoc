@@ -3,6 +3,7 @@
 The static methods in `CliAssured` class, such as `CliAssured.given()` or `CliAssured.command(String, String...)` are the main entry points into the CLI Assured API.
 They all return a `CommandSpec` instance.
 
+[[command-and-its-arguments]]
 == Command and its arguments
 
 [.since]#0.0.1#
@@ -23,6 +24,7 @@ include::example$j21/CommandSpecCommandTest.java[tag=imports]
 include::example$j21/CommandSpecCommandTest.java[tag=command,indent=0]
 ----
 
+[[add-arguments-separately]]
 === Add arguments separately
 
 [.since]#0.0.1#
@@ -36,12 +38,14 @@ include::example$j21/CommandSpecCommandTest.java[tag=imports]
 include::example$j21/CommandSpecCommandTest.java[tag=executableArgs,indent=0]
 ----
 
+[[special-command-spec-factories]]
 == Special `CommandSpec` factories
 
 [.since]#0.0.1#
 
 CLI Assured offers special `CommandSpec` factories for the `java` executable of the current JVM process and for Maven.
 
+[[cli-assured-java]]
 === `CliAssured.java()`
 
 [.since]#0.0.1#
@@ -56,6 +60,7 @@ include::example$j21/CommandSpecJavaTest.java[tag=imports]
 include::example$j21/CommandSpecJavaTest.java[tag=javaVersion,indent=0]
 ----
 
+[[install-invoke-and-test-maven]]
 === Install, invoke and test Maven
 
 [.since]#0.0.1#
@@ -78,6 +83,7 @@ There are two ways how to specify the Maven version to install and run:
 * By version literal
 * By querying `.mvn/wrapper/maven-wrapper.properties`
 
+[[install-and-run-a-specific-version-of-maven]]
 ==== Install and run a specific version of Maven
 
 [.since]#0.0.1#
@@ -99,6 +105,7 @@ Mvn.version("3.9.11")
     .assertSuccess();
 ----
 
+[[install-and-run-maven-wrapper-version]]
 ==== Install and run the Maven version configured for Maven Wrapper
 
 [.since]#0.0.1#
@@ -122,6 +129,7 @@ Mvn.fromMvnw() // Find .mvn/wrapper/maven-wrapper.properties
     .assertSuccess();
 ----
 
+[[environment-variables]]
 == Environment variables
 
 [.since]#0.0.1#
@@ -143,6 +151,7 @@ There is also `CommandSpec.env(Map<String, String> variables)` accepting a map f
 ====
 
 
+[[working-directory]]
 == Working directory
 
 [.since]#0.0.1#
@@ -164,6 +173,7 @@ include::example$j21/CdTest.java[tag=snippet,indent=0]
 Using `CliAssured.command("cat", "hello.txt").cd(myWorkDir)` would have exactly the same effect.
 ====
 
+[[redirect-stderr-to-stdout]]
 == Redirect `stderr` to `stdout`
 
 [.since]#0.0.1#
@@ -181,10 +191,12 @@ include::example$j21/StderrToStdoutTest.java[tag=imports]
 include::example$j21/StderrToStdoutTest.java[tag=snippet,indent=0]
 ----
 
+[[write-to-stdin]]
 == Write to `stdin`
 
 [.since]#0.0.1#
 
+[[write-a-string-to-stdin]]
 === Write a string to `stdin`
 
 [.since]#0.0.1#
@@ -200,6 +212,7 @@ include::example$j21/SendStringToStdinTest.java[tag=imports]
 include::example$j21/SendStringToStdinTest.java[tag=snippet,indent=0]
 ----
 
+[[send-a-file-to-stdin]]
 === Send a file to `stdin`
 
 [.since]#0.0.1#
@@ -214,6 +227,7 @@ include::example$j21/SendFileToStdinTest.java[tag=imports]
 include::example$j21/SendFileToStdinTest.java[tag=snippet,indent=0]
 ----
 
+[[write-bytes-to-stdin]]
 === Write bytes to `stdin`
 
 [.since]#0.0.1#
@@ -232,6 +246,7 @@ include::example$j21/WriteToStdinTest.java[tag=imports]
 include::example$j21/WriteToStdinTest.java[tag=snippet,indent=0]
 ----
 
+[[auto-close-behavior]]
 == Auto-close behavior
 
 [.since]#0.0.1#
@@ -254,6 +269,7 @@ include::example$j21/AutoCloseForciblyTest.java[tag=imports]
 include::example$j21/AutoCloseForciblyTest.java[tag=snippet,indent=0]
 ----
 
+[[thread-pool]]
 == Thread pool
 
 [.since]#0.0.1#
@@ -270,6 +286,7 @@ include::example$j21/ThreadPoolTest.java[tag=imports]
 include::example$j21/ThreadPoolTest.java[tag=local,indent=0]
 ----
 
+[[supply-a-custom-executor-service]]
 === Supply a custom `ExecutorService`
 
 [.since]#0.0.1#
@@ -285,6 +302,7 @@ include::example$j21/ThreadPoolCustomTest.java[tag=imports]
 include::example$j21/ThreadPoolCustomTest.java[tag=custom,indent=0]
 ----
 
+[[next-steps]]
 == Next steps
 
 Once you have configured a `CommandSpec` instance, you may want to do one of the following:

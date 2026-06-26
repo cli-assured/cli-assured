@@ -1,6 +1,6 @@
 ---
 name: relnotes
-description: Create release notes for a specific CLI Assured release version. 
+description: Create release notes for a specific CLI Assured release version.
 Usage: /relnotes <version> (e.g., /relnotes 3.33.2)
   or /relnotes <version> <previous-version> (e.g., /relnotes 3.35.0 3.33.1)
 ---
@@ -17,17 +17,17 @@ The version number is passed as the first non-optional argument (e.g., `3.33.2`)
 
 Extract the version number from the first (required) argument. It must be a semantic version like `3.33.2` following the naming scheme `<major>.<minor>.<micro or patch>`.
 
-### 1.1 Determine the previous version 
+### 1.1 Determine the previous version
 
 If previous version is specified via the second command argument, use that one.
 
 Otherwise determine the previous version by looking at existing git tags on the branch of the release notes version.
-The name of the branch is either `main` for release notes versions ending with `.0` or `<major>.<minor>` for Long Term 
+The name of the branch is either `main` for release notes versions ending with `.0` or `<major>.<minor>` for Long Term
 Support (LTS) branches).
-Only tags matching `<major>.<minor>.<micro>`, where all of `<major>`, `<minor>` and `<micro>` must be numeric, 
+Only tags matching `<major>.<minor>.<micro>`, where all of `<major>`, `<minor>` and `<micro>` must be numeric,
 are relevant for release notes other tags can be ignored.
 
-If the requested release notes version does not end with `.0`, the previous version is the tag immediately before 
+If the requested release notes version does not end with `.0`, the previous version is the tag immediately before
 the requested version in sorted order.
 
 Use:
@@ -86,9 +86,9 @@ The format follows these conventions:
 - **Sections** (include only those that apply):
   - `== Important dependency upgrades` — bullet list of upgraded dependencies. Each upgrade should contain:
     - A link to release notes
-      - Look into older release notes under `docs/modules/ROOT/pages/release-notes/` to figure out where the given 
+      - Look into older release notes under `docs/modules/ROOT/pages/release-notes/` to figure out where the given
         project publishes their release notes and try to find the release notes for the version we upgraded to.
-      - If needed you can also search on the internet for the specific dependency release 
+      - If needed you can also search on the internet for the specific dependency release
     - A link to changelog in, typically `https://github.com/<org>/<project>/compare/<old-version>+++...+++<new-version>`
     - If there were security vulnerabilities fixed in the given dependency, list them along with links to the CVE database.
   - `== Enhancements` — for new features or enhancements, each as a `===` subsection. Link GitHub issues in the heading like `=== https://github.com/cli-assured/cli-assured/issues/<issue-number>[#issue-number] <issue-title>`
@@ -125,7 +125,7 @@ Do not ask the user whether the file can be created or updated, just create and/
 
 ### 6. Update nav.adoc
 
-Edit `docs/modules/ROOT/nav.adoc`. Add a new entry in the release notes section, maintaining version-descending order. 
+Edit `docs/modules/ROOT/nav.adoc`. Add a new entry in the release notes section, maintaining version-descending order.
 The entry goes after the `ifeval::[{doc-is-main} == true]` line, among the other `** xref:release-notes/...` entries.
 
 Format: `** xref:release-notes/<version>.adoc[<version>]`

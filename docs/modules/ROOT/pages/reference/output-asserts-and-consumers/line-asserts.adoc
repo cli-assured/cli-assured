@@ -9,6 +9,7 @@ All assertion methods that accept `String...` also have `Collection<String>` ove
 `hasLinesMatching` also accepts `Pattern...` for compiled regular expressions.
 ====
 
+[[has-lines]]
 == `hasLines(String...)`
 
 [.since]#0.0.1#
@@ -22,6 +23,7 @@ include::example$j21/LineAssertsTest.java[tag=imports]
 include::example$j21/LineAssertsTest.java[tag=hasLines,indent=0]
 ----
 
+[[does-not-have-lines]]
 == `doesNotHaveLines(String...)`
 
 [.since]#0.0.1#
@@ -35,6 +37,7 @@ include::example$j21/LineAssertsTest.java[tag=imports]
 include::example$j21/LineAssertsTest.java[tag=doesNotHaveLines,indent=0]
 ----
 
+[[has-lines-containing]]
 == `hasLinesContaining(String...)`
 
 [.since]#0.0.1#
@@ -48,6 +51,7 @@ include::example$j21/LineAssertsTest.java[tag=imports]
 include::example$j21/LineAssertsTest.java[tag=hasLinesContaining,indent=0]
 ----
 
+[[does-not-have-lines-containing]]
 == `doesNotHaveLinesContaining(String...)`
 
 [.since]#0.0.1#
@@ -61,6 +65,7 @@ include::example$j21/LineAssertsTest.java[tag=imports]
 include::example$j21/LineAssertsTest.java[tag=doesNotHaveLinesContaining,indent=0]
 ----
 
+[[has-lines-containing-case-insensitive]]
 == `hasLinesContainingCaseInsensitive(String...)`
 
 [.since]#0.0.1#
@@ -74,6 +79,7 @@ include::example$j21/LineAssertsTest.java[tag=imports]
 include::example$j21/LineAssertsTest.java[tag=hasLinesContainingCaseInsensitive,indent=0]
 ----
 
+[[has-lines-matching]]
 == `hasLinesMatching(String...)`
 
 [.since]#0.0.1#
@@ -88,6 +94,7 @@ include::example$j21/LineAssertsTest.java[tag=imports]
 include::example$j21/LineAssertsTest.java[tag=hasLinesMatching,indent=0]
 ----
 
+[[does-not-have-lines-matching]]
 == `doesNotHaveLinesMatching(String...)`
 
 [.since]#0.0.1#
@@ -101,6 +108,7 @@ include::example$j21/LineAssertsTest.java[tag=imports]
 include::example$j21/LineAssertsTest.java[tag=doesNotHaveLinesMatching,indent=0]
 ----
 
+[[has-line-count]]
 == `hasLineCount(int)`
 
 [.since]#0.0.1#
@@ -124,6 +132,7 @@ include::example$j21/LineCountTest.java[tag=imports]
 include::example$j21/LineCountTest.java[tag=predicate,indent=0]
 ----
 
+[[encoding]]
 == Encoding
 
 [.since]#0.0.1#

@@ -3,6 +3,7 @@
 You can start the command process and await its termination in one step using `CommandSpec.execute()`
 or you can use `CommandSpec.start()` and `CommandProcess.awatTermination()` if you need more control.
 
+[[command-spec-execute]]
 == `CommandSpec.execute()`
 
 [.since]#0.0.1#
@@ -17,6 +18,7 @@ include::example$j21/ExecuteAndStartTest.java[tag=imports]
 include::example$j21/ExecuteAndStartTest.java[tag=execute,indent=0]
 ----
 
+[[command-spec-start-and-await-termination]]
 == `CommandSpec.start()` and `CommandProcess.awaitTermination()`
 
 [.since]#0.0.1#
@@ -42,6 +44,7 @@ include::example$j21/ExecuteAndStartTest.java[tag=imports]
 include::example$j21/ExecuteAndStartTest.java[tag=tryWithResources,indent=0]
 ----
 
+[[timeouts]]
 == Timeouts
 
 [.since]#0.0.1#
@@ -74,6 +77,7 @@ include::example$j21/TimeoutTest.java[tag=imports]
 include::example$j21/TimeoutTest.java[tag=assertTimeout,indent=0]
 ----
 
+[[killing-the-command-midflight]]
 == Killing the command midflight
 
 [.since]#0.0.1#
@@ -98,6 +102,7 @@ include::example$j21/CommandProcessTest.java[tag=imports]
 include::example$j21/CommandProcessTest.java[tag=killForcibly,indent=0]
 ----
 
+[[access-the-pid-of-the-command-process]]
 == Access the PID of the command process
 
 [.since]#0.0.1#
@@ -111,6 +116,7 @@ include::example$j21/CommandProcessTest.java[tag=imports]
 include::example$j21/CommandProcessTest.java[tag=pid,indent=0]
 ----
 
+[[child-and-descendant-processes]]
 == Child and descendant processes
 
 [.since]#0.0.1#
