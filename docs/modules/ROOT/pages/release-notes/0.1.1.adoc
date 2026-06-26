@@ -1,0 +1,13 @@
+= CLI Assured 0.1.1 release notes
+
+== Bugfixes
+
+=== `org.slf4j:slf4j-api` moved from `provided` to `compile` scope
+
+Before CLI Assured 0.1.1, `org.slf4j:slf4j-api` was declared with `provided` scope, requiring users to add it explicitly
+to their projects.
+Since CLI Assured 0.1.1, `org.slf4j:slf4j-api` is a transitive `compile` dependency, so it is available automatically.
+
+== Full changelog
+
+https://github.com/cli-assured/cli-assured/compare/0.1.0+++...+++0.1.1

@@ -1,6 +1,7 @@
 // release-notes
 * xref:release-notes/index.adoc[]
 ifeval::[{doc-is-main} == true]
+** xref:release-notes/0.1.1.adoc[0.1.1]
 ** xref:release-notes/0.1.0.adoc[0.1.0]
 ** xref:release-notes/0.0.1.adoc[0.0.1]
 endif::[]
