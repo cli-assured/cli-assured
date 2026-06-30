@@ -1,0 +1,14 @@
+= Call `java` command
+
+[.since]#0.0.1#
+
+CLI Assured offers the `CliAssured.java()` factory method to create a `CommandSpec` instance
+with the `java` executable of the current JVM process pre-configured.
+The executable is resolved from the `java.home` system property.
+
+[source,java]
+----
+include::example$j21/CommandSpecJavaTest.java[tag=imports]
+
+include::example$j21/CommandSpecJavaTest.java[tag=javaVersion,indent=0]
+----

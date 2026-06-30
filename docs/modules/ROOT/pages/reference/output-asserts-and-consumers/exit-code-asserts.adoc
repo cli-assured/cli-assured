@@ -38,7 +38,7 @@ include::example$j21/ExitCodeTest.java[tag=exitCodeIsAnyOf,indent=0]
 [.since]#0.0.1#
 
 Use `exitCodeSatisfies(IntPredicate, String)` for more complex conditions.
-The description string supports `${actual}` as a placeholder for the actual exit code:
+The description string supports `$\{actual}` as a placeholder for the actual exit code:
 
 [source,java]
 ----

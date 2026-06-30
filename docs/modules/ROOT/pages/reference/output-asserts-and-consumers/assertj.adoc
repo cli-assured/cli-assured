@@ -26,7 +26,7 @@ depending on the amount of data produced on `stdout` or `stderr`.
 ====
 
 [[using-assertj-on-individual-lines]]
-=== Using AssertJ on individual lines
+== Using AssertJ on individual lines
 
 [.since]#0.0.1#
 

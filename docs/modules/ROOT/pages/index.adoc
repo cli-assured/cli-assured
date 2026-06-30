@@ -8,6 +8,23 @@ Although we strive to keep all changes backwards compatible,
 as long as the project has not reached version 1.0.0, backwards incompatible changes may happen without notice.
 ====
 
+[[hello-world]]
+== Hello World!
+
+Here an example how you would typically use CLI Assured:
+
+[source,java]
+----
+include::example$j21/HelloWorldTest.java[tag=imports]
+
+include::example$j21/HelloWorldTest.java[tag=snippet,indent=0]
+----
+
+[TIP]
+====
+Refer to xref:reference/index.adoc[] for more examples and for more information about the individual CLI Assured API methods.
+====
+
 == Main characteristics
 
 * xref:reference/index.adoc#api-overview[Fluent API]

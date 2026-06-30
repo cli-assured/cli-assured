@@ -1,0 +1,49 @@
+= Install and invoke Maven
+
+[.since]#0.0.1#
+
+The utility methods for installing and invoking Maven are available in `cli-assured-mvn` artifact:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.cli-assured</groupId>
+  <artifactId>cli-assured-mvn</artifactId>
+  <version><!-- Use the latest --></version>
+</dependency>
+----
+
+Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured-mvn[Maven Central].
+
+There are two ways how to specify the Maven version to install and run:
+
+* By version literal
+* By querying `.mvn/wrapper/maven-wrapper.properties`
+
+[[install-and-run-a-specific-version-of-maven]]
+== Install and run a specific version of Maven
+
+[.since]#0.0.1#
+
+[source,java]
+----
+include::example$j21/MvnTest.java[tag=imports]
+
+include::example$j21/MvnTest.java[tag=snippet,indent=0]
+----
+
+[[install-and-run-maven-wrapper-version]]
+== Install and run the Maven version configured for Maven Wrapper
+
+[.since]#0.0.1#
+
+In case you are about to invoke Maven inside a project having Maven Wrapper configured,
+you can let CLI Assured pick its version of Maven and also reuse the Maven installation available in
+`~/.m2/wrapper/dists`.
+
+[source,java]
+----
+include::example$j21/MvnTest.java[tag=imports]
+
+include::example$j21/MvnTest.java[tag=fromMvnw,indent=0]
+----
