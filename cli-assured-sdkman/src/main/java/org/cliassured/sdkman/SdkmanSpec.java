@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SdkmanSpec {
     private static final int BUFFER_SIZE = 8192;
-    private static final String GET_SDKMAN_IO = "https://get.sdkman.io";
+    private static final String GET_SDKMAN_IO = "https://get.sdkman.io?rcupdate=false";
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(SdkmanSpec.class);
 
     private final Path home;
@@ -92,13 +92,14 @@ public class SdkmanSpec {
     }
 
     /**
-     * Install SDKMAN! from {@link #installationScriptUrl()} or throw an {@link AssertionError} if SDKMAN! is installed in {@link #home()} already.
+     * Install SDKMAN! from {@link #installationScriptUrl()} or throw an {@link AssertionError} if SDKMAN! is installed in
+     * {@link #home()} already.
      * <p>
      * You may want to prefer {@link #installIfNeeded()} if you cannot guarantee that SDKMAN! was installed already
      *
-     * @return                       a new {@link InstalledSdkman} instance
+     * @return                a new {@link InstalledSdkman} instance
      * @throws AssertionError if this SDKMAN! version is installed in {@link #home()} already
-     * @since                        0.2.0
+     * @since                 0.2.0
      */
     @ExcludeFromJacocoGeneratedReport
     public InstalledSdkman install() {
@@ -139,7 +140,7 @@ public class SdkmanSpec {
     /**
      * Throw an {@link IllegalStateException} unless SDKMAN is installed in directory returned by {@link #home()}.
      *
-     * @return                       a new {@link InstalledSdkman} instance
+     * @return                a new {@link InstalledSdkman} instance
      * @throws AssertionError if SDKMAN! is not installed in directory returned by {@link #home()}
      * @since                 0.2.0
      */

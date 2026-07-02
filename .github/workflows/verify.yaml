@@ -66,6 +66,12 @@ jobs:
           java-version: ${{ matrix.jdk }}
           distribution: 'temurin'
 
+      - name: Install Bash 4+ on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install bash
+          echo "$(brew --prefix)/bin" >> $GITHUB_PATH
+
       - id: maven-m2
         shell: bash
         run: |

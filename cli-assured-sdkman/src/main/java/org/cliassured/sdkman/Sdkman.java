@@ -52,9 +52,9 @@ public class Sdkman {
      * Install SDKMAN! from default installation script URL to default SDKMAN home directory or throw an
      * {@link AssertionError} if SDKMAN! is installed there already.
      *
-     * @return                       a new {@link InstalledSdkman} instance
+     * @return                a new {@link InstalledSdkman} instance
      * @throws AssertionError if this SDKMAN! version is installed in default SDKMAN home directory already
-     * @since                        0.2.0
+     * @since                 0.2.0
      */
     @ExcludeFromJacocoGeneratedReport
     public static InstalledSdkman install() {
@@ -66,7 +66,7 @@ public class Sdkman {
      * <p>
      * You may want to prefer {@link #installIfNeeded()} if you cannot guarantee that SDKMAN! was installed already
      *
-     * @return                       a new {@link InstalledSdkman} instance
+     * @return                a new {@link InstalledSdkman} instance
      * @throws AssertionError if SDKMAN! is not installed in default SDKMAN home directory
      * @since                 0.2.0
      */

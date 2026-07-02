@@ -41,8 +41,9 @@ include::example$j21/CommandSpecCommandTest.java[tag=executableArgs,indent=0]
 [[special-command-spec-factories]]
 == Special `CommandSpec` factories
 
-CLI Assured offers special `CommandSpec` factories for xref:reference/invoke-java-command.adoc[calling the `java` command]
-and for xref:reference/install-and-invoke-maven.adoc[installing and invoking Maven].
+CLI Assured offers special `CommandSpec` factories for xref:reference/invoke-java-command.adoc[calling the `java` command],
+for xref:reference/install-and-invoke-maven.adoc[installing and invoking Maven],
+and for xref:reference/install-and-invoke-sdkman.adoc[installing and invoking SDKMAN!].
 
 [[environment-variables]]
 == Environment variables
