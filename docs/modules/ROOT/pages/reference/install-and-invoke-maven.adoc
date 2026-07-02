@@ -2,7 +2,7 @@
 
 [.since]#0.0.1#
 
-The utility methods for installing and invoking Maven are available in `cli-assured-mvn` artifact:
+The utility methods for installing and invoking Maven are available in `cli-assured-maven` artifact:
 
 [source,xml]
 ----
@@ -13,7 +13,7 @@ The utility methods for installing and invoking Maven are available in `cli-assu
 </dependency>
 ----
 
-Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured-mvn[Maven Central].
+Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured-maven[Maven Central].
 
 There are two ways how to specify the Maven version to install and run:
 

@@ -14,7 +14,7 @@
         <version>0.1.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cli-assured-mvn</artifactId>
+    <artifactId>cli-assured-maven</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
 
     <dependencies>

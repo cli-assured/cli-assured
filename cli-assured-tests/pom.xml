@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>org.cli-assured</groupId>
-            <artifactId>cli-assured-mvn</artifactId>
+            <artifactId>cli-assured-maven</artifactId>
         </dependency>
         <dependency>
             <groupId>org.cli-assured</groupId>
@@ -109,7 +109,7 @@
                                             <filtering>false</filtering>
                                         </resource>
                                         <resource>
-                                            <directory>${project.basedir}/../cli-assured-mvn/target/classes</directory>
+                                            <directory>${project.basedir}/../cli-assured-maven/target/classes</directory>
                                             <includes>
                                                 <include>**</include>
                                             </includes>
@@ -135,7 +135,7 @@
                                             <filtering>false</filtering>
                                         </resource>
                                         <resource>
-                                            <directory>${project.basedir}/../cli-assured-mvn/src/main/java</directory>
+                                            <directory>${project.basedir}/../cli-assured-maven/src/main/java</directory>
                                             <includes>
                                                 <include>**</include>
                                             </includes>
