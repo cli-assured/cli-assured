@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: Copyright (c) 2025 CLI Assured contributors as indicated by the @author tags
  * SPDX-License-Identifier: Apache-2.0
  */
-package org.cliassured.mvn.test.java21;
+package org.cliassured.maven.test.java21;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -24,8 +24,8 @@ import org.awaitility.Awaitility;
 import org.cliassured.Await;
 import org.cliassured.Await.LineAwait;
 import org.cliassured.CommandProcess;
-import org.cliassured.mvn.InstalledMaven;
-import org.cliassured.mvn.Maven;
+import org.cliassured.maven.InstalledMaven;
+import org.cliassured.maven.Maven;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

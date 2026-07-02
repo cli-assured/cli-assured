@@ -9,7 +9,7 @@ import org.cliassured.maven.Maven;
 // end::imports[]
 import org.junit.jupiter.api.Test;
 
-public class MvnTest {
+public class MavenTest {
 
     @Test
     void versionLiteral() {

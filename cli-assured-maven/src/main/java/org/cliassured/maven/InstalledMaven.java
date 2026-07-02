@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: Copyright (c) 2025 CLI Assured contributors as indicated by the @author tags
  * SPDX-License-Identifier: Apache-2.0
  */
-package org.cliassured.mvn;
+package org.cliassured.maven;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.cliassured.CliAssured;
 import org.cliassured.CommandSpec;
-import org.cliassured.mvn.MavenSpec.ExcludeFromJacocoGeneratedReport;
+import org.cliassured.maven.MavenSpec.ExcludeFromJacocoGeneratedReport;
 
 /**
  * Maven installed locally.

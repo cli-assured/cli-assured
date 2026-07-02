@@ -5,11 +5,11 @@
 package org.cliassured.test.j21.docs;
 
 // tag::imports[]
-import org.cliassured.mvn.Maven;
+import org.cliassured.maven.Maven;
 // end::imports[]
 import org.junit.jupiter.api.Test;
 
-public class MvnTest {
+public class MavenTest {
 
     @Test
     void versionLiteral() {

@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: Copyright (c) 2025 CLI Assured contributors as indicated by the @author tags
  * SPDX-License-Identifier: Apache-2.0
  */
-package org.cliassured.mvn.test;
+package org.cliassured.maven.test;
 
 import java.io.IOException;
 import java.nio.file.FileStore;
@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.cliassured.CliAssured;
-import org.cliassured.mvn.InstalledMaven;
-import org.cliassured.mvn.Maven;
-import org.cliassured.mvn.MavenSpec;
+import org.cliassured.maven.InstalledMaven;
+import org.cliassured.maven.Maven;
+import org.cliassured.maven.MavenSpec;
 import org.junit.jupiter.api.Test;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
-public class MvnTest {
+public class MavenTest {
     static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 
     @Test

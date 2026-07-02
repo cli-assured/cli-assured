@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: Copyright (c) 2025 CLI Assured contributors as indicated by the @author tags
  * SPDX-License-Identifier: Apache-2.0
  */
-package org.cliassured.mvn;
+package org.cliassured.maven;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
