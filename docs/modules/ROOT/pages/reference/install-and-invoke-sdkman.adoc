@@ -1,0 +1,96 @@
+= Install and invoke SDKMAN!
+
+[.since]#0.2.0#
+
+The utility methods for installing and invoking https://sdkman.io/[SDKMAN!] are available in `cli-assured-sdkman` artifact:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.cli-assured</groupId>
+  <artifactId>cli-assured-sdkman</artifactId>
+  <version><!-- Use the latest --></version>
+</dependency>
+----
+
+Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured-sdkman[Maven Central].
+
+[[install-sdkman-or-assert-it-is-installed]]
+== Install SDKMAN! or assert it is installed
+
+[.since]#0.2.0#
+
+To obtain an instance of `org.cliassured.sdkman.Sdk` representing the `sdk` command, you need to install SDKMAN! first
+or at least assert that it is installed.
+
+If you are fine with default SDKMAN! installation directory (`~/.sdkman`)
+and default URL of the SDKMAN! installation script (`https://get.sdkman.io?rcupdate=false`),
+you may use any of the following methods for that:
+
+* `Sdkman.install()` - install SDKMAN!
+* `Sdkman.installIfNeeded()` - install SDKMAN! unless it is installed
+* `Sdkman.assertInstalled()` - assert SDKMAN! is installed
+
+All of the above methods return an instance of `org.cliassured.sdkman.InstalledSdkman`
+
+[[install-sdkman-to-a-custom-directory]]
+== Install SDKMAN! to a custom directory
+
+[.since]#0.2.0#
+
+If you prefer not to interfere with the default local installation of SDKMAN! in `~/.sdkman`,
+you may want to install it into a custom directory.
+
+[source,java]
+----
+include::example$j21/SdkmanHomeTest.java[tag=imports]
+
+include::example$j21/SdkmanHomeTest.java[tag=installToCustomHome,indent=0]
+----
+
+[[install-sdkman-using-custom-installation-script]]
+== Install SDKMAN! using custom installation script
+
+[.since]#0.2.0#
+
+If you prefer to install SDKMAN! in a special way, be it by adding or removing URL parameters from the default URL `https://get.sdkman.io?rcupdate=false`
+or by serving your own script, you can use `Sdkman.installationScriptUrl(String)` or `SdkmanSpec.installationScriptUrl(String)`:
+
+[source,java]
+----
+include::example$j21/SdkmanInstallationScriptUrlTest.java[tag=imports]
+
+include::example$j21/SdkmanInstallationScriptUrlTest.java[tag=installationScriptUrl,indent=0]
+----
+
+
+[[install-a-candidate-and-call-its-commands]]
+== Install a candidate and call its commands
+
+[.since]#0.2.0#
+
+Use `Sdk.installCandidateIfNeeded(String candidate, String version)` to install any SDKMAN!-managed tool
+(such as `maven`, `java`, `gradle`, etc.) at a specific version. The method returns an `InstalledCandidate`
+that provides access to the candidate's commands in its `bin` directory.
+
+[source,java]
+----
+include::example$j21/SdkmanInstallCandidateTest.java[tag=imports]
+
+include::example$j21/SdkmanInstallCandidateTest.java[tag=installCandidate,indent=0]
+----
+
+[[run-sdk-commands]]
+== Run `sdk` commands
+
+[.since]#0.2.0#
+
+Use `Sdk.args(String\...)` to run arbitrary `sdk` subcommands, such as `version`, `list`, `uninstall`, `upgrade`, etc.
+`Sdk.args(String\...)` returns a `CommandSpec`, so the rest is standard CLI Assured code.
+
+[source,java]
+----
+include::example$j21/SdkmanVersionTest.java[tag=imports]
+
+include::example$j21/SdkmanVersionTest.java[tag=version,indent=0]
+----

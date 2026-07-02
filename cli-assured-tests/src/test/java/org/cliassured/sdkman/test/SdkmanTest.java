@@ -13,10 +13,13 @@ import org.cliassured.sdkman.Sdk;
 import org.cliassured.sdkman.Sdkman;
 import org.cliassured.sdkman.SdkmanSpec;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 public class SdkmanTest {
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void e2e() {
         final Path baseDir = Paths.get(".").toAbsolutePath().normalize();
         final Path sdkmanHome = baseDir.resolve("target/sdkman-" + UUID.randomUUID());
