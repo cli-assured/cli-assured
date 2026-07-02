@@ -57,7 +57,6 @@ public class SdkmanTest {
 
             Assertions.assertThat(sdkSpec.home().resolve("candidates/maven/3.9.11/bin/"
                     + mvnScriptName)).isRegularFile();
-            Assertions.assertThat(mvn3911.bin().resolve(mvnScriptName)).isRegularFile();
         }
 
         {
@@ -75,7 +74,6 @@ public class SdkmanTest {
 
             Assertions.assertThat(sdkSpec.home().resolve("candidates/maven/3.9.12/bin/"
                     + mvnScriptName)).isRegularFile();
-            Assertions.assertThat(mvn3912.bin().resolve(mvnScriptName)).isRegularFile();
         }
 
     }

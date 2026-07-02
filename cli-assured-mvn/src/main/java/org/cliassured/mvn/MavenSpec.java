@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -37,33 +36,16 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.cliassured.CliAssured;
-import org.cliassured.CommandSpec;
 import org.slf4j.LoggerFactory;
 
-// @formatter:off
 /**
- * A Maven version installed or installable locally under {@code ~/.m2/wrapper/dists}.
- * Can be used for invoking {@code mvn[.cmd]} after calling {@link #installIfNeeded()} or {@link #assertInstalled()} as
- * follows:
- *
- * <pre>{@code
- * Mvn.version("3.9.11")
- *         .installIfNeeded()
- *         .args("--version")
- *         .then()
- *             .stdout()
- *                 .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
- *         .execute()
- *         .assertSuccess();
- * }</pre>
+ * A specification of a Maven installation
  *
  * @author <a href="https://github.com/ppalaga">Peter Palaga</a>
  * @since  0.0.1
  */
-// @formatter:on
-public class Mvn {
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Mvn.class);
+public class MavenSpec {
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MavenSpec.class);
     private static final Pattern MAVEN_URL_PATH_PATTERN = Pattern.compile("/apache-maven-(.*)-bin\\.zip$");
     private static final Pattern MAVEN_CORE_PATTERN = Pattern.compile("^maven-core-(.*)\\.jar$");
     private static final int BUFFER_SIZE = 8192;
@@ -73,90 +55,14 @@ public class Mvn {
     private final Path home;
     private final String distributionUrl;
 
-    /**
-     * Create a new {@link Mvn} of the given version.
-     *
-     * @param  version the Maven version to select, such as {@code 3.9.11}
-     * @return         a new {@link Mvn}
-     *
-     * @since          0.0.1
-     */
-    public static Mvn version(String version) {
-        return new Mvn(version);
-    }
-
-    /**
-     * Create a new {@link Mvn} with the {@link #distributionUrl} looked up in {@code .mvn/wrapper/maven-wrapper.properties}
-     * relative to current directory or its nearest ancestor directory.
-     * Equivalent to {@code Mvn.fromMvnw(Paths.get(".").toAbsolutePath().normalize())}.
-     *
-     * @return                       a new {@link Mvn}
-     * @throws IllegalStateException if {@code .mvn/wrapper/maven-wrapper.properties} cannot be found under any of the
-     *                               ancestors
-     *
-     * @since                        0.0.1
-     */
-    @ExcludeFromJacocoGeneratedReport
-    public static Mvn fromMvnw() {
-        return fromMvnw(Paths.get(".").toAbsolutePath().normalize());
-    }
-
-    /**
-     * Create a new {@link Mvn} with the {@link #distributionUrl} looked up in {@code .mvn/wrapper/maven-wrapper.properties}
-     * relative to the given {@code directory} or its nearest ancestor directory.
-     *
-     * @param  directory             the directory where to start looking for {@code .mvn/wrapper/maven-wrapper.properties}
-     * @return                       a new {@link Mvn}
-     * @throws IllegalStateException if {@code .mvn/wrapper/maven-wrapper.properties} cannot be found under any of the
-     *                               ancestors
-     *
-     * @since                        0.0.1
-     */
-    @ExcludeFromJacocoGeneratedReport
-    public static Mvn fromMvnw(Path directory) {
-        return fromMvnw(directory, findM2Directory());
-    }
-
-    /**
-     * Create a new {@link Mvn} with the {@link #distributionUrl} looked up in {@code .mvn/wrapper/maven-wrapper.properties}
-     * relative to current directory or its nearest ancestor directory.
-     *
-     * @param  directory             the directory where to start looking for {@code .mvn/wrapper/maven-wrapper.properties}
-     * @param  m2Directory           a custom Maven user home directory instead of the default {@code ~/.m2}
-     * @return                       a new {@link Mvn}
-     * @throws IllegalStateException if {@code .mvn/wrapper/maven-wrapper.properties} cannot be found under any of the
-     *                               ancestors
-     *
-     * @since                        0.0.1
-     */
-    @ExcludeFromJacocoGeneratedReport
-    public static Mvn fromMvnw(Path directory, Path m2Directory) {
-        Path dir = directory;
-        while (dir != null) {
-            final Path wrapperProps = dir.resolve(".mvn/wrapper/maven-wrapper.properties");
-            if (Files.isRegularFile(wrapperProps)) {
-                Properties props = new Properties();
-                try (InputStream in = Files.newInputStream(wrapperProps)) {
-                    props.load(in);
-                } catch (IOException e) {
-                    throw new UncheckedIOException("Could not read " + wrapperProps, e);
-                }
-                return fromDistributionUrl((String) props.get("distributionUrl"), m2Directory);
-            }
-            dir = dir.getParent();
-        }
-        throw new IllegalStateException(
-                "Could not find .mvn/wrapper/maven-wrapper.properties in the parent hierarchy of " + directory);
-    }
-
-    private Mvn(String version) {
+    MavenSpec(String version) {
         this.version = Objects.requireNonNull(version, "version");
         this.m2Directory = findM2Directory();
         this.distributionUrl = defaultDistributionUrl(version);
         this.home = null;
     }
 
-    private Mvn(String version, Path m2Directory, Path home, String downloadUrl) {
+    MavenSpec(String version, Path m2Directory, Path home, String downloadUrl) {
         this.version = Objects.requireNonNull(version, "version");
         this.m2Directory = m2Directory;
         this.home = home;
@@ -167,11 +73,11 @@ public class Mvn {
      * Set a different Maven user home directory instead of the default {@code ~/.m2}.
      *
      * @param  m2Directory the {@code .m2} directory path
-     * @return             an adjusted copy of this {@link Mvn}
+     * @return             an adjusted copy of this {@link MavenSpec}
      * @since              0.0.1
      */
-    public Mvn m2Directory(Path m2Directory) {
-        return new Mvn(version, m2Directory, home, distributionUrl);
+    public MavenSpec m2Directory(Path m2Directory) {
+        return new MavenSpec(version, m2Directory, home, distributionUrl);
     }
 
     /**
@@ -180,15 +86,15 @@ public class Mvn {
      * Maven home is the directory containing {@code bin/mvn[.cmd]}.
      *
      * @param  m2Directory the {@code .m2} directory path
-     * @return             an adjusted copy of this {@link Mvn}
+     * @return             an adjusted copy of this {@link MavenSpec}
      * @since              0.0.1
      */
-    public Mvn home(Path home) {
-        return new Mvn(version, m2Directory, home, distributionUrl);
+    public MavenSpec home(Path home) {
+        return new MavenSpec(version, m2Directory, home, distributionUrl);
     }
 
     /**
-     * @return the Maven home directory of this {@link Mvn} - the one containing {@code bin/mvn[.cmd]}
+     * @return the Maven home directory of this {@link MavenSpec} - the one containing {@code bin/mvn[.cmd]}
      * @since  0.0.1
      */
     public Path home() {
@@ -196,51 +102,28 @@ public class Mvn {
     }
 
     /**
-     * Set the distribution URL from which {@link Mvn} can be installed instead of the default that is computed based
+     * Set the distribution URL from which {@link MavenSpec} can be installed instead of the default that is computed based
      * on the {@link #version(String)} using the template
      * {@code https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/<version>/apache-maven-<version>-bin.zip}
      *
      * @param  distributionUrl the distribution URL
-     * @return                 an adjusted copy of this {@link Mvn}
+     * @return                 an adjusted copy of this {@link MavenSpec}
      * @since                  0.0.1
      */
-    public Mvn distributionUrl(String distributionUrl) {
-        return new Mvn(version, m2Directory, home, distributionUrl);
-    }
-
-    /**
-     * @return the path pointing at the {@code mvn} or {@code mvn.cmd} executable of this {@link Mvn}; the path is
-     *         guaranteed to exist only after calling {@link #assertInstalled()}, {@link #installIfNeeded()} or ensuring
-     *         that {@link #isInstalled()} returns {@code true}
-     * @since  0.0.1
-     */
-    public String executable() {
-        return executablePath()
-                .toString();
-    }
-
-    /**
-     * @return the path pointing at the {@code mvn} or {@code mvn.cmd} executable of this {@link Mvn}; the path is
-     *         guaranteed to exist only after calling {@link #assertInstalled()}, {@link #installIfNeeded()} or ensuring
-     *         that {@link #isInstalled()} returns {@code true}
-     * @since  0.0.1
-     */
-    @ExcludeFromJacocoGeneratedReport
-    public Path executablePath() {
-        return home()
-                .resolve("bin/mvn"
-                        + (System.getProperty("os.name").toLowerCase().contains("win") ? ".cmd" : ""));
+    public MavenSpec distributionUrl(String distributionUrl) {
+        return new MavenSpec(version, m2Directory, home, distributionUrl);
     }
 
     /**
      * Install this Maven version or fail if the version is installed already.
      *
-     * @return                       a possibly new {@link Mvn} instance pointing at the freshly installed Maven version
+     * @return                       a possibly new {@link MavenSpec} instance pointing at the freshly installed Maven
+     *                               version
      * @throws IllegalStateException if this Maven version is installed already
      * @since                        0.0.1
      */
     @ExcludeFromJacocoGeneratedReport
-    public Mvn install() {
+    public InstalledMaven install() {
         final Path home = home();
         if (Files.exists(home)) {
             throw new IllegalStateException(
@@ -320,26 +203,27 @@ public class Mvn {
                 }
             }
         }
-        return new Mvn(version, m2Directory, home, distributionUrl);
+        return new InstalledMaven(version, home);
     }
 
     /**
-     * @return                this {@link Mvn}
+     * @return                this {@link MavenSpec}
      * @throws AssertionError if this Maven version is not installed yet
      */
     @ExcludeFromJacocoGeneratedReport
-    public Mvn assertInstalled() {
+    public InstalledMaven assertInstalled() {
         final Path home = home();
         if (!Files.isDirectory(home)) {
             throw new AssertionError("Maven " + version + " is not installed in " + home
                     + " (directory does not exist). You may want to set Mvn.home(Path) or call Mvn.installIfNeeded()");
         }
-        final Path executable = executablePath();
+
+        final Path executable = new InstalledMaven(version, home).mvnPath();
         if (!Files.isRegularFile(executable)) {
             throw new AssertionError("Maven " + version + " is not installed in " + home
                     + " (bin/mvn[.cmd] does not exist). You may want to set Mvn.home(Path) or call Mvn.installIfNeeded()");
         }
-        return this;
+        return new InstalledMaven(version, home);
     }
 
     /**
@@ -349,45 +233,24 @@ public class Mvn {
     @ExcludeFromJacocoGeneratedReport
     public boolean isInstalled() {
         final Path home = home();
-        return Files.isDirectory(home) && Files.isRegularFile(executablePath());
+        return Files.isDirectory(home) && Files.isRegularFile(new InstalledMaven(version, home).mvnPath());
     }
 
     /**
      * Install this Maven version unless it is installed already.
      *
-     * @return a possibly new {@link Mvn} instance pointing at the freshly installed Maven version
+     * @return a possibly new {@link MavenSpec} instance pointing at the freshly installed Maven version
      * @since  0.0.1
      */
-    public Mvn installIfNeeded() {
+    public InstalledMaven installIfNeeded() {
         if (!isInstalled()) {
             return install();
         }
-        return this;
-    }
-
-    /**
-     * Set Maven command line arguments and return a new {@link CommandSpec} that can be used to execute a Maven command
-     * and/or define assertions on the output.
-     *
-     * @param  args the Maven command line arguments to set
-     * @return      a new {@link CommandSpec} with its executable path and arguments set
-     */
-    @ExcludeFromJacocoGeneratedReport
-    public CommandSpec args(String... args) {
-        final String exe = executable();
-        if (exe.endsWith(".cmd")) {
-            /* Windows call via cmd.exe */
-            return CliAssured.command("cmd.exe")
-                    .args("/c", exe)
-                    .args(args);
-        } else {
-            /* Linux or Mac - call mvn directly */
-            return CliAssured.command(exe, args);
-        }
+        return new InstalledMaven(version, home());
     }
 
     @ExcludeFromJacocoGeneratedReport
-    static Mvn fromDistributionUrl(String distributionUrl, Path m2Directory) {
+    static MavenSpec fromDistributionUrl(String distributionUrl, Path m2Directory) {
         final Path distsDir = m2Directory.resolve("wrapper/dists");
         final String hash = hashString(distributionUrl);
         final Optional<Path> mavenHome;
@@ -416,7 +279,7 @@ public class Mvn {
             version = findVersion(mavenHome.get());
         }
 
-        return new Mvn(version, m2Directory, mavenHome.orElse(null), distributionUrl);
+        return new MavenSpec(version, m2Directory, mavenHome.orElse(null), distributionUrl);
     }
 
     static String defaultDistributionUrl(String version) {

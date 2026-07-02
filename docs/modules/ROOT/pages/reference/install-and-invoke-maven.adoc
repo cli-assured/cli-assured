@@ -8,7 +8,7 @@ The utility methods for installing and invoking Maven are available in `cli-assu
 ----
 <dependency>
   <groupId>org.cli-assured</groupId>
-  <artifactId>cli-assured-mvn</artifactId>
+  <artifactId>cli-assured-maven</artifactId>
   <version><!-- Use the latest --></version>
 </dependency>
 ----

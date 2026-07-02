@@ -19,21 +19,19 @@ import org.cliassured.CommandSpec;
  */
 public class InstalledCandidate {
     private final Path home;
-    private final Path bin;
 
     InstalledCandidate(Path home) {
         this.home = home;
-        this.bin = home.resolve("bin");
     }
 
     /**
-     * Resolves {@code binaryName} and {@code altBinaryNames} against {@link #home()},
+     * Resolves {@code binaryName} and {@code altBinaryNames} against {@code home() + "/bin"},
      * selects the first of those files that exists and returns a new {@link CommandSpec} having
      * the file set as {@link executable CommandSpec#executable(String)}.
      * <p>
      * {@code altBinaryNames} may come it handy when covering Windows and Unix-like platforms.
      * E.g. to resolve {@code java} on Linux and {@code java.exe} on Windows you would call
-     * {@code bin("java", "java.exe")}. For Maven, you may need to call {@code bin("mvn", "mvn.cmd")}
+     * {@code bin("java", "java.exe")}.
      *
      * @param  binaryName            name of a file under this {@link InstalledCandidate}'s {@code bin} directory
      * @param  altBinaryNames        alternative names of files under this {@link InstalledCandidate}'s {@code bin}
@@ -44,6 +42,7 @@ public class InstalledCandidate {
      * @since                        0.2.0
      */
     public CommandSpec bin(String binaryName, String... altBinaryNames) {
+        final Path bin = home.resolve("bin");
         {
             final Path executable = bin.resolve(binaryName);
             if (Files.isRegularFile(executable)) {
@@ -76,11 +75,4 @@ public class InstalledCandidate {
         return home;
     }
 
-    /**
-     * @return bin directory of this {@link InstalledCandidate}, typically {@code $SDKMAN_DIR/<candidate>/<version>/bin}
-     * @since  0.2.0
-     */
-    public Path bin() {
-        return bin;
-    }
 }

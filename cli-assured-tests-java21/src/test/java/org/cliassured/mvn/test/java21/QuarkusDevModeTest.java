@@ -24,7 +24,8 @@ import org.awaitility.Awaitility;
 import org.cliassured.Await;
 import org.cliassured.Await.LineAwait;
 import org.cliassured.CommandProcess;
-import org.cliassured.mvn.Mvn;
+import org.cliassured.mvn.InstalledMaven;
+import org.cliassured.mvn.Maven;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -47,9 +48,9 @@ public class QuarkusDevModeTest {
             throw new UncheckedIOException("Could not create " + tempProject.getParent(), e);
         }
 
-        final Mvn mvn = Mvn.fromMvnw().installIfNeeded();
+        final InstalledMaven mvn = Maven.fromMvnw().installIfNeeded();
         mvn
-                .args(
+                .mvn().args(
                         "-ntp",
                         "io.quarkus:quarkus-maven-plugin:" + quarkusVersion + ":create",
                         "-DprojectGroupId=org.cli-assured",
@@ -68,7 +69,7 @@ public class QuarkusDevModeTest {
         final List<Long> pids = new ArrayList<>();
         final LineAwait<String> await = Await.lineContaining("Installed features: [");
         try (CommandProcess mvnProcess = mvn
-                .args(
+                .mvn().args(
                         "-ntp",
                         "-Dquarkus.analytics.disabled=true",
                         "-Ddebug=false", // Disable Java debugger

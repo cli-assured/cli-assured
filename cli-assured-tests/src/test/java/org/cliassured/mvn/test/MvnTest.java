@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.cliassured.CliAssured;
-import org.cliassured.mvn.Mvn;
+import org.cliassured.mvn.InstalledMaven;
+import org.cliassured.mvn.Maven;
+import org.cliassured.mvn.MavenSpec;
 import org.junit.jupiter.api.Test;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
@@ -45,11 +47,11 @@ public class MvnTest {
                 .execute()
                 .assertSuccess();
 
-        Mvn mvnw = Mvn.fromMvnw();
+        MavenSpec mvnw = Maven.fromMvnw();
 
         Assertions.assertThat(mvnw.isInstalled()).isTrue();
 
-        mvnw.args("--version")
+        mvnw.assertInstalled().mvn().args("--version")
                 .then()
                 .stdout()
                 .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
@@ -62,22 +64,48 @@ public class MvnTest {
 
         final Path m2Dir = Paths.get("target/m2-" + UUID.randomUUID());
 
-        final Mvn mvnw = Mvn.fromMvnw(
+        final MavenSpec mvnw = Maven.fromMvnw(
                 Paths.get("target/test-classes/test-project").toAbsolutePath().normalize(),
                 m2Dir);
 
         Assertions.assertThat(mvnw.isInstalled()).isFalse();
 
-        mvnw
-                .installIfNeeded()
-                .args("--version")
+        final InstalledMaven installedMvn = mvnw.installIfNeeded();
+
+        installedMvn
+                .mvn().args("--version")
                 .then()
                 .stdout()
                 .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
                 .execute()
                 .assertSuccess();
 
-        Assertions.assertThat(m2Dir.resolve("wrapper/dists/apache-maven-3.9.11/a2d47e15/bin/mvn")).isRegularFile();
+        final Path mvnPath = m2Dir.resolve("wrapper/dists/apache-maven-3.9.11/a2d47e15/bin/mvn");
+        Assertions.assertThat(mvnPath).isRegularFile();
+
+        String mvnScript = isWindows ? "mvn.cmd" : "mvn";
+
+        installedMvn.bin(mvnScript).args("--version")
+                .then()
+                .stdout()
+                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .execute()
+                .assertSuccess();
+
+        installedMvn.bin("foo", mvnScript).args("--version")
+                .then()
+                .stdout()
+                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .execute()
+                .assertSuccess();
+
+        Assertions.assertThatThrownBy(() -> installedMvn.bin("foo")).isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("does not exist");
+        Assertions.assertThatThrownBy(() -> installedMvn.bin("foo", "bar")).isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("None of the requested binaries");
+
+        Assertions.assertThat(installedMvn.version()).isEqualTo("3.9.11");
+        Assertions.assertThat(installedMvn.home()).isEqualTo(m2Dir.resolve("wrapper/dists/apache-maven-3.9.11/a2d47e15"));
 
     }
 
@@ -85,7 +113,7 @@ public class MvnTest {
     void installIfNeeded() throws IOException {
         final Path m2Dir = Paths.get("target/m2-" + UUID.randomUUID());
         final String version = "3.9.11";
-        Mvn mvn = Mvn.version(version)
+        MavenSpec mvn = Maven.version(version)
                 .m2Directory(m2Dir);
         Assertions.assertThat(mvn.isInstalled()).isFalse();
 
@@ -96,7 +124,7 @@ public class MvnTest {
                 .isInstanceOf(AssertionError.class)
                 .hasMessageStartingWith("Maven 3.9.11 is not installed ");
 
-        mvn = mvn.installIfNeeded();
+        InstalledMaven installedMaven = mvn.installIfNeeded();
 
         Assertions.assertThat(mvn.isInstalled()).isTrue();
 
@@ -104,7 +132,7 @@ public class MvnTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageEndingWith("because it exists already");
 
-        CliAssured.command(mvn.executable(), "-v")
+        installedMaven.mvn().args("-v")
                 .then()
                 .stdout()
                 .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
@@ -150,12 +178,12 @@ public class MvnTest {
                         diffs.stream().map(Object::toString).collect(java.util.stream.Collectors.joining("\n")))
                 .isEmpty();
 
-        /* Because isInstalled() returns true */
-        Assertions.assertThat(mvn.installIfNeeded()).isSameAs(mvn);
+        /* Make Jacoco happy */
+        mvn.installIfNeeded();
 
-        Mvn customHome = Mvn.version(version).home(unzipDirRootDir);
+        MavenSpec customHome = Maven.version(version).home(unzipDirRootDir);
         Assertions.assertThat(customHome.isInstalled()).isTrue();
-        customHome.args("--version")
+        customHome.assertInstalled().mvn().args("--version")
                 .then()
                 .stdout()
                 .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
@@ -167,7 +195,19 @@ public class MvnTest {
     @Test
     void distributionUrl() throws IOException {
         final String version = "3.9.12";
-        Mvn mvn = Mvn.version(version)
+        MavenSpec mvn = Maven.version(version)
+                .m2Directory(Paths.get("src/test/resources/m2"))
+                .distributionUrl("https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/" + version
+                        + "/apache-maven-" + version + "-bin.zip");
+        Assertions.assertThat(mvn.home())
+                .isEqualTo(Paths.get("src/test/resources/m2/wrapper/dists/apache-maven-3.9.12/6068d197"));
+        Assertions.assertThat(mvn.isInstalled()).isFalse();
+    }
+
+    @Test
+    void bin() throws IOException {
+        final String version = "3.9.12";
+        MavenSpec mvn = Maven.version(version)
                 .m2Directory(Paths.get("src/test/resources/m2"))
                 .distributionUrl("https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/" + version
                         + "/apache-maven-" + version + "-bin.zip");

@@ -12,7 +12,7 @@ public class MvnTest {
     void hashString() {
         Assertions
                 .assertThat(
-                        Mvn.hashString(
+                        MavenSpec.hashString(
                                 "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.11/apache-maven-3.9.11-bin.zip"))
                 .isEqualTo("a2d47e15");
     }
