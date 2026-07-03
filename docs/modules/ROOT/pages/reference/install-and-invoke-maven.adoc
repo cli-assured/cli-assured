@@ -27,9 +27,9 @@ There are two ways how to specify the Maven version to install and run:
 
 [source,java]
 ----
-include::example$j21/MvnTest.java[tag=imports]
+include::example$j21/MavenTest.java[tag=imports]
 
-include::example$j21/MvnTest.java[tag=snippet,indent=0]
+include::example$j21/MavenTest.java[tag=snippet,indent=0]
 ----
 
 [[install-and-run-maven-wrapper-version]]
@@ -43,7 +43,7 @@ you can let CLI Assured pick its version of Maven and also reuse the Maven insta
 
 [source,java]
 ----
-include::example$j21/MvnTest.java[tag=imports]
+include::example$j21/MavenTest.java[tag=imports]
 
-include::example$j21/MvnTest.java[tag=fromMvnw,indent=0]
+include::example$j21/MavenTest.java[tag=fromMvnw,indent=0]
 ----
