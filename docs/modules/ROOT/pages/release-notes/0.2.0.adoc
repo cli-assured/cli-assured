@@ -1,0 +1,71 @@
+= CLI Assured 0.2.0 release notes
+
+== Enhancements
+
+=== https://github.com/cli-assured/cli-assured/pull/107[#107] New `cli-assured-sdkman` module for SDKMAN! integration
+
+A new `cli-assured-sdkman` module provides utilities for installing and testing CLI tools managed by https://sdkman.io/[SDKMAN!].
+
+Add the following dependency to your project:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.cli-assured</groupId>
+  <artifactId>cli-assured-sdkman</artifactId>
+  <version>0.2.0</version>
+</dependency>
+----
+
+The module supports:
+
+* Installing SDKMAN! itself (to default or custom directories, with custom installation scripts)
+* Installing SDKMAN!-managed candidates (such as `maven`, `java`, `gradle`, etc.) at specific versions
+* Running `sdk` subcommands (`version`, `list`, `install`, etc.)
+* Accessing candidate commands from the `bin` directory of installed candidates
+
+See xref:reference/install-and-invoke-sdkman.adoc[Install and invoke SDKMAN!] for more details.
+
+== Breaking changes
+
+=== https://github.com/cli-assured/cli-assured/pull/108[#108] Maven module refactored to a cleaner API
+
+The Maven module has been refactored to follow the same conventions as the new SDKMAN! module.
+The new API splits responsibilities across three classes:
+
+* `Maven` - entry point with static factory methods (`version(String)`, `fromMvnw()`, `fromMvnw(Path)`)
+* `MavenSpec` - configuration builder for Maven version, installation directory, etc.
+* `InstalledMaven` - represents an installed Maven instance and provides `mvn(String\...)` to create commands
+
+Before CLI Assured 0.2.0, `Mvn.version("3.9.9").args("--version")` allowed calling `mvn` without explicitly installing it
+or asserting it is installed first.
+Since CLI Assured 0.2.0, `Maven.version("3.9.9")` returns a `MavenSpec`; you must call `install()`, `installIfNeeded()`,
+or `assertInstalled()` to obtain an `InstalledMaven` instance, on which you can then call
+`mvn().args("clean", "install")`.
+
+See xref:reference/install-and-invoke-maven.adoc[Install and invoke Maven] for more details.
+
+=== https://github.com/cli-assured/cli-assured/pull/109[#109] Module and packages renamed from `mvn` to `maven`
+
+The Maven artifact and all its Java packages have been renamed:
+
+* Maven artifact ID: `cli-assured-mvn` -> `cli-assured-maven`
+* Java package: `org.cliassured.mvn` -> `org.cliassured.maven`
+* Entry point class: `org.cliassured.mvn.Mvn` -> `org.cliassured.maven.Maven`
+
+To migrate, update your dependency:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.cli-assured</groupId>
+  <artifactId>cli-assured-maven</artifactId>
+  <version>0.2.0</version>
+</dependency>
+----
+
+And update your imports from `org.cliassured.mvn.\*` to `org.cliassured.maven.*`.
+
+== Full changelog
+
+https://github.com/cli-assured/cli-assured/compare/0.1.1+++...+++0.2.0
