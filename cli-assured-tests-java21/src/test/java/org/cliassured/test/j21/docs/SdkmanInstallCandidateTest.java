@@ -6,12 +6,10 @@ package org.cliassured.test.j21.docs;
 
 // tag::imports[]
 import org.cliassured.sdkman.InstalledCandidate;
-import org.cliassured.sdkman.Sdk;
 import org.cliassured.sdkman.Sdkman;
 // end::imports[]
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -19,8 +17,7 @@ import org.junit.jupiter.api.condition.OS;
 @DisabledOnOs(OS.WINDOWS)
 public class SdkmanInstallCandidateTest {
 
-    static final Path sdkmanHome = Paths.get("target/sdkman-" + UUID.randomUUID())
-            .toAbsolutePath().normalize();
+    static final Path sdkmanHome = Paths.get("target/sdkman").toAbsolutePath().normalize();
 
     @Test
     void installCandidate() {
@@ -31,6 +28,7 @@ public class SdkmanInstallCandidateTest {
             // end::installCandidate[]
             .home(sdkmanHome)
             // tag::installCandidate[]
+            // Install SDKMAN! if needed
             .installIfNeeded()
             // calls `sdk install maven 3.9.11`
             .sdk().installCandidateIfNeeded("maven", "3.9.11");

@@ -7,10 +7,8 @@ package org.cliassured.test.j21.docs;
 // tag::imports[]
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.cliassured.sdkman.InstalledSdkman;
 import org.cliassured.sdkman.Sdkman;
 // end::imports[]
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -22,10 +20,10 @@ public class SdkmanHomeTest {
     void installSdkmanToCustomHome() {
         // @formatter:off
         // tag::installToCustomHome[]
-        Path customHome = Paths.get("target/sdkman-" + UUID.randomUUID())
-                .toAbsolutePath().normalize();
+        Path customHome = Paths.get("target/sdkman").toAbsolutePath().normalize();
         // Install SDKMAN! to customHome
         Sdkman.home(customHome)
+            // Install SDKMAN! if needed
             .installIfNeeded()
             // Get the sdk command
             .sdk()

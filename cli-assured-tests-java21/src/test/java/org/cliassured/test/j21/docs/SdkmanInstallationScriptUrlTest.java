@@ -30,6 +30,7 @@ public class SdkmanInstallationScriptUrlTest {
             // end::installationScriptUrl[]
             .home(sdkmanHome)
             // tag::installationScriptUrl[]
+            // Install SDKMAN! if needed
             .installIfNeeded()
             // Get the sdk command
             .sdk()

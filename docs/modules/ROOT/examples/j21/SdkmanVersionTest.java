@@ -7,10 +7,8 @@ package org.cliassured.test.j21.docs;
 // tag::imports[]
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.cliassured.sdkman.InstalledSdkman;
 import org.cliassured.sdkman.Sdkman;
 // end::imports[]
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -18,8 +16,7 @@ import org.junit.jupiter.api.condition.OS;
 @DisabledOnOs(OS.WINDOWS)
 public class SdkmanVersionTest {
 
-    static final Path sdkmanHome = Paths.get("target/sdkman-" + UUID.randomUUID())
-            .toAbsolutePath().normalize();
+    static final Path sdkmanHome = Paths.get("target/sdkman").toAbsolutePath().normalize();
 
     @Test
     void version() {
@@ -29,6 +26,7 @@ public class SdkmanVersionTest {
             // end::version[]
             .home(sdkmanHome)
             // tag::version[]
+            // Install SDKMAN! if needed
             .installIfNeeded()
             // Get the sdk command
             .sdk()
