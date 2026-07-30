@@ -596,8 +596,7 @@ public class StreamExpectationsSpec {
      */
     public StreamExpectationsSpec capture(int maxHeadLines, int maxTailLines) {
         return new StreamExpectationsSpec(expectations, stream,
-                CliAssertUtils.join(this.asserts,
-                        LineAssert.log(stream, LoggerFactory.getLogger("org.cliassured." + stream.name())::info)),
+                this.asserts,
                 byteCountAssert, charset, redirect,
                 new OutputCaptureSpec(maxHeadLines, maxTailLines, charset, stream));
     }
@@ -618,8 +617,7 @@ public class StreamExpectationsSpec {
      */
     public StreamExpectationsSpec captureAll() {
         return new StreamExpectationsSpec(expectations, stream,
-                CliAssertUtils.join(this.asserts,
-                        LineAssert.log(stream, LoggerFactory.getLogger("org.cliassured." + stream.name())::info)),
+                this.asserts,
                 byteCountAssert, charset, redirect,
                 OutputCaptureSpec.captureAll(charset, stream));
     }
