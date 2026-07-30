@@ -868,6 +868,12 @@ public class StreamExpectationsSpec {
             return redirect;
         }
 
+        /**
+         * @return     {@code true} if this {@link StreamExpectations} has line asserts
+         * @deprecated unused
+         */
+        @Deprecated(forRemoval = true)
+        @ExcludeFromJacocoGeneratedReport
         public boolean hasLineAsserts() {
             return lineAsserts.size() > 0;
         }

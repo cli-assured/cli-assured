@@ -136,28 +136,16 @@ abstract class OutputConsumer implements Assert {
         @Override
         @ExcludeFromJacocoGeneratedReport
         void run() {
-            if (streamExpectations.hasLineAsserts()) {
-                try (BufferedReader r = new BufferedReader(
-                        new InputStreamReader(streamExpectations.capture.wrap(redirect(in, streamExpectations.redirect())),
-                                streamExpectations.charset()))) {
-                    String line;
-                    while (!cancelled && (line = r.readLine()) != null) {
-                        streamExpectations.line(line);
-                    }
-                } catch (Exception e) {
-                    synchronized (exceptions) {
-                        exceptions.add(new RuntimeException("Exception caught while consuming " + stream, e));
-                    }
+            try (BufferedReader r = new BufferedReader(
+                    new InputStreamReader(streamExpectations.capture.wrap(redirect(in, streamExpectations.redirect())),
+                            streamExpectations.charset()))) {
+                String line;
+                while (!cancelled && (line = r.readLine()) != null) {
+                    streamExpectations.line(line);
                 }
-            } else {
-                try (InputStream wrappedIn = streamExpectations.capture.wrap(redirect(in, streamExpectations.redirect()))) {
-                    byte[] buff = new byte[8192];
-                    while (wrappedIn.read(buff) >= 0) {
-                    }
-                } catch (Exception e) {
-                    synchronized (exceptions) {
-                        exceptions.add(new RuntimeException("Exception caught while consuming " + stream, e));
-                    }
+            } catch (Exception e) {
+                synchronized (exceptions) {
+                    exceptions.add(new RuntimeException("Exception caught while consuming " + stream, e));
                 }
             }
         }
