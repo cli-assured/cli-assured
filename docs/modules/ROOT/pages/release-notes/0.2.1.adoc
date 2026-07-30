@@ -1,0 +1,26 @@
+= CLI Assured 0.2.1 release notes
+
+== Enhancements
+
+=== https://github.com/cli-assured/cli-assured/issues/104[#104] Provide module descriptor
+
+All CLI Assured modules now ship with Java module descriptors (`module-info.java`), making CLI Assured compatible
+with the Java Platform Module System (JPMS).
+
+Special thanks to https://github.com/rfscholte[Robert Scholte]!
+
+== Bugfixes
+
+=== https://github.com/cli-assured/cli-assured/pull/124[#124] `.captureAll()` and `capture(int, int)` should not log
+
+Before CLI Assured 0.2.1, calling `.captureAll()` or `.capture(int, int)` would implicitly add a logging line assert,
+causing all output lines to be logged even when the user only intended to capture them.
+This may have also caused each line being logged twice if some of the `.log(*)` methods was called.
+Since CLI Assured 0.2.1, `.captureAll()` and `.capture(int, int)` no longer add logging side effects.
+
+In addition, when `captureAll()` was used without any explicit line asserts, lines were not counted properly.
+Since CLI Assured 0.2.1, lines are always counted regardless of whether line asserts are set.
+
+== Full changelog
+
+https://github.com/cli-assured/cli-assured/compare/0.2.0+++...+++0.2.1
