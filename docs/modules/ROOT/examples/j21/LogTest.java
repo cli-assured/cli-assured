@@ -29,6 +29,14 @@ public class LogTest {
                     .log()
             .execute()
             .assertSuccess();
+        CliAssured
+        .command("echo", "Hello World!")
+        .then()
+            .stdout()
+                // Log each line at INFO level via org.cliassured.stdout logger
+            .captureAll().log()
+        .execute()
+        .assertSuccess();
         // end::snippet[]
         // @formatter:on
     }
