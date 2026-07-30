@@ -41,6 +41,7 @@ public class AntoraTest {
     public void linksValid() {
 
         final Set<String> ignorables = new LinkedHashSet<>();
+        ignorables.add("https://slf4j.org/news.html"); // timeouts on GH Actions
 
         LinkStream linkStream = AntorAssured
                 .links()
