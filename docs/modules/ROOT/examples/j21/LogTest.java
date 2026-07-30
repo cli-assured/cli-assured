@@ -5,9 +5,6 @@
 package org.cliassured.test.j21.docs;
 
 // tag::imports[]
-import java.util.ArrayList;
-import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.cliassured.CliAssured;
 // end::imports[]
 import org.junit.jupiter.api.Test;
@@ -29,14 +26,6 @@ public class LogTest {
                     .log()
             .execute()
             .assertSuccess();
-        CliAssured
-        .command("echo", "Hello World!")
-        .then()
-            .stdout()
-                // Log each line at INFO level via org.cliassured.stdout logger
-            .captureAll().log()
-        .execute()
-        .assertSuccess();
         // end::snippet[]
         // @formatter:on
     }

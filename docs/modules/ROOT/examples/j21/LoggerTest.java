@@ -5,9 +5,6 @@
 package org.cliassured.test.j21.docs;
 
 // tag::imports[]
-import java.util.ArrayList;
-import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.cliassured.CliAssured;
 // end::imports[]
 import org.junit.jupiter.api.Test;
