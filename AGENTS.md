@@ -1,13 +1,18 @@
+# CLI Assured `AGENTS.md`
+
+CLI Assured is a Java domain specific language (DSL) for testing or executing command line applications.
 
 ## Build the project
+
+Fallback to `mvn` or `./mvnw` if `mvnd` is not installed.
 
 Build without tests
 
 ```bash
-mvnd clean install -DskipTests
+mvnd clean install -DskipTests -Dquarkus.build.skip
 ```
 
-Build with tests
+Build with all tests
 
 ```bash
 mvnd clean install
@@ -19,10 +24,10 @@ Run all test methods in a specific test class
 mvnd -f path/to/pom.xml clean test -Dtest=MyTest
 ```
 
-Run a specific test in a specific test class
+Run specific test(s) in a specific test class(es)
 
 ```bash
-mvnd -f path/to/pom.xml clean test -Dtest=MyTest#myTestMethod
+mvnd -f path/to/pom.xml clean test -Dtest=MyTest[#myTestMethod][,MyOtherTest[#myOtherTestMethod],...]
 ```
 
 ## Documentation sources
