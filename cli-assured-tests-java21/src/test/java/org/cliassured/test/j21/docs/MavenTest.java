@@ -15,8 +15,8 @@ public class MavenTest {
     void versionLiteral() {
         // @formatter:off
         // tag::snippet[]
-        // Use Maven version 3.9.11 as available in ~/.m2/wrapper/dists/apache-maven-3.9.11/a2d47e15
-        Maven.version("3.9.11")
+        // Use Maven version 3.9.11 as available in ~/.m2/wrapper/dists/apache-maven-3.9.16/56ba1f9f
+        Maven.version("3.9.16")
             // If ~/.m2/wrapper/dists/apache-maven-3.9.11/a2d47e15 does not exist,
             // download it from
             // https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.11/apache-maven-3.9.11-bin.zip
@@ -28,7 +28,7 @@ public class MavenTest {
             .args("--version")
             .then()
                 .stdout()
-                    .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                    .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
             .execute()
             .assertSuccess();
         // end::snippet[]
@@ -52,7 +52,7 @@ public class MavenTest {
             .args("--version")
             .then()
                 .stdout()
-                    .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                    .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
             .execute()
             .assertSuccess();
         // end::fromMvnw[]
