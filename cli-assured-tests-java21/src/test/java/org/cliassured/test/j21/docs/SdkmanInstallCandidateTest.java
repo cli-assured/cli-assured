@@ -30,8 +30,8 @@ public class SdkmanInstallCandidateTest {
             // tag::installCandidate[]
             // Install SDKMAN! if needed
             .installIfNeeded()
-            // calls `sdk install maven 3.9.11`
-            .sdk().installCandidateIfNeeded("maven", "3.9.11");
+            // calls `sdk install maven 3.9.16`
+            .sdk().installCandidateIfNeeded("maven", "3.9.16");
 
         // Invoke the mvn binary from the installed candidate's bin folder
         maven_3_9_11
@@ -40,7 +40,7 @@ public class SdkmanInstallCandidateTest {
             .stderrToStdout()
             .then()
                 .stdout()
-                    .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                    .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
             .execute()
             .assertSuccess();
         // end::installCandidate[]

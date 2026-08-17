@@ -43,7 +43,7 @@ public class MavenTest {
         CliAssured.command(mvnwPath.toString(), "-v")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
                 .execute()
                 .assertSuccess();
 
@@ -54,7 +54,7 @@ public class MavenTest {
         mvnw.assertInstalled().mvn().args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
                 .execute()
                 .assertSuccess();
     }
@@ -76,11 +76,11 @@ public class MavenTest {
                 .mvn().args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
                 .execute()
                 .assertSuccess();
 
-        final Path mvnPath = m2Dir.resolve("wrapper/dists/apache-maven-3.9.11/a2d47e15/bin/mvn");
+        final Path mvnPath = m2Dir.resolve("wrapper/dists/apache-maven-3.9.16/56ba1f9f/bin/mvn");
         Assertions.assertThat(mvnPath).isRegularFile();
 
         String mvnScript = isWindows ? "mvn.cmd" : "mvn";
@@ -88,14 +88,14 @@ public class MavenTest {
         installedMvn.bin(mvnScript).args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
                 .execute()
                 .assertSuccess();
 
         installedMvn.bin("foo", mvnScript).args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
                 .execute()
                 .assertSuccess();
 
@@ -104,15 +104,15 @@ public class MavenTest {
         Assertions.assertThatThrownBy(() -> installedMvn.bin("foo", "bar")).isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("None of the requested binaries");
 
-        Assertions.assertThat(installedMvn.version()).isEqualTo("3.9.11");
-        Assertions.assertThat(installedMvn.home()).isEqualTo(m2Dir.resolve("wrapper/dists/apache-maven-3.9.11/a2d47e15"));
+        Assertions.assertThat(installedMvn.version()).isEqualTo("3.9.16");
+        Assertions.assertThat(installedMvn.home()).isEqualTo(m2Dir.resolve("wrapper/dists/apache-maven-3.9.16/56ba1f9f"));
 
     }
 
     @Test
     void installIfNeeded() throws IOException {
         final Path m2Dir = Paths.get("target/m2-" + UUID.randomUUID());
-        final String version = "3.9.11";
+        final String version = "3.9.16";
         MavenSpec mvn = Maven.version(version)
                 .m2Directory(m2Dir);
         Assertions.assertThat(mvn.isInstalled()).isFalse();
@@ -122,7 +122,7 @@ public class MavenTest {
 
         Assertions.assertThatThrownBy(mvn::assertInstalled)
                 .isInstanceOf(AssertionError.class)
-                .hasMessageStartingWith("Maven 3.9.11 is not installed ");
+                .hasMessageStartingWith("Maven 3.9.16 is not installed ");
 
         InstalledMaven installedMaven = mvn.installIfNeeded();
 
@@ -135,7 +135,7 @@ public class MavenTest {
         installedMaven.mvn().args("-v")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
                 .execute()
                 .assertSuccess();
 
@@ -186,7 +186,7 @@ public class MavenTest {
         customHome.assertInstalled().mvn().args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
                 .execute()
                 .assertSuccess();
 

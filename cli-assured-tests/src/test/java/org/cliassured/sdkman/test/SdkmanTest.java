@@ -43,7 +43,7 @@ public class SdkmanTest {
 
         final String mvnScriptName = "mvn" + (System.getProperty("os.name").toLowerCase().contains("win") ? ".cmd" : "");
         {
-            InstalledCandidate mvn3911 = sdk.installCandidateIfNeeded("maven", "3.9.11");
+            InstalledCandidate mvn3911 = sdk.installCandidateIfNeeded("maven", "3.9.16");
             mvn3911
                     .bin(mvnScriptName)
                     .args("--version")
@@ -51,11 +51,11 @@ public class SdkmanTest {
                     .then()
                     .stdout()
                     // .log()
-                    .hasLines("Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)")
+                    .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
                     .execute()
                     .assertSuccess();
 
-            Assertions.assertThat(sdkSpec.home().resolve("candidates/maven/3.9.11/bin/"
+            Assertions.assertThat(sdkSpec.home().resolve("candidates/maven/3.9.16/bin/"
                     + mvnScriptName)).isRegularFile();
         }
 
