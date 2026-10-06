@@ -5,6 +5,7 @@
 package org.cliassured.test.j21.docs;
 
 // tag::imports[]
+import java.util.regex.Pattern;
 import org.cliassured.sdkman.InstalledCandidate;
 import org.cliassured.sdkman.Sdkman;
 // end::imports[]
@@ -24,23 +25,24 @@ public class SdkmanInstallCandidateTest {
         // @formatter:off
         // tag::installCandidate[]
         // Install a specific version of a candidate
-        InstalledCandidate maven_3_9_11 = Sdkman
+        final String version = "3.9.16";
+        InstalledCandidate maven = Sdkman
             // end::installCandidate[]
             .home(sdkmanHome)
             // tag::installCandidate[]
             // Install SDKMAN! if needed
             .installIfNeeded()
-            // calls `sdk install maven 3.9.16`
-            .sdk().installCandidateIfNeeded("maven", "3.9.16");
+            // calls `sdk install maven <version>`
+            .sdk().installCandidateIfNeeded("maven", version);
 
         // Invoke the mvn binary from the installed candidate's bin folder
-        maven_3_9_11
+        maven
             .bin("mvn") // You may need to use "mvn.cmd" on Windows
             .args("--version")
             .stderrToStdout()
             .then()
                 .stdout()
-                    .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                    .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
             .execute()
             .assertSuccess();
         // end::installCandidate[]

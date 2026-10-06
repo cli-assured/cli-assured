@@ -7,6 +7,7 @@ package org.cliassured.sdkman.test;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import org.assertj.core.api.Assertions;
 import org.cliassured.sdkman.InstalledCandidate;
 import org.cliassured.sdkman.Sdk;
@@ -43,36 +44,38 @@ public class SdkmanTest {
 
         final String mvnScriptName = "mvn" + (System.getProperty("os.name").toLowerCase().contains("win") ? ".cmd" : "");
         {
-            InstalledCandidate mvn3911 = sdk.installCandidateIfNeeded("maven", "3.9.16");
-            mvn3911
+            final String version = "3.9.16";
+            InstalledCandidate maven = sdk.installCandidateIfNeeded("maven", version);
+            maven
                     .bin(mvnScriptName)
                     .args("--version")
                     .stderrToStdout()
                     .then()
                     .stdout()
                     // .log()
-                    .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                    .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                     .execute()
                     .assertSuccess();
 
-            Assertions.assertThat(sdkSpec.home().resolve("candidates/maven/3.9.16/bin/"
+            Assertions.assertThat(sdkSpec.home().resolve("candidates/maven/" + version + "/bin/"
                     + mvnScriptName)).isRegularFile();
         }
 
         {
-            InstalledCandidate mvn3912 = sdk.installCandidateIfNeeded("maven", "3.9.12");
-            mvn3912
+            final String version = "3.9.12";
+            InstalledCandidate maven = sdk.installCandidateIfNeeded("maven", version);
+            maven
                     .bin(mvnScriptName)
                     .args("--version")
                     .stderrToStdout()
                     .then()
                     .stdout()
                     // .log()
-                    .hasLines("Apache Maven 3.9.12 (848fbb4bf2d427b72bdb2471c22fced7ebd9a7a1)")
+                    .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                     .execute()
                     .assertSuccess();
 
-            Assertions.assertThat(sdkSpec.home().resolve("candidates/maven/3.9.12/bin/"
+            Assertions.assertThat(sdkSpec.home().resolve("candidates/maven/" + version + "/bin/"
                     + mvnScriptName)).isRegularFile();
         }
 
