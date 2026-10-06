@@ -107,3 +107,17 @@ jobs:
             git diff
             exit 1
           }
+
+  workflow-passed:
+      if: always()
+      needs: [Install, Test]
+      runs-on: ubuntu-slim
+      steps:
+          - name: Verify all required jobs succeeded
+            run: |
+                if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" || \
+                      "${{ contains(needs.*.result, 'cancelled') }}" == "true" || \
+                      "${{ contains(needs.*.result, 'skipped') }}" == "true" ]]; then
+                  echo "One or more required jobs did not succeed"
+                  exit 1
+                fi
