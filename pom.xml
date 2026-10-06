@@ -402,6 +402,7 @@
 SPDX-License-Identifier: Apache-2.0</inlineHeader>
                                     <excludes>
                                         <exclude>**/*.adoc</exclude>
+                                        <exclude>**/*.directory</exclude>
                                         <exclude>**/*.hbs</exclude>
                                         <exclude>**/*.expected.*</exclude>
                                         <exclude>**/create-extension-templates/*</exclude>

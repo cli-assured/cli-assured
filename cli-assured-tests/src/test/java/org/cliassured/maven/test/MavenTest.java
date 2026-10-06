@@ -5,6 +5,7 @@
 package org.cliassured.maven.test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -17,9 +18,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
@@ -35,15 +39,16 @@ public class MavenTest {
     static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 
     @Test
-    void fromMvnw() {
+    void fromMvnw() throws IOException {
         final Path projectRoot = Paths.get("..").toAbsolutePath().normalize();
+        final String version = readWrapperVersion(projectRoot);
         final Path mvnwPath = projectRoot.resolve("mvnw" + (isWindows ? ".cmd" : ""));
         Assertions.assertThat(mvnwPath).isRegularFile();
 
         CliAssured.command(mvnwPath.toString(), "-v")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                 .execute()
                 .assertSuccess();
 
@@ -51,22 +56,25 @@ public class MavenTest {
 
         Assertions.assertThat(mvnw.isInstalled()).isTrue();
 
-        mvnw.assertInstalled().mvn().args("--version")
+        final InstalledMaven installedMaven = mvnw.assertInstalled();
+        Assertions.assertThat(installedMaven.version()).isEqualTo(version);
+
+        installedMaven.mvn().args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                 .execute()
                 .assertSuccess();
     }
 
     @Test
-    void fromMvnwWithM2Directory() {
+    void fromMvnwWithM2Directory() throws IOException {
 
         final Path m2Dir = Paths.get("target/m2-" + UUID.randomUUID());
+        final Path projectRoot = Paths.get("target/test-classes/test-project").toAbsolutePath().normalize();
+        final String version = readWrapperVersion(projectRoot);
 
-        final MavenSpec mvnw = Maven.fromMvnw(
-                Paths.get("target/test-classes/test-project").toAbsolutePath().normalize(),
-                m2Dir);
+        final MavenSpec mvnw = Maven.fromMvnw(projectRoot, m2Dir);
 
         Assertions.assertThat(mvnw.isInstalled()).isFalse();
 
@@ -76,26 +84,31 @@ public class MavenTest {
                 .mvn().args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                 .execute()
                 .assertSuccess();
 
-        final Path mvnPath = m2Dir.resolve("wrapper/dists/apache-maven-3.9.16/56ba1f9f/bin/mvn");
+        final Path versionDir = m2Dir.resolve("wrapper/dists/apache-maven-" + version);
+        Assertions.assertThat(versionDir).isDirectory();
+        List<Path> hashDirs = Files.list(versionDir).filter(Files::isDirectory).collect(Collectors.toList());
+        Assertions.assertThat(hashDirs).hasSize(1);
+        final Path mvnPath = hashDirs.get(0).resolve("bin/mvn");
         Assertions.assertThat(mvnPath).isRegularFile();
 
         String mvnScript = isWindows ? "mvn.cmd" : "mvn";
+        Assertions.assertThat(installedMvn.home().resolve("bin").resolve(mvnScript)).isRegularFile();
 
         installedMvn.bin(mvnScript).args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                 .execute()
                 .assertSuccess();
 
         installedMvn.bin("foo", mvnScript).args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                 .execute()
                 .assertSuccess();
 
@@ -104,8 +117,9 @@ public class MavenTest {
         Assertions.assertThatThrownBy(() -> installedMvn.bin("foo", "bar")).isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("None of the requested binaries");
 
-        Assertions.assertThat(installedMvn.version()).isEqualTo("3.9.16");
-        Assertions.assertThat(installedMvn.home()).isEqualTo(m2Dir.resolve("wrapper/dists/apache-maven-3.9.16/56ba1f9f"));
+        Assertions.assertThat(installedMvn.version()).isEqualTo(version);
+        Assertions.assertThat(installedMvn.home().toAbsolutePath().normalize())
+                .startsWith(m2Dir.resolve("wrapper/dists/apache-maven-" + version).toAbsolutePath().normalize());
 
     }
 
@@ -122,7 +136,7 @@ public class MavenTest {
 
         Assertions.assertThatThrownBy(mvn::assertInstalled)
                 .isInstanceOf(AssertionError.class)
-                .hasMessageStartingWith("Maven 3.9.16 is not installed ");
+                .hasMessageStartingWith("Maven " + version + " is not installed ");
 
         InstalledMaven installedMaven = mvn.installIfNeeded();
 
@@ -135,7 +149,7 @@ public class MavenTest {
         installedMaven.mvn().args("-v")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                 .execute()
                 .assertSuccess();
 
@@ -186,7 +200,7 @@ public class MavenTest {
         customHome.assertInstalled().mvn().args("--version")
                 .then()
                 .stdout()
-                .hasLines("Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)")
+                .hasLinesMatching("Apache Maven\\s+" + Pattern.quote(version) + "(?:\\s|$)")
                 .execute()
                 .assertSuccess();
 
@@ -214,6 +228,18 @@ public class MavenTest {
         Assertions.assertThat(mvn.home())
                 .isEqualTo(Paths.get("src/test/resources/m2/wrapper/dists/apache-maven-3.9.12/6068d197"));
         Assertions.assertThat(mvn.isInstalled()).isFalse();
+    }
+
+    private static String readWrapperVersion(Path projectRoot) throws IOException {
+        final Properties properties = new Properties();
+        try (InputStream in = Files.newInputStream(projectRoot.resolve(".mvn/wrapper/maven-wrapper.properties"))) {
+            properties.load(in);
+        }
+        final String distributionUrl = properties.getProperty("distributionUrl");
+        Assertions.assertThat(distributionUrl).as("Wrapper distribution URL in %s", projectRoot).isNotNull();
+        final Matcher matcher = Pattern.compile("/apache-maven-(.+)-bin\\.zip$").matcher(distributionUrl);
+        Assertions.assertThat(matcher.find()).as("Maven version in %s", distributionUrl).isTrue();
+        return matcher.group(1);
     }
 
     static final class Difference {
