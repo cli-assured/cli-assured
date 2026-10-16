@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -216,6 +217,35 @@ public class MavenTest {
         Assertions.assertThat(mvn.home())
                 .isEqualTo(Paths.get("src/test/resources/m2/wrapper/dists/apache-maven-3.9.12/6068d197"));
         Assertions.assertThat(mvn.isInstalled()).isFalse();
+    }
+
+    @Test
+    void centralMirror() throws IOException {
+
+        String oldUrl = System.getProperty("mvnw.repo.url");
+        try {
+
+            final String version = "3.9.12";
+            System.setProperty("mvnw.repo.url", "https://localhost:8080/central/");
+            Path m2Dir = Paths.get("target/MavenTest/centralMirror/m2");
+            Files.createDirectories(m2Dir);
+            MavenSpec mvn = Maven.version(version)
+                    .m2Directory(m2Dir);
+            Assertions.assertThat(mvn.home())
+                    .isEqualTo(m2Dir.resolve("wrapper/dists/apache-maven-3.9.12/30afe6cd"));
+            Assertions.assertThat(mvn.isInstalled()).isFalse();
+
+        } finally {
+            BiConsumer<String, String> reset = (k, v) -> {
+                if (oldUrl == null) {
+                    System.getProperties().remove(k);
+                } else {
+                    System.setProperty(k, v);
+                }
+            };
+            reset.accept("mvnw.repo.url", oldUrl);
+        }
+
     }
 
     @Test
