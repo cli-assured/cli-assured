@@ -53,16 +53,16 @@ public class MavenSpec {
     private final String version;
     private final Path m2Directory;
     private final Path home;
-    private final String distributionUrl;
+    private final Supplier<String> distributionUrl;
 
     MavenSpec(String version) {
         this.version = Objects.requireNonNull(version, "version");
         this.m2Directory = findM2Directory();
-        this.distributionUrl = defaultDistributionUrl(version);
+        this.distributionUrl = () -> defaultDistributionUrl(version);
         this.home = null;
     }
 
-    MavenSpec(String version, Path m2Directory, Path home, String downloadUrl) {
+    MavenSpec(String version, Path m2Directory, Path home, Supplier<String> downloadUrl) {
         this.version = Objects.requireNonNull(version, "version");
         this.m2Directory = m2Directory;
         this.home = home;
@@ -98,20 +98,22 @@ public class MavenSpec {
      * @since  0.0.1
      */
     public Path home() {
-        return home != null ? home : findDefaultHome(version, m2Directory, distributionUrl);
+        return home != null ? home : findDefaultHome(version, m2Directory, distributionUrl.get());
     }
 
     /**
      * Set the distribution URL from which {@link MavenSpec} can be installed instead of the default that is computed based
      * on the {@link #version(String)} using the template
-     * {@code https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/<version>/apache-maven-<version>-bin.zip}
+     * {@code <mvnw.repo.url>/org/apache/maven/apache-maven/<version>/apache-maven-<version>-bin.zip}, where
+     * {@code <mvnw.repo.url>} is either the value of {@code mvnw.repo.url} system property, if set, or
+     * the value of {@code MVNW_REPOURL} environment variable, if set, or {@code "https://repo.maven.apache.org/maven2"}.
      *
      * @param  distributionUrl the distribution URL
      * @return                 an adjusted copy of this {@link MavenSpec}
      * @since                  0.0.1
      */
     public MavenSpec distributionUrl(String distributionUrl) {
-        return new MavenSpec(version, m2Directory, home, distributionUrl);
+        return new MavenSpec(version, m2Directory, home, () -> distributionUrl);
     }
 
     /**
@@ -137,17 +139,18 @@ public class MavenSpec {
             throw new UncheckedIOException("Could not create " + home, e);
         }
         final Path localFile = home.resolve(UUID.randomUUID() + ".zip");
-        try (InputStream in = new URL(distributionUrl).openStream()) {
+        String url = distributionUrl.get();
+        try (InputStream in = new URL(url).openStream()) {
             Files.copy(in, localFile);
         } catch (IOException e) {
-            throw new UncheckedIOException("Could not download " + distributionUrl + " to " + home, e);
+            throw new UncheckedIOException("Could not download " + url + " to " + home, e);
         }
         final String actualSha512 = sha512(localFile);
-        final String expectedSha512 = dowloadText(distributionUrl + ".sha512", 512);
+        final String expectedSha512 = dowloadText(url + ".sha512", 512);
 
         if (!actualSha512.equals(expectedSha512)) {
             throw new AssertionError(
-                    "Could not verify " + localFile + " downloaded from " + distributionUrl + ": expected SHA-512 "
+                    "Could not verify " + localFile + " downloaded from " + url + ": expected SHA-512 "
                             + expectedSha512 + " but found " + actualSha512);
         }
         try (ZipFile zipFile = ZipFile.builder().setPath(localFile).setBufferSize(BUFFER_SIZE).get()) {
@@ -279,12 +282,22 @@ public class MavenSpec {
             version = findVersion(mavenHome.get());
         }
 
-        return new MavenSpec(version, m2Directory, mavenHome.orElse(null), distributionUrl);
+        return new MavenSpec(version, m2Directory, mavenHome.orElse(null), () -> distributionUrl);
     }
 
     static String defaultDistributionUrl(String version) {
-        return "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/" + version + "/apache-maven-" + version
+        String centralUrl = System.getProperty("mvnw.repo.url");
+        if (centralUrl == null) {
+            centralUrl = System.getenv("MVNW_REPOURL");
+        }
+        if (centralUrl == null) {
+            centralUrl = "https://repo.maven.apache.org/maven2";
+        } else if (centralUrl.endsWith("/")) {
+            centralUrl = centralUrl.substring(0, centralUrl.length() - 1);
+        }
+        centralUrl = centralUrl + "/org/apache/maven/apache-maven/" + version + "/apache-maven-" + version
                 + "-bin.zip";
+        return centralUrl;
     }
 
     @ExcludeFromJacocoGeneratedReport
