@@ -1,0 +1,38 @@
+= CLI Assured 0.2.2 release notes
+
+== Important dependency upgrades
+
+* `org.slf4j:slf4j-api` 2.0.18 -> 2.0.20
+** https://github.com/qos-ch/slf4j/releases/tag/v_2.0.20[Release notes]
+** https://github.com/qos-ch/slf4j/compare/v_2.0.18+++...+++v_2.0.20[Changelog]
+
+== Enhancements
+
+=== https://github.com/cli-assured/cli-assured/pull/151[#151] Honor Maven repository overrides when downloading Maven
+
+Before CLI Assured 0.2.2, `Maven.version(String)` always used Maven Central to compute the default Maven distribution URL,
+regardless of the `mvnw.repo.url` system property or the `MVNW_REPOURL` environment variable.
+Since CLI Assured 0.2.2, the default distribution URL uses the repository configured through `mvnw.repo.url`,
+falling back to `MVNW_REPOURL` and then to `https://repo.maven.apache.org/maven2`.
+This allows downloading Maven distributions from a repository mirror without setting an explicit distribution URL for each Maven version.
+
+Note that `MVNW_REPOURL` is also honored by `mvnw` and `mvnw.cmd` scripts since Maven Wrapper version 0.5.3 (released on 2019-02-25).
+
+`mvnw.repo.url` system property is specific for CLI Assured.
+We have added it so that end users can override it easily when testing with Surefire/Failsafe Maven plugins.
+
+An explicit `MavenSpec.distributionUrl(String)` or the distribution URL read by `Maven.fromMvnw()` continues to take precedence.
+
+See xref:reference/install-and-invoke-maven.adoc[Install and invoke Maven] for more details about the Maven integration.
+
+=== https://github.com/cli-assured/cli-assured/pull/150[#150] Make Maven examples resilient to version changes
+
+The xref:reference/install-and-invoke-maven.adoc[Install and invoke Maven] examples now match Maven's version output
+without depending on a particular build hash.
+The Maven Wrapper example obtains the expected version from the installed Maven instance instead of hard-coding it.
+
+Special thanks to https://github.com/ppalaga[@ppalaga]!
+
+== Full changelog
+
+https://github.com/cli-assured/cli-assured/compare/0.2.1+++...+++0.2.2
