@@ -27,8 +27,6 @@ nb-configuration.xml
 # OSX
 .DS_Store
 
-# Claude
-/.claude/settings.json
 /antora-cache/
 /node_modules/
 /package-lock.json
