@@ -11,6 +11,8 @@ Release notes documents for major and minor releases are listed in this section.
 |===
 | Version | Release date
 
+| xref:release-notes/0.2.2.adoc[0.2.2] | 2026-10-16
+
 | xref:release-notes/0.2.1.adoc[0.2.1] | 2026-07-30
 
 | xref:release-notes/0.2.0.adoc[0.2.0] | 2026-07-03
