@@ -4,8 +4,15 @@
  */
 package org.cliassured.maven.test;
 
+import com.sun.net.httpserver.BasicAuthenticator;
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpServer;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -13,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,17 +30,21 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.assertj.core.api.Assertions;
 import org.cliassured.CliAssured;
 import org.cliassured.maven.InstalledMaven;
 import org.cliassured.maven.Maven;
 import org.cliassured.maven.MavenSpec;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
@@ -246,6 +258,82 @@ public class MavenTest {
             reset.accept("mvnw.repo.url", oldUrl);
         }
 
+    }
+
+    @Test
+    void authenticatedDownload(@TempDir Path tempDir) throws Exception {
+        final String version = "3.9.12";
+        final byte[] script = "fake Maven executable\n".getBytes(StandardCharsets.UTF_8);
+        final ByteArrayOutputStream zipBytes = new ByteArrayOutputStream();
+        try (ZipOutputStream zip = new ZipOutputStream(zipBytes)) {
+            for (String name : new String[] { "mvn", "mvn.cmd" }) {
+                zip.putNextEntry(new ZipEntry("apache-maven-" + version + "/bin/" + name));
+                zip.write(script);
+                zip.closeEntry();
+            }
+        }
+        final byte[] distribution = zipBytes.toByteArray();
+        final byte[] checksum = String.format("%0128x",
+                new BigInteger(1, MessageDigest.getInstance("SHA-512").digest(distribution)))
+                .getBytes(StandardCharsets.UTF_8);
+        final String distributionPath = "/org/apache/maven/apache-maven/" + version + "/apache-maven-" + version + "-bin.zip";
+        final List<String> downloads = new CopyOnWriteArrayList<>();
+        final HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        final String oldUrl = System.getProperty("mvnw.repo.url");
+        final String oldUsername = System.getProperty("mvnw.repo.username");
+        final String oldPassword = System.getProperty("mvnw.repo.password");
+        try {
+            final HttpContext context = server.createContext("/", exchange -> {
+                try {
+                    final String path = exchange.getRequestURI().getPath();
+                    final byte[] body;
+                    if (distributionPath.equals(path)) {
+                        body = distribution;
+                    } else if ((distributionPath + ".sha512").equals(path)) {
+                        body = checksum;
+                    } else {
+                        exchange.sendResponseHeaders(404, -1);
+                        return;
+                    }
+                    downloads.add(path);
+                    exchange.sendResponseHeaders(200, body.length);
+                    exchange.getResponseBody().write(body);
+                } finally {
+                    exchange.close();
+                }
+            });
+            context.setAuthenticator(new BasicAuthenticator("maven-repository") {
+                @Override
+                public boolean checkCredentials(String username, String password) {
+                    return "test-user".equals(username) && "test-password".equals(password);
+                }
+            });
+            server.start();
+            System.setProperty("mvnw.repo.url", "http://127.0.0.1:" + server.getAddress().getPort());
+            System.setProperty("mvnw.repo.username", "test-user");
+            System.setProperty("mvnw.repo.password", "test-password");
+
+            final MavenSpec mvn = Maven.version(version).m2Directory(tempDir.resolve("m2"));
+            final InstalledMaven installed = mvn.install();
+
+            Assertions.assertThat(downloads).containsExactly(distributionPath, distributionPath + ".sha512");
+            Assertions.assertThat(mvn.isInstalled()).isTrue();
+            Assertions.assertThat(installed.version()).isEqualTo(version);
+            Assertions.assertThat(Files.readAllBytes(installed.home().resolve("bin/mvn"))).isEqualTo(script);
+            Assertions.assertThat(Files.readAllBytes(installed.home().resolve("bin/mvn.cmd"))).isEqualTo(script);
+        } finally {
+            server.stop(0);
+            final BiConsumer<String, String> reset = (key, value) -> {
+                if (value == null) {
+                    System.clearProperty(key);
+                } else {
+                    System.setProperty(key, value);
+                }
+            };
+            reset.accept("mvnw.repo.url", oldUrl);
+            reset.accept("mvnw.repo.username", oldUsername);
+            reset.accept("mvnw.repo.password", oldPassword);
+        }
     }
 
     @Test
