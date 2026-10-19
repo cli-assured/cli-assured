@@ -52,6 +52,11 @@ before starting the Java process:
 export MVNW_REPOURL=https://repo.example.org/maven2
 ----
 
+[NOTE]
+====
+`MVNW_REPOURL` is also honored by `mvnw` and `mvnw.cmd` scripts since Maven Wrapper version 0.5.3 (released on 2019-02-25).
+====
+
 CLI Assured constructs the download URL using this template:
 
 [source,text]

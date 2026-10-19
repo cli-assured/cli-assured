@@ -25,14 +25,6 @@ An explicit `MavenSpec.distributionUrl(String)` or the distribution URL read by 
 
 See xref:reference/install-and-invoke-maven.adoc[Install and invoke Maven] for more details about the Maven integration.
 
-=== https://github.com/cli-assured/cli-assured/pull/150[#150] Make Maven examples resilient to version changes
-
-The xref:reference/install-and-invoke-maven.adoc[Install and invoke Maven] examples now match Maven's version output
-without depending on a particular build hash.
-The Maven Wrapper example obtains the expected version from the installed Maven instance instead of hard-coding it.
-
-Special thanks to https://github.com/ppalaga[@ppalaga]!
-
 == Full changelog
 
 https://github.com/cli-assured/cli-assured/compare/0.2.1+++...+++0.2.2
