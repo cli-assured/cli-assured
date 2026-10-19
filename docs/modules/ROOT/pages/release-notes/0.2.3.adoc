@@ -1,0 +1,27 @@
+= CLI Assured 0.2.3 release notes
+
+== Enhancements
+
+=== https://github.com/cli-assured/cli-assured/pull/153[#153] Support credentials for Maven distribution downloads
+
+Before CLI Assured 0.2.3, Maven distribution downloads did not use credentials configured through system properties or environment variables.
+Since CLI Assured 0.2.3, downloads support HTTP Basic authentication using the following settings:
+
+[cols="1,1,1",options="header"]
+|===
+|Credential |System property |Environment variable
+|Username |`mvnw.repo.username` |`MVNW_USERNAME`
+|Password |`mvnw.repo.password` |`MVNW_PASSWORD`
+|===
+
+Each system property takes precedence over its corresponding environment variable, with fallback resolved independently for each credential.
+Authentication is used only when both resolved credentials are nonempty.
+The credentials apply to both the Maven ZIP distribution and its `.zip.sha512` checksum,
+including explicit `MavenSpec.distributionUrl(String)` URLs and URLs read by `Maven.fromMvnw()`.
+
+The Maven integration guide now documents both authentication and the repository overrides introduced in CLI Assured 0.2.2.
+See xref:reference/install-and-invoke-maven.adoc#configure-maven-download-repository[Custom Maven download repository] for configuration details.
+
+== Full changelog
+
+https://github.com/cli-assured/cli-assured/compare/0.2.2+++...+++0.2.3
