@@ -13,6 +13,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +25,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Objects;
@@ -107,6 +109,7 @@ public class MavenSpec {
      * {@code <mvnw.repo.url>/org/apache/maven/apache-maven/<version>/apache-maven-<version>-bin.zip}, where
      * {@code <mvnw.repo.url>} is either the value of {@code mvnw.repo.url} system property, if set, or
      * the value of {@code MVNW_REPOURL} environment variable, if set, or {@code "https://repo.maven.apache.org/maven2"}.
+     * See {@link #install()} for download authentication settings.
      *
      * @param  distributionUrl the distribution URL
      * @return                 an adjusted copy of this {@link MavenSpec}
@@ -118,6 +121,11 @@ public class MavenSpec {
 
     /**
      * Install this Maven version or fail if the version is installed already.
+     * <p>
+     * HTTP Basic authentication for the distribution and its SHA-512 checksum is configured with the
+     * {@code mvnw.repo.username} and {@code mvnw.repo.password} system properties, falling back independently to the
+     * {@code MVNW_USERNAME} and {@code MVNW_PASSWORD} environment variables when the respective property is not set.
+     * Authentication is used only when both resolved values are nonempty.
      *
      * @return                       a possibly new {@link MavenSpec} instance pointing at the freshly installed Maven
      *                               version
@@ -140,7 +148,7 @@ public class MavenSpec {
         }
         final Path localFile = home.resolve(UUID.randomUUID() + ".zip");
         String url = distributionUrl.get();
-        try (InputStream in = new URL(url).openStream()) {
+        try (InputStream in = openDownloadStream(url)) {
             Files.copy(in, localFile);
         } catch (IOException e) {
             throw new UncheckedIOException("Could not download " + url + " to " + home, e);
@@ -384,9 +392,28 @@ public class MavenSpec {
     }
 
     @ExcludeFromJacocoGeneratedReport
+    private static InputStream openDownloadStream(String url) throws IOException {
+        String username = System.getProperty("mvnw.repo.username");
+        if (username == null) {
+            username = System.getenv("MVNW_USERNAME");
+        }
+        String password = System.getProperty("mvnw.repo.password");
+        if (password == null) {
+            password = System.getenv("MVNW_PASSWORD");
+        }
+        final URLConnection connection = new URL(url).openConnection();
+        if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
+            final String credentials = Base64.getEncoder()
+                    .encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+            connection.setRequestProperty("Authorization", "Basic " + credentials);
+        }
+        return connection.getInputStream();
+    }
+
+    @ExcludeFromJacocoGeneratedReport
     static String dowloadText(String url, int expectedByteSize) {
         ByteArrayOutputStream out = new ByteArrayOutputStream(expectedByteSize);
-        try (InputStream in = new URL(url).openStream()) {
+        try (InputStream in = openDownloadStream(url)) {
             final byte[] buff = new byte[Math.min(expectedByteSize, BUFFER_SIZE)];
             int bytesRead;
             while ((bytesRead = in.read(buff)) >= 0) {
