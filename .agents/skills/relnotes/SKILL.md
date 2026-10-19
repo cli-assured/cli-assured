@@ -117,6 +117,7 @@ The format follows these conventions:
 - When describing behavior changes, use the pattern: "Before CLI Assured <version>, ... Since CLI Assured <version>, ..."
 - Link configuration options using xref syntax: `xref:reference/extensions/quarkus-cxf.adoc#quarkus-cxf_quarkus-cxf-...[quarkus.cxf....]`
 - Credit contributors with `Special thanks to https://github.com/<user>[@<user>]`
+  - Do not thank to regular contributors like `@ppalaga`.
 
 ### 5. Write the release notes file
 
