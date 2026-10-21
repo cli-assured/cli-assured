@@ -257,7 +257,8 @@
                     <version>${maven-release-plugin.version}</version>
                     <configuration>
                         <tagNameFormat>@{project.version}</tagNameFormat>
-                        <preparationGoals>package</preparationGoals>
+                        <preparationGoals>clean</preparationGoals>
+                        <preparationProfiles>release-prepare</preparationProfiles>
                         <goals>deploy</goals>
                         <releaseProfiles>release</releaseProfiles>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -381,6 +382,14 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>release-prepare</id>
+            <!-- include the modules so that their versions are updated properly -->
+            <modules>
+                <module>cli-assured-tests-java21</module>
+                <module>docs</module>
+            </modules>
+        </profile>
         <profile>
             <id>java21</id>
             <activation>
